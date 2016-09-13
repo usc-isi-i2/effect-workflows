@@ -1,0 +1,7 @@
+name: effect-env
+dependencies:
+    - python=2.7
+    - psycopg2
+    - pip:
+        - digEntityMerger
+        - digSparkUtil
