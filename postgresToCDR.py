@@ -26,11 +26,16 @@ class PostgresToCDR:
         if row is not None:
             content = dict(row)
             json_res = {}
-            json_res["_url"] = "http://effect.isi.edu/input/" + self.config.database + "/" + self.config.table
-            json_res["_timestamp"] = str(int(time.time() * 1000))
-            json_res["_content_type"] = "application/json"
-            json_res["_jsonRep"] = content
-            json_res["_rawContent"] = json.dumps(content)
+            timestamp = str(int(time.time() * 1000))
+            json_res["timestamp"] = timestamp
+            json_res["content_type"] = "application/json"
+            json_res["json_rep"] = content
+            json_res["raw_content"] = json.dumps(content)
+            json_res["_id"] = self.config.database + "_" + self.config.table + "_" + timestamp
+            json_res["url"] = "http://effect.isi.edu/input/" + self.config.database + "/" + self.config.table + "/" + timestamp
+            json_res["version"] = self.config.version
+            json_res["team"] = "ISI"
+
             return json_res
 
         return None
@@ -48,6 +53,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--database", type=str, help="Database name", required=True)
     parser.add_argument("-t", "--table", type=str, help="Table name", required=True)
     parser.add_argument("-o", "--output", type=str, help="Output filename", default="stdout", required=False)
+    parser.add_argument("-v", "--version", type=str, help="CDR Version", default="2.0", required=False)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
