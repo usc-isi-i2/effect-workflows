@@ -89,3 +89,7 @@ ENV/
 .ropeproject
 
 .idea/*
+
+effect-env.zip
+
+effect-env/*
