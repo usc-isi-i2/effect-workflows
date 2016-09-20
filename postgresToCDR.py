@@ -29,7 +29,7 @@ class PostgresToCDR:
             timestamp = str(int(time.time() * 1000))
             json_res["timestamp"] = timestamp
             json_res["content_type"] = "application/json"
-            json_res["json_rep"] = content
+            #json_res["json_rep"] = content
             json_res["raw_content"] = json.dumps(content)
             json_res["_id"] = self.config.database + "_" + self.config.table + "_" + timestamp
             json_res["url"] = "http://effect.isi.edu/input/" + self.config.database + "/" + self.config.table + "/" + timestamp
