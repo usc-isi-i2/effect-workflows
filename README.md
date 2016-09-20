@@ -26,7 +26,7 @@ DIG workflow processing for the EFFECT project.
 3. Execute: 
 
   ```
-  python postgresToCDR.py --host<postgreSQL hostname> --user <db username> --password <db password> \
+  python postgresToCDR.py --host <postgreSQL hostname> --user <db username> --password <db password> \
                           --database <databasename> --table <tablename> --output <output filename>`
   ```
 
