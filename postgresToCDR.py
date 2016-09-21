@@ -35,7 +35,7 @@ class PostgresToCDR:
             json_res["url"] = "http://effect.isi.edu/input/" + self.config.database + "/" + self.config.table + "/" + timestamp
             json_res["version"] = self.config.version
             json_res["team"] = "ISI"
-
+            json_res["source_name"] = self.config.database
             return json_res
 
         return None
