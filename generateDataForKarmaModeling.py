@@ -6,8 +6,7 @@ import json
 import time
 from csvToJson import CSVToJson
 import hashlib
-from xmljson import yahoo as xmlConvertor
-from xml.etree.ElementTree import fromstring
+from cdrLoader import CDRLoader
 
 if __name__ == "__main__":
 
@@ -23,6 +22,7 @@ if __name__ == "__main__":
     print ("Got arguments:", args)
 
     out_file = open(args.output, 'w')
+    cdrLoader = CDRLoader()
 
     def write_output(line):
         line = json.dumps(line)
@@ -43,17 +43,13 @@ if __name__ == "__main__":
         json_res["source_name"] = args.source
         return json_res
 
-    def add_parsed_json(cdr):
-        cdr["json_rep"] = json.loads(cdr["raw_content"])
-        return cdr
 
     if args.format == "csv":
         toJson = CSVToJson(config=args)
         row = toJson.next()
         while row is not None:
             cdr_row = generate_cdr_from_raw_json(json.dumps(row), "application/json")
-            cdr_row_parsed = add_parsed_json(cdr_row)
-            write_output(cdr_row_parsed)
+            write_output(cdrLoader.load_from_json_object(cdr_row)[1])
             row = toJson.next()
         toJson.close()
     elif args.format == "json" or args.format == "cdr":
@@ -64,17 +60,11 @@ if __name__ == "__main__":
                 cdr_row = generate_cdr_from_raw_json(line, "application/json")
             else:
                 cdr_row = json.loads(line)
-            cdr_row_parsed = add_parsed_json(cdr_row)
-            write_output(cdr_row_parsed)
+            write_output(cdrLoader.load_from_json_object(cdr_row)[1])
         input.close()
     elif args.format == "xml":
         input = open(args.input, 'r')
         xml = input.read()
         cdr_row = generate_cdr_from_raw_json(xml, "application/xml")
-        json_rep = xmlConvertor.data(fromstring(xml))
-        # import xmltodict
-        # json_rep = xmltodict.parse(xml)
-        # print json.dumps(json_rep)
-        cdr_row["json_rep"] = json_rep
-        write_output(cdr_row)
+        write_output(cdrLoader.load_from_json_object(cdr_row)[1])
     out_file.close()

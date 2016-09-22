@@ -7,16 +7,7 @@ DIG workflow processing for the EFFECT project.
 2. Install conda env - `conda install -c conda conda-env`
 3. Create the environment `conda env create`. This will create a virtual environment named effect-env (The name is defined in environment.yml)
 4. Switch to the environment using `source activate effect-env`
-5. Run the scripts
-6. To exit the environment, do `source deactivate`
-7. To execute the code on a cluster, you would need to attach the environment as a zip file. To export the environment, you can do `conda create -m -p /home/user1/effect-env --copy --clone effect-env`. This copies the effect-env into the location specified by the `-p` parameter.
-   Then zip the environment
 
-   ```
-   cd /home/user1/lib/python2.7/site-packages
-   zip -r effect-env.zip *
-   spark-submit --archives effect-env.zip ......
-   ```
 <B>NOTE: You should build the environment on the same hardware/os you're going to run the job</B>
 
 
@@ -56,7 +47,22 @@ DIG workflow processing for the EFFECT project.
             --output hackmageddon.jl --format json --source hackmageddon
   ```
 
+## Running the workflow
+To build the python libraries required by the workflows,
+1. Edit make.sh and update the path to `dig-workflows`
+2. Run `./make.sh`. This will create `lib\python-lib.zip` that can be attached with the `--py-files` option to the spark workflow
+3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/
+4. Login to AWS and run the workflow
+```
+ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com
+spark-submit --deploy-mode client  \
+    --py-files /home/hadoop/effect-workflows/python-lib.zip \
+    /home/hadoop/effect-workflows/effectWorkflow.py \
+    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out text
+```
+
 ## Extras
 
 * To remove the environment run `conda env remove -n effect-env`
 * To see all environments run `conda env list`
+q
