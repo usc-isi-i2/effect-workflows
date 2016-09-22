@@ -13,8 +13,8 @@ DIG workflow processing for the EFFECT project.
    Then zip the environment
 
    ```
-   cd /home/user1
-   zip -r effect-env.zip effect-env
+   cd /home/user1/lib/python2.7/site-packages
+   zip -r effect-env.zip *
    spark-submit --archives effect-env.zip ......
    ```
 <B>NOTE: You should build the environment on the same hardware/os you're going to run the job</B>
@@ -55,7 +55,6 @@ DIG workflow processing for the EFFECT project.
   python generateDataForKarmaModeling.py --input ~/github/effect/effect-data/hackmageddon/sample/hackmageddon_20160730.jl \
             --output hackmageddon.jl --format json --source hackmageddon
   ```
-
 
 ## Extras
 
