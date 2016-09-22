@@ -47,6 +47,12 @@ DIG workflow processing for the EFFECT project.
             --output hackmageddon.jl --format json --source hackmageddon
   ```
 
+## Loading data in HIVE
+
+1. Login to AWS and create a tunnel - `ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com`
+2. Access Hue on http://localhost:8888
+3. See hiveQueries.sql for examples
+
 ## Running the workflow
 
 To build the python libraries required by the workflows,
