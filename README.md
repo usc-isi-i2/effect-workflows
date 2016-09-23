@@ -47,12 +47,21 @@ DIG workflow processing for the EFFECT project.
             --output hackmageddon.jl --format json --source hackmageddon
   ```
 
+## Loading data in HIVE
+
+1. Login to AWS and create a tunnel - `ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com`
+2. Access Hue on http://localhost:8888
+3. See hiveQueries.sql for examples
+
 ## Running the workflow
+
 To build the python libraries required by the workflows,
+
 1. Edit make.sh and update the path to `dig-workflows`
 2. Run `./make.sh`. This will create `lib\python-lib.zip` that can be attached with the `--py-files` option to the spark workflow
-3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/
+3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/`
 4. Login to AWS and run the workflow
+
 ```
 ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com
 spark-submit --deploy-mode client  \
@@ -65,4 +74,4 @@ spark-submit --deploy-mode client  \
 
 * To remove the environment run `conda env remove -n effect-env`
 * To see all environments run `conda env list`
-q
+
