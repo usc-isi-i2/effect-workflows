@@ -59,16 +59,27 @@ To build the python libraries required by the workflows,
 
 1. Edit make.sh and update the path to `dig-workflows`
 2. Run `./make.sh`. This will create `lib\python-lib.zip` that can be attached with the `--py-files` option to the spark workflow
-3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/`
-4. Login to AWS and run the workflow
+3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib`
+4. Build a shaded karma-spark jar -
+
+   ```
+   cd karma-spark
+   mvn clean install -P shaded -Denv=hive
+   scp lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib
+   ```
+
+5. Login to AWS and run the workflow
 
 ```
 ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com
 spark-submit --deploy-mode client  \
-    --py-files /home/hadoop/effect-workflows/python-lib.zip \
+    --jars "/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
+    --conf "spark.driver.extraClassPath=/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
+    --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
     /home/hadoop/effect-workflows/effectWorkflow.py \
-    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out text
+    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out text 10
 ```
+
 
 ## Extras
 
