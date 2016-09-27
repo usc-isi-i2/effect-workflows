@@ -18,7 +18,8 @@ DIG workflow processing for the EFFECT project.
 
   ```
   python postgresToCDR.py --host <postgreSQL hostname> --user <db username> --password <db password> \
-                          --database <databasename> --table <tablename> --output <output filename>`
+                          --database <databasename> --table <tablename> \
+                          --output <output filename> --team <Name of team providing data>`
   ```
 
 

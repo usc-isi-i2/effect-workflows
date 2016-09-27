@@ -42,8 +42,8 @@ class PostgresToCDR:
             json_res["_id"] = self.config.database + "_" + self.config.table + "_" + timestamp
             json_res["url"] = "http://effect.isi.edu/input/" + self.config.database + "/" + self.config.table + "/" + timestamp
             json_res["version"] = self.config.version
-            json_res["team"] = "ISI"
-            json_res["source_name"] = self.config.database
+            json_res["team"] = self.config.team
+            json_res["source_name"] = self.config.database + "-" + self.config.table
             return json_res
 
         return None
@@ -62,6 +62,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--table", type=str, help="Table name", required=True)
     parser.add_argument("-o", "--output", type=str, help="Output filename", default="stdout", required=False)
     parser.add_argument("-v", "--version", type=str, help="CDR Version", default="2.0", required=False)
+    parser.add_argument("-m", "--team", type=str, help="Team that provided the data", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
