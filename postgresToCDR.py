@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 import json
 import time
 
-class MyrEncoder(json.JSONEncoder):
+class DateTimeEncoder(json.JSONEncoder):
 
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -38,7 +38,7 @@ class PostgresToCDR:
             json_res["timestamp"] = timestamp
             json_res["content_type"] = "application/json"
             #json_res["json_rep"] = content
-            json_res["raw_content"] = json.dumps(content, ,cls = MyEncoder)
+            json_res["raw_content"] = json.dumps(content, ,cls = DateTimeEncoder)
             json_res["_id"] = self.config.database + "_" + self.config.table + "_" + timestamp
             json_res["url"] = "http://effect.isi.edu/input/" + self.config.database + "/" + self.config.table + "/" + timestamp
             json_res["version"] = self.config.version
