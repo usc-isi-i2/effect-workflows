@@ -6,3 +6,4 @@ dependencies:
         - digEntityMerger
         - digSparkUtil
         - xmljson
+        - requests

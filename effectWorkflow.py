@@ -6,6 +6,7 @@ from digSparkUtil.fileUtil import FileUtil
 from cdrLoader import CDRLoader
 from py4j.java_gateway import java_import
 from digWorkflow.workflow import Workflow
+from digWorkflow.git_model_loader import GitModelLoader
 
 '''
 spark-submit --deploy-mode client  \
@@ -18,13 +19,6 @@ spark-submit --deploy-mode client  \
 
 context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/master/versions/3.0/karma/karma-context.json"
 base_uri = "http://effect.isi.edu/data/"
-models = [
-    {
-        "name": "hackmageddon",
-        "root": "http://schema.dig.isi.edu/ontology/AttackEvent1",
-        "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/models/hackmageddon/hackmageddon-20160730-model.ttl?token=ABxFI-kOG4aXvq8EpXxJg13jGSozrAXXks5X8q5gwA%3D%3D"
-    }
-]
 
 class EffectWorkflow(Workflow):
     def __init__(self, spark_context, sql_context):
@@ -74,6 +68,11 @@ if __name__ == "__main__":
     java_import(sc._jvm, "edu.isi.karma")
     effectWorkflow = EffectWorkflow(sc, sqlContext)
     fileUtil = FileUtil(sc)
+
+    gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
+    models = gitModelLoader.get_models_from_folder("models")
+
+    print "Got models:", json.dumps(models)
 
     inputTable = sys.argv[1]
     outputFilename = sys.argv[2]
