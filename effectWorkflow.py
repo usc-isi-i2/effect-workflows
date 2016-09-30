@@ -14,7 +14,7 @@ spark-submit --deploy-mode client  \
     --conf "spark.driver.extraClassPath=/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
     /home/hadoop/effect-workflows/effectWorkflow.py \
-    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out text 10
+    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out sequence 10
 '''
 
 context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/master/versions/3.0/karma/karma-context.json"
