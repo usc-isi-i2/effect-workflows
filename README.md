@@ -61,7 +61,8 @@ To build the python libraries required by the workflows,
 1. Edit make.sh and update the path to `dig-workflows`
 2. Run `./make.sh`. This will create `lib\python-lib.zip` that can be attached with the `--py-files` option to the spark workflow
 3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib`
-4. Build a shaded karma-spark jar -
+4. zip your karma home folder into `karma.zip` and copt to AWS - `scp karma.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/`
+5. Build a shaded karma-spark jar -
 
    ```
    cd karma-spark
@@ -69,7 +70,7 @@ To build the python libraries required by the workflows,
    scp lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib
    ```
 
-5. Login to AWS and run the workflow
+6. Login to AWS and run the workflow
 
 ```
 ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com
@@ -77,8 +78,44 @@ spark-submit --deploy-mode client  \
     --jars "/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
     --conf "spark.driver.extraClassPath=/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
+    --archives /home/hadoop/effect-workflows/karma.zip
     /home/hadoop/effect-workflows/effectWorkflow.py \
-    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out text 10
+    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-framed sequence 10
+```
+This will load data from HIVE table CDR, apply karma models to it and save the output to HDFS.
+To load the data to ES from HDFS, run:
+
+```
+spark-submit --deploy-mode client  \
+    --executor-memory 5g \
+    --driver-memory 5g \
+    --jars "/home/hadoop/effect-workflows/jars/elasticsearch-hadoop-2.4.0.jar" \
+    --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
+    /home/hadoop/effect-workflows/effectWorkflow-es.py \
+    --host 172.31.19.102 \
+    --port 9200 \
+    --index effect-2 \
+    --doctype attack \
+    --input hdfs://ip-172-31-19-102/user/effect/data/cdr-framed/attack
+```
+
+Now Change the alias 'effect' in ES to point to this new index - effect-2
+```
+POST _aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "effect-2",
+        "alias": "effect"
+      },
+      "remove": {
+        "index": "effect-1",
+        "alias": "effect"
+      }
+    }
+  ]
+}
 ```
 
 

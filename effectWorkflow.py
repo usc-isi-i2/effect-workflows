@@ -13,8 +13,9 @@ spark-submit --deploy-mode client  \
     --jars "/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
     --conf "spark.driver.extraClassPath=/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
+    --archives /home/hadoop/effect-workflows/karma.zip \
     /home/hadoop/effect-workflows/effectWorkflow.py \
-    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-out sequence 10
+    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-framed sequence 10
 '''
 
 context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/master/versions/3.0/karma/karma-context.json"
@@ -33,7 +34,7 @@ class EffectWorkflow(Workflow):
     def load_cdr_from_hive_table(self, table):
         return self.load_cdr_from_hive_query("FROM " + table + " SELECT *")
 
-    def apply_karma_model_per_msg_type(self, rdd, models, context_url, base_uri, partitions):
+    def apply_karma_model_per_msg_type(self, rdd, models, context_url, base_uri, partitions, outpartitions):
         result_rdds = list()
 
         for model in models:
@@ -57,7 +58,7 @@ class EffectWorkflow(Workflow):
         if num_rdds > 0:
             if num_rdds == 1:
                 return result_rdds[0]
-            return self.reduce_rdds(*result_rdds)
+            return self.reduce_rdds(outpartitions, *result_rdds)
         return None
 
 
@@ -66,7 +67,7 @@ if __name__ == "__main__":
     sqlContext = HiveContext(sc)
 
     java_import(sc._jvm, "edu.isi.karma")
-    effectWorkflow = EffectWorkflow(sc, sqlContext)
+    workflow = EffectWorkflow(sc, sqlContext)
     fileUtil = FileUtil(sc)
 
     gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
@@ -78,15 +79,50 @@ if __name__ == "__main__":
     outputFilename = sys.argv[2]
     outputFileType = sys.argv[3]
     numPartitions = int(sys.argv[4])
+    numFramerPartitions = numPartitions/2
 
-    cdr_data = effectWorkflow.load_cdr_from_hive_table(inputTable)\
-                    .partitionBy(numPartitions)\
-                    .persist(StorageLevel.MEMORY_AND_DISK)
+    cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+        .partitionBy(numPartitions) \
+        .persist(StorageLevel.MEMORY_AND_DISK)
     cdr_data.setName("cdr_data")
-    #fileUtil.save_file(cdr_data, outputFilename, outputFileType, "json")
 
-    karma_out = effectWorkflow.apply_karma_model_per_msg_type(cdr_data, models, context_url, base_uri, numPartitions)
-    if karma_out is not None:
-        fileUtil.save_file(karma_out, outputFilename, outputFileType, "json")
+    reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_data, models, context_url, base_uri,
+                                                              numPartitions, numFramerPartitions)
 
-    cdr_data.unpersist()
+    if reduced_rdd is not None:
+        reduced_rdd = reduced_rdd.persist(StorageLevel.MEMORY_AND_DISK)
+        reduced_rdd.setName("karma_out_reduced")
+
+        types = [
+            {"name": "AttackEvent", "uri": "http://schema.dig.isi.edu/ontology/AttackEvent"},
+            {"name": "EmailAddress", "uri": "http://schema.dig.isi.edu/ontology/EmailAddress"},
+            {"name": "GeoCoordinates", "uri": "http://schema.org/GeoCoordinates"},
+            {"name": "Organization", "uri": "http://schema.org/Organization"},
+            {"name": "PersonOrOrganization", "uri": "http://schema.dig.isi.edu/ontology/PersonOrOrganization"},
+            {"name": "PhoneNumber", "uri": "http://schema.dig.isi.edu/ontology/PhoneNumber"},
+            {"name": "Place", "uri": "http://schema.org/Place"},
+            {"name": "PostalAddress", "uri": "http://schema.org/PostalAddress"}
+        ]
+
+        frames = [
+            {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"}
+        ]
+        type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
+
+        for type_name in type_to_rdd_json:
+            type_to_rdd_json[type_name]["rdd"] = type_to_rdd_json[type_name]["rdd"].persist(StorageLevel.MEMORY_AND_DISK)
+            type_to_rdd_json[type_name]["rdd"].setName(type_name)
+
+        framer_output = workflow.apply_framer(reduced_rdd, type_to_rdd_json, frames,
+                                              numFramerPartitions,
+                                              None)
+
+        for frame_name in framer_output:
+            framer_output_one_frame = framer_output[frame_name].coalesce(numFramerPartitions)
+            fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
+
+        reduced_rdd.unpersist()
+        for type_name in type_to_rdd_json:
+            type_to_rdd_json[type_name]["rdd"].unpersist()
+
+cdr_data.unpersist()

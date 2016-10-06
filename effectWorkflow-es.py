@@ -16,9 +16,9 @@ spark-submit --deploy-mode client  \
     /home/hadoop/effect-workflows/effectWorkflow-es.py \
     --host 172.31.19.102 \
     --port 9200 \
-    --index effect \
-    --doctype events \
-    --input hdfs://ip-172-31-19-102/user/effect/data/cdr-out
+    --index effect-2 \
+    --doctype attack \
+    --input hdfs://ip-172-31-19-102/user/effect/data/cdr-framed/attack
 '''
 
 if __name__ == '__main__':
