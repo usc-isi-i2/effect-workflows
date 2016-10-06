@@ -83,40 +83,45 @@ spark-submit --deploy-mode client  \
     cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-framed sequence 10
 ```
 This will load data from HIVE table CDR, apply karma models to it and save the output to HDFS.
-To load the data to ES from HDFS, run:
 
-```
-spark-submit --deploy-mode client  \
-    --executor-memory 5g \
-    --driver-memory 5g \
-    --jars "/home/hadoop/effect-workflows/jars/elasticsearch-hadoop-2.4.0.jar" \
-    --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
-    /home/hadoop/effect-workflows/effectWorkflow-es.py \
-    --host 172.31.19.102 \
-    --port 9200 \
-    --index effect-2 \
-    --doctype attack \
-    --input hdfs://ip-172-31-19-102/user/effect/data/cdr-framed/attack
-```
+To load the data to ES, 
 
-Now Change the alias 'effect' in ES to point to this new index - effect-2
-```
-POST _aliases
-{
-  "actions": [
+1. Create an index, say effect-2 with mappings from file - https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/es/es-mappings.json
+
+2. Run spark workflow to load data from hdfs to this effect-2 index
+    ```
+    spark-submit --deploy-mode client  \
+        --executor-memory 5g \
+        --driver-memory 5g \
+        --jars "/home/hadoop/effect-workflows/jars/elasticsearch-hadoop-2.4.0.jar" \
+        --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
+        /home/hadoop/effect-workflows/effectWorkflow-es.py \
+        --host 172.31.19.102 \
+        --port 9200 \
+        --index effect-2 \
+        --doctype attack \
+        --input hdfs://ip-172-31-19-102/user/effect/data/cdr-framed/attack
+    ```
+    This shows how to add in the attack frame. This needs to executed for all the available frames.
+    
+3. Change the alias 'effect' in ES to point to this new index - effect-2
+    ```
+    POST _aliases
     {
-      "add": {
-        "index": "effect-2",
-        "alias": "effect"
-      },
-      "remove": {
-        "index": "effect-1",
-        "alias": "effect"
-      }
+      "actions": [
+        {
+          "add": {
+            "index": "effect-2",
+            "alias": "effect"
+          },
+          "remove": {
+            "index": "effect-1",
+            "alias": "effect"
+          }
+        }
+      ]
     }
-  ]
-}
-```
+    ```
 
 
 ## Extras
