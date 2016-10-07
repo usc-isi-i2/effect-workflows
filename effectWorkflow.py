@@ -105,7 +105,8 @@ if __name__ == "__main__":
         ]
 
         frames = [
-            {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"}
+            {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"},
+            {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"}
         ]
         type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
 

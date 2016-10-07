@@ -23,6 +23,12 @@ SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(),
 
 
 # Load the HyperionGray CVE Data
+#1. Download data from API
+#2. Convert JSON to Json Lines - jq -c .[] cve.json > cve.jl
+#3. Upload data to hdfs
+#4. Load into a hg_cve table
+LOAD DATA INPATH '/user/effect/cve.jl' INTO TABLE hg_cve
+#5. Insert data into CDR from hg_cve
 FROM hg_cve h
 INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='7')
 SELECT concat('hg-cve/', hex(hash(h.raw_content))), unix_timestamp(), 
