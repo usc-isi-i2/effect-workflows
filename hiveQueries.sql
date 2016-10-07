@@ -15,13 +15,20 @@ LOAD DATA INPATH '/user/effect/hackmageddon_20160730.jl' INTO TABLE hackmageddon
 
 # Load data into CDR from hackmagadden
 FROM hackmageddon h
-INSERT OVERWRITE TABLE cdr PARTITION(year='2016', month='09', day='22')
+INSERT INTO TABLE cdr PARTITION(year='2016', month='09', day='22')
 SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(), 
 		h.raw_content, 'application/json', 
 		concat('http://effect.isi.edu/input/hackmageddon/',hex(hash(h.raw_content))), 
 		"2.0", "ISI", "hackmageddon"
 
 
+# Load the HyperionGray CVE Data
+FROM hg_cve h
+INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='7')
+SELECT concat('hg-cve/', hex(hash(h.raw_content))), unix_timestamp(), 
+		h.raw_content, 'application/json', 
+		concat('http://effect.isi.edu/input/hg/cve/',hex(hash(h.raw_content))), 
+		"2.0", "hyperiongray", "hg-cve"
 
 #---------------------------------------------------------------------------------------
 
