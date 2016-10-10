@@ -101,7 +101,10 @@ if __name__ == "__main__":
             {"name": "PersonOrOrganization", "uri": "http://schema.dig.isi.edu/ontology/PersonOrOrganization"},
             {"name": "PhoneNumber", "uri": "http://schema.dig.isi.edu/ontology/PhoneNumber"},
             {"name": "Place", "uri": "http://schema.org/Place"},
-            {"name": "PostalAddress", "uri": "http://schema.org/PostalAddress"}
+            {"name": "PostalAddress", "uri": "http://schema.org/PostalAddress"},
+            {"name": "Vulnerability", "uri": "http://schema.dig.isi.edu/ontology/Vulnerability"},
+            {"name": "SoftwareSystem", "uri":"http://schema.dig.isi.edu/ontology/SoftwareSystem"},
+            {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"}
         ]
 
         frames = [
