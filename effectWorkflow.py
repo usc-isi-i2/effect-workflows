@@ -18,7 +18,7 @@ spark-submit --deploy-mode client  \
     cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-framed sequence 10
 '''
 
-context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/master/versions/3.0/karma/karma-context.json"
+context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/development/versions/3.0/karma/karma-context.json"
 base_uri = "http://effect.isi.edu/data/"
 
 class EffectWorkflow(Workflow):
@@ -44,12 +44,10 @@ class EffectWorkflow(Workflow):
                     print "Apply model for", model["name"], ":", model["url"]
 
                     #print json.dumps(model_rdd.first()[1])
-
-                    # Since we are not using the framer, we should enable json nesting to get complete objects
                     karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
-                                               num_partitions=partitions,
-                                               additional_settings={"rdf.generation.disable.nesting": "false"})
+                                               num_partitions=partitions)
                     if not karma_rdd.isEmpty():
+                        #fileUtil.save_file(karma_rdd, outputFilename + '/' + model["name"], "text", "json")
                         result_rdds.append(karma_rdd)
 
                     print "Done applying model ", model["name"]
@@ -123,7 +121,8 @@ if __name__ == "__main__":
 
         for frame_name in framer_output:
             framer_output_one_frame = framer_output[frame_name].coalesce(numFramerPartitions)
-            fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
+            if not framer_output_one_frame.isEmpty():
+                fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
 
         reduced_rdd.unpersist()
         for type_name in type_to_rdd_json:
