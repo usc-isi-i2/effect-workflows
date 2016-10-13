@@ -10,18 +10,31 @@ CREATE TABLE hackmageddon (raw_content STRING)
 STORED AS TEXTFILE
 
 # Load data into hackmagadden
-LOAD DATA INPATH '/user/effect/hackmageddon_20160730.jl' INTO TABLE hackmageddon
+LOAD DATA INPATH '/user/effect/hackmageddon-cleaned.jl' INTO TABLE hackmageddon
 
 
 # Load data into CDR from hackmagadden
 FROM hackmageddon h
-INSERT OVERWRITE TABLE cdr PARTITION(year='2016', month='09', day='22')
+INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='10')
 SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(), 
 		h.raw_content, 'application/json', 
 		concat('http://effect.isi.edu/input/hackmageddon/',hex(hash(h.raw_content))), 
-		"2.0", "ISI", "hackmageddon"
+		"2.0", "hackmageddon", "hackmageddon"
 
 
+# Load the HyperionGray CVE Data
+#1. Download data from API
+#2. Convert JSON to Json Lines - jq -c .[] cve.json > cve.jl
+#3. Upload data to hdfs
+#4. Load into a hg_cve table
+LOAD DATA INPATH '/user/effect/cve.jl' INTO TABLE hg_cve
+#5. Insert data into CDR from hg_cve
+FROM hg_cve h
+INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='10')
+SELECT concat('hg-cve/', hex(hash(h.raw_content))), unix_timestamp(), 
+		h.raw_content, 'application/json', 
+		concat('http://effect.isi.edu/input/hg/cve/',hex(hash(h.raw_content))), 
+		"2.0", "hyperiongray", "hg-cve"
 
 #---------------------------------------------------------------------------------------
 
