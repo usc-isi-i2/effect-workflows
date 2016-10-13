@@ -20,8 +20,16 @@ if __name__ == "__main__":
     def write_output(line):
         line = json.dumps(line)
         out_file.write(line + "\n")
+    def load_data_into_hive():
+        conn = hive.Connection(host="localhost", port=9083, username="effect")
+        create_table = "CREATE TABLE hg_cve (raw_content STRING) STORED AS TEXTFILE"
+        conn.execute(create_table)
+        load_table = "LOAD DATA INPATH" + args.output + "INTO TABLE hg_cve"
+        conn.execute(load_table)
+        now = datetime.datetime.now()
     url = "https://effect.hyperiongray.com/api/cve/?query={\"vulnerability_scoring.cvss:base_metrics.cvss:generated-on-datetime\":{\"$gte\":\"" + gte_date + "\"}}"
     response = requests.get(url, verify=False,	auth=HTTPBasicAuth('isi', 'KSIDOOIWHJu8ewhui8923y8gYGuYGASYUHjksahuihIHU'))
     result = json.loads(response.text)
     for line in result:
     	write_output(line)
+    load_data_into_hive()
