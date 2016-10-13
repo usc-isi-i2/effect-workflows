@@ -1,15 +1,18 @@
 import json
 
+import datetime
 import requests
 from argparse import ArgumentParser
 from requests.auth import HTTPBasicAuth
 from urllib import urlopen
+from pyhive import hive
 
 if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument("-o", "--output", type=str, help="Output filename", required=True)
     parser.add_argument("-g", "--gte", type=str, help="Greater than equal date", required=True)
+    parser.add_argument("-p", "--password", type=str, help="password for connecting to hyperion gray api", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
@@ -28,7 +31,7 @@ if __name__ == "__main__":
         conn.execute(load_table)
         now = datetime.datetime.now()
     url = "https://effect.hyperiongray.com/api/cve/?query={\"vulnerability_scoring.cvss:base_metrics.cvss:generated-on-datetime\":{\"$gte\":\"" + gte_date + "\"}}"
-    response = requests.get(url, verify=False,	auth=HTTPBasicAuth('isi', 'KSIDOOIWHJu8ewhui8923y8gYGuYGASYUHjksahuihIHU'))
+    response = requests.get(url, verify=False,	auth=HTTPBasicAuth('isi', args.password))
     result = json.loads(response.text)
     for line in result:
     	write_output(line)
