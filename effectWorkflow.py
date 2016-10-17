@@ -42,7 +42,6 @@ class EffectWorkflow(Workflow):
                 model_rdd = rdd.filter(lambda x: x[1]["source_name"] == model["name"])
                 if not model_rdd.isEmpty():
                     print "Apply model for", model["name"], ":", model["url"]
-
                     #print json.dumps(model_rdd.first()[1])
                     karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
                                                num_partitions=partitions)
@@ -89,6 +88,7 @@ if __name__ == "__main__":
 
     if reduced_rdd is not None:
         reduced_rdd = reduced_rdd.persist(StorageLevel.MEMORY_AND_DISK)
+        fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', "text", "json")
         reduced_rdd.setName("karma_out_reduced")
 
         types = [
@@ -102,6 +102,7 @@ if __name__ == "__main__":
             {"name": "PostalAddress", "uri": "http://schema.org/PostalAddress"},
             {"name": "Vulnerability", "uri": "http://schema.dig.isi.edu/ontology/Vulnerability"},
             {"name": "SoftwareSystem", "uri":"http://schema.dig.isi.edu/ontology/SoftwareSystem"},
+            {"name": "Identifier", "uri":"http://schema.dig.isi.edu/ontology/Identifier"},
             {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"}
         ]
 
