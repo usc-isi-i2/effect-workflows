@@ -44,7 +44,8 @@ class EffectWorkflow(Workflow):
                     print "Apply model for", model["name"], ":", model["url"]
                     #print json.dumps(model_rdd.first()[1])
                     karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
-                                               num_partitions=partitions)
+                                               num_partitions=partitions,
+                                               batch_size=10000)
                     if not karma_rdd.isEmpty():
                         #fileUtil.save_file(karma_rdd, outputFilename + '/' + model["name"], "text", "json")
                         result_rdds.append(karma_rdd)

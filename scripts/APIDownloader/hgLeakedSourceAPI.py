@@ -13,23 +13,23 @@ if __name__ == "__main__":
 
     url = "https://effect.hyperiongray.com/api/leaked-source/email?query=*@"
     domains = [ "alaska.edu",
-                "apple.afsmith.bm",
+                "apple.afsmith.bm",  #No results
                 "bremertonhousing.org",
                 "clixsense.com",
-                "Empireminecraft.com",
+                "Empireminecraft.com", #No results
                 "eurekalert.org",
                 "feverclan.com",
-                "floridabar.org",
+                "floridabar.org", #No results
                 "i-dressup.com",
                 "jivesoftware.com",
-                "justformen.com",
+                "justformen.com",  #No result
                 "Last.fm",
                 "manaliveinc.org",
                 "newseasims.com",
                 "saintfrancis.com",
-                "ssctech.com",
-                "unm.edu",
-                "usc.edu",
+                "ssctech.com",  #No result
+                "unm.edu",  #No result
+                "usc.edu", #No result
                 "wpcapital.com"
             ]
 
