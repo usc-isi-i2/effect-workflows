@@ -23,5 +23,7 @@ class APIDownloader:
     def load_into_cdr(self, data, tablename):
         self.sqlContext.sql("DROP TABLE " + tablename)
         self.sqlContext.sql("CREATE TABLE " + tablename + "(raw_content STRING) STORED AS TEXTFILE")
-        self.write_as_json_lines(data, tablename + ".jl")
+        out_file = open(tablename + ".jl", "w")
+        self.write_as_json_lines(data, out_file)
+        out_file.close()
         self.sqlContext.sql("LOAD DATA INPATH '" + tablename + ".jl' INTO TABLE " + tablename)

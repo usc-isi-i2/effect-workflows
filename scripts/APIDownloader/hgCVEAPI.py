@@ -24,7 +24,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    out_file = open(args.output, 'w')
+    #out_file = open(args.output, 'w')
 
     url = "https://effect.hyperiongray.com/api/cve/?query=" \
           "{\"vulnerability_scoring.cvss:base_metrics.cvss:generated-on-datetime\":{\"$gte\":\"" + args.date + "\"}}"
@@ -35,6 +35,6 @@ if __name__ == "__main__":
     results = apiDownloader.download_api(url, "isi", args.password)
     if results is not None:
         #apiDownloader.write_as_json_lines(results, out_file)
-        apiDownloader.load_into_cdr(results, "hg-cve")
+        apiDownloader.load_into_cdr(results, "hg_cve")
 
-    out_file.close()
+    #out_file.close()
