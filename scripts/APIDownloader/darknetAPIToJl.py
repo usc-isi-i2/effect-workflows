@@ -24,11 +24,11 @@ if __name__ == "__main__":
             out_file.write(line + "\n")
 
     def get_all_urls():
-        zeroDayUrl = "https://54.186.69.219/GargoyleApi/getZerodayProducts?limit=10&from=" + args.fromDate
-        hackingItemsUrl = "https://54.186.69.219/GargoyleApi/getHackingItems?limit=10&from=" + args.fromDate
-        dictionaryUrl = "https://54.186.69.219/GargoyleApi/getDictionary?limit=10&from=" + args.fromDate
-        clusterStatisticsUrl = "https://54.186.69.219/GargoyleApi/getClusterStatistics?limit=10&from" + args.fromDate
-        hackingPostsUrl = "https://54.186.69.219/GargoyleApi/getHackingPosts?limit=10&from=" + args.fromDate
+        zeroDayUrl = "https://54.186.69.219/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.fromDate
+        hackingItemsUrl = "https://54.186.69.219/GargoyleApi/getHackingItems?limit=20000&from=" + args.fromDate
+        dictionaryUrl = "https://54.186.69.219/GargoyleApi/getDictionary?limit=10000&from=" + args.fromDate
+        clusterStatisticsUrl = "https://54.186.69.219/GargoyleApi/getClusterStatistics?limit=10000&from" + args.fromDate
+        hackingPostsUrl = "https://54.186.69.219/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
         return [zeroDayUrl,hackingItemsUrl,dictionaryUrl,clusterStatisticsUrl,hackingPostsUrl]
 
 
