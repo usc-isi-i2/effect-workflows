@@ -45,7 +45,6 @@ if __name__ == "__main__":
 
     def get_result(url):
         response = requests.get(url, verify=False,  headers=headers)
-        print type(response.text)
         return byteify(json.loads(response.text))
 
     urls = get_all_urls()
