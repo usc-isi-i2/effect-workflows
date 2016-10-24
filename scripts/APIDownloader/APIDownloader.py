@@ -1,6 +1,7 @@
 import json
 import requests
 from requests.auth import HTTPBasicAuth
+from datetime import date
 
 class APIDownloader:
     def __init__(self, spark_context, sql_context):
@@ -20,10 +21,22 @@ class APIDownloader:
             file_handler.write("\n")
 
 
-    def load_into_cdr(self, data, tablename):
+    def load_into_cdr(self, data, tablename, teamname, sourcename):
         self.sqlContext.sql("DROP TABLE " + tablename)
         self.sqlContext.sql("CREATE TABLE " + tablename + "(raw_content STRING) STORED AS TEXTFILE")
         out_file = open(tablename + ".jl", "w")
         self.write_as_json_lines(data, out_file)
         out_file.close()
-        self.sqlContext.sql("LOAD DATA INPATH '" + tablename + ".jl' INTO TABLE " + tablename)
+        self.sqlContext.sql("LOAD DATA LOCAL INPATH '" + tablename + ".jl' INTO TABLE " + tablename)
+        today = date.today()
+        self.sqlContext.sql("FROM " + tablename + " h "
+                            "INSERT INTO TABLE cdr_auto_test PARTITION(year='" + str(today.year) + "', "
+                                    "month='" + str(today.month) + "', day='" + str(today.day) + "') "
+                            "SELECT concat('" + sourcename + "/', hex(hash(h.raw_content))), "
+                                    "unix_timestamp(),"
+                                    "h.raw_content, "
+                                    "'application/json', "
+                                    "concat('http://effect.isi.edu/input/" + sourcename + "',hex(hash(h.raw_content))),"
+                                    "'2.0', "
+                                    "'" + teamname + "', "
+                                    "'" + sourcename + "'")
