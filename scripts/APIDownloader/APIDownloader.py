@@ -30,7 +30,7 @@ class APIDownloader:
         self.sqlContext.sql("LOAD DATA LOCAL INPATH '" + tablename + ".jl' INTO TABLE " + tablename)
         today = date.today()
         self.sqlContext.sql("FROM " + tablename + " h "
-                            "INSERT INTO TABLE cdr_auto_test PARTITION(year='" + str(today.year) + "', "
+                            "INSERT INTO TABLE cdr PARTITION(year='" + str(today.year) + "', "
                                     "month='" + str(today.month) + "', day='" + str(today.day) + "') "
                             "SELECT concat('" + sourcename + "/', hex(hash(h.raw_content))), "
                                     "unix_timestamp(),"
@@ -40,3 +40,4 @@ class APIDownloader:
                                     "'2.0', "
                                     "'" + teamname + "', "
                                     "'" + sourcename + "'")
+        #self.sqlContext("DROP TABLE " + tablename)

@@ -10,7 +10,7 @@ spark-submit --deploy-mode client \
     --output hg_cve1 \
     --team "hyperiongray" \
     --source "hg-cve" \
-    --password KSIDOOIWHJu8ewhui8923y8gYGuYGASYUHjksahuihIHU \
+    --password <PASSWORD> \
     --date 2016-10-02T12:00:00+00:00
 '''
 
