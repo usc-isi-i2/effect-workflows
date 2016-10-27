@@ -5,12 +5,19 @@ from argparse import ArgumentParser
 from requests.auth import HTTPBasicAuth
 from urllib import urlopen
 import re
+from APIDownloader import APIDownloader
+from pyspark import SparkContext, StorageLevel
+from pyspark.sql import HiveContext
 
 if __name__ == "__main__":
 
+    sc = SparkContext()
+    sqlContext = HiveContext(sc)
     parser = ArgumentParser()
     parser.add_argument("-f", "--fromDate", type=str, help="from date", required=True)
     parser.add_argument("-k", "--apiKey", type=str, help="api key for darknet", required=True)
+    parser.add_argument("-t", "--team", type=str, help="Team name", required=True)
+    parser.add_argument("-s", "--source", type=str, help="source name", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
@@ -29,45 +36,19 @@ if __name__ == "__main__":
         dictionaryUrl = "https://apigargoyle.com/GargoyleApi/getDictionary?limit=10000&from=" + args.fromDate
         clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000&from" + args.fromDate
         hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
-        return [zeroDayUrl,hackingItemsUrl,dictionaryUrl,clusterStatisticsUrl,hackingPostsUrl]
+        return {"zerodayproducts" : zeroDayUrl, "hackingitems" : hackingItemsUrl, "dictionary" : dictionaryUrl, "clusterstatistics" : clusterStatisticsUrl, "hackingposts" : hackingPostsUrl}
 
-
-    def byteify(input):
-        if isinstance(input, dict):
-            return {byteify(key): byteify(value)
-                    for key, value in input.iteritems()}
-        elif isinstance(input, list):
-            return [byteify(element) for element in input]
-        elif isinstance(input, unicode):
-            return input.encode('utf-8')
-        else:
-            return input
-
-    def get_result(url):
-        response = requests.get(url, verify=False,  headers=headers)
-        return byteify(json.loads(response.text))
-
+    apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
     for url in urls:
-        api_name = "zerodayproducts"
-        if (re.search(api_name, url, re.IGNORECASE)):
-            res = get_result(url)
-            write_output_to_file(api_name + ".jl", res['results'])
-        api_name = "hackingitems"
-        if (re.search(api_name, url, re.IGNORECASE)):
-            res = get_result(url)
-            write_output_to_file(api_name + ".jl", res['results'])
-        api_name = "dictionary"
-        if (re.search(api_name, url, re.IGNORECASE)):
-            res = get_result(url)
-            write_output_to_file(api_name + ".jl", res['results'])
-        api_name = "clusterstatistics"
-        if (re.search(api_name, url, re.IGNORECASE)):
-            res = get_result(url)
-            write_output_to_file(api_name + ".jl", res['results'])
-        api_name = "hackingposts"
-        if (re.search(api_name, url, re.IGNORECASE)):
-            res = get_result(url)
-            out_file = open(api_name + ".jl", 'w')
+        if (url == "hackingposts"):
+            res = apiDownloader.download_api(urls[url],None,None,headers)
+            result = []
             for each_number in res['results'].keys():
-                out_file.write(json.dumps(res['results'][each_number],ensure_ascii=False) + "\n")
+                result.append(res['results'][each_number])
+            if result:
+                apiDownloader.load_into_cdr(result, url, args.team, args.source)
+        else:
+            res = apiDownloader.download_api(urls[url],None,None,headers)
+            if res is not None:
+                apiDownloader.load_into_cdr(res['results'], url, args.team, args.source)

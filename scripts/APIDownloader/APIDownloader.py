@@ -9,17 +9,28 @@ class APIDownloader:
         self.sc = spark_context
         self.sqlContext = sql_context
 
-    def download_api(self, url, username=None, password=None):
+    def byteify(self,input):
+        if isinstance(input, dict):
+            return {self.byteify(key): self.byteify(value)
+                    for key, value in input.iteritems()}
+        elif isinstance(input, list):
+            return [self.byteify(element) for element in input]
+        elif isinstance(input, unicode):
+            return input.encode('utf-8')
+        else:
+            return input
+
+    def download_api(self, url, username=None, password=None, headers=None):
         auth = None
         if username is not None:
             auth = HTTPBasicAuth(username, password)
-        response = requests.get(url, verify=False,	auth=auth)
-        return json.loads(response.text)
+        response = requests.get(url, verify=False,	auth=auth, headers=headers)
+        return self.byteify(json.loads(response.text))
 
     def write_as_json_lines(self, array, file_handler):
         for line in array:
-            json.dump(line, file_handler)
-            file_handler.write("\n")
+            line = json.dumps(line, ensure_ascii=False)
+            file_handler.write(line + "\n")
 
 
     def load_into_cdr(self, data, tablename, teamname, sourcename):
