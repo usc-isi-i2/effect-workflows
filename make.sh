@@ -16,6 +16,7 @@ cp -rf effect-env/lib/python2.7/site-packages/* tozip/
 rm -rf effect-env
 
 cp ../*.py tozip/
+cp ../scripts/APIDownloader/*.py tozip/
 cd tozip
 
 mkdir digWorkflow

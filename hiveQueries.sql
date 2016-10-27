@@ -2,7 +2,8 @@
 CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type STRING, url STRING, version STRING, team STRING, source_name STRING)
 COMMENT 'Used to store all CDR data'
 PARTITIONED BY (year INT, month INT, day INT)
-STORED AS SEQUENCEFILE;
+CLUSTERED BY(source_name) INTO 256 BUCKETS
+STORED AS ORC;
 
 
 # Create table for hackmagadden
@@ -15,11 +16,8 @@ LOAD DATA INPATH '/user/effect/hackmageddon-cleaned.jl' INTO TABLE hackmageddon
 
 # Load data into CDR from hackmagadden
 FROM hackmageddon h
-INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='10')
-SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(), 
-		h.raw_content, 'application/json', 
-		concat('http://effect.isi.edu/input/hackmageddon/',hex(hash(h.raw_content))), 
-		"2.0", "hackmageddon", "hackmageddon"
+INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='18')
+SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(), h.raw_content, 'application/json', concat('http://effect.isi.edu/input/hackmageddon/',hex(hash(h.raw_content))), "2.0", "hackmageddon", "hackmageddon"
 
 
 # Load the HyperionGray CVE Data
@@ -27,14 +25,19 @@ SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(),
 #2. Convert JSON to Json Lines - jq -c .[] cve.json > cve.jl
 #3. Upload data to hdfs
 #4. Load into a hg_cve table
+CREATE TABLE hg_zdi (raw_content STRING)
+STORED AS TEXTFILE
+
 LOAD DATA INPATH '/user/effect/cve.jl' INTO TABLE hg_cve
 #5. Insert data into CDR from hg_cve
 FROM hg_cve h
-INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='10')
-SELECT concat('hg-cve/', hex(hash(h.raw_content))), unix_timestamp(), 
-		h.raw_content, 'application/json', 
-		concat('http://effect.isi.edu/input/hg/cve/',hex(hash(h.raw_content))), 
-		"2.0", "hyperiongray", "hg-cve"
+INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='18')
+SELECT concat('hg-cve/', hex(hash(h.raw_content))), unix_timestamp(),h.raw_content, 'application/json', concat('http://effect.isi.edu/input/hg/cve/',hex(hash(h.raw_content))),  "2.0", "hyperiongray", "hg-cve"
+
+
+FROM hg_zdi h
+INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='18')
+SELECT concat('hg-zdi/', hex(hash(h.raw_content))), unix_timestamp(),h.raw_content, 'application/json', concat('http://effect.isi.edu/input/hg/zdi/',hex(hash(h.raw_content))),  "2.0", "hyperiongray", "hg-zdi"
 
 #---------------------------------------------------------------------------------------
 

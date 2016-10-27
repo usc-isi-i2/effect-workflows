@@ -93,3 +93,5 @@ ENV/
 effect-env.zip
 
 effect-env/*
+
+*.jl
