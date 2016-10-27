@@ -24,11 +24,11 @@ if __name__ == "__main__":
             out_file.write(line + "\n")
 
     def get_all_urls():
-        zeroDayUrl = "https://54.186.69.219/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.fromDate
-        hackingItemsUrl = "https://54.186.69.219/GargoyleApi/getHackingItems?limit=20000&from=" + args.fromDate
-        dictionaryUrl = "https://54.186.69.219/GargoyleApi/getDictionary?limit=10000&from=" + args.fromDate
-        clusterStatisticsUrl = "https://54.186.69.219/GargoyleApi/getClusterStatistics?limit=10000&from" + args.fromDate
-        hackingPostsUrl = "https://54.186.69.219/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
+        zeroDayUrl = "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.fromDate
+        hackingItemsUrl = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.fromDate
+        dictionaryUrl = "https://apigargoyle.com/GargoyleApi/getDictionary?limit=10000&from=" + args.fromDate
+        clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000&from" + args.fromDate
+        hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
         return [zeroDayUrl,hackingItemsUrl,dictionaryUrl,clusterStatisticsUrl,hackingPostsUrl]
 
 
@@ -70,4 +70,4 @@ if __name__ == "__main__":
             res = get_result(url)
             out_file = open(api_name + ".jl", 'w')
             for each_number in res['results'].keys():
-                out_file.write(json.dumps(res['results'][each_number],ensure_ascii=False))
+                out_file.write(json.dumps(res['results'][each_number],ensure_ascii=False) + "\n")
