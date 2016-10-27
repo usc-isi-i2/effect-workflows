@@ -34,7 +34,6 @@ if __name__ == "__main__":
 
 
     apiDownloader = APIDownloader(sc, sqlContext)
-    out_file = open(args.output, 'w')
     results = apiDownloader.download_api(url, "isi", args.password)
     if results is not None:
         apiDownloader.load_into_cdr(results, args.output, args.team, args.source)

@@ -2,6 +2,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 from datetime import date
+import os
 
 class APIDownloader:
     def __init__(self, spark_context, sql_context):
@@ -40,4 +41,7 @@ class APIDownloader:
                                     "'2.0', "
                                     "'" + teamname + "', "
                                     "'" + sourcename + "'")
+
+        #Cleanup, delete the temporary file and intermediate table
+        os.remove(tablename + ".jl")
         #self.sqlContext("DROP TABLE " + tablename)
