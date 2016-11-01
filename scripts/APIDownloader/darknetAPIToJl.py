@@ -46,12 +46,13 @@ if __name__ == "__main__":
         dictionaryUrl = "https://apigargoyle.com/GargoyleApi/getDictionary?limit=10000&from=" + args.fromDate
         clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000&from" + args.fromDate
         hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
-        return {"zerodayproducts" : zeroDayUrl, "hackingitems" : hackingItemsUrl, "dictionary" : dictionaryUrl, "clusterstatistics" : clusterStatisticsUrl, "hackingposts" : hackingPostsUrl}
+        hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.fromDate
+        return {"zerodayproducts" : zeroDayUrl, "hackingitems" : hackingItemsUrl, "dictionary" : dictionaryUrl, "clusterstatistics" : clusterStatisticsUrl, "hackingposts" : hackingPostsUrl, "hackingthreads" : hackingThreadsUrl}
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
     for url in urls:
-        if (url == "hackingposts"):
+        if (url == "hackingthreads"):
             res = apiDownloader.download_api(urls[url],None,None,headers)
             result = []
             for each_number in res['results'].keys():
