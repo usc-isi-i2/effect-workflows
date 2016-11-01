@@ -9,6 +9,16 @@ from APIDownloader import APIDownloader
 from pyspark import SparkContext, StorageLevel
 from pyspark.sql import HiveContext
 
+'''
+spark-submit --deploy-mode client  \
+--files /etc/hive/conf/hive-site.xml \
+--py-files /home/hadoop/effect-workflows/lib/python-lib.zip darknetAPIToJl.py \
+--fromDate 1970-01-01 \
+--apiKey <APIKEY> \
+--source 'ISI' \
+--team 'ASU'
+'''
+
 if __name__ == "__main__":
 
     sc = SparkContext()
