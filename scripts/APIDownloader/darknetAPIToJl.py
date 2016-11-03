@@ -43,8 +43,8 @@ if __name__ == "__main__":
     def get_all_urls():
         zeroDayUrl = "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.fromDate
         hackingItemsUrl = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.fromDate
-        dictionaryUrl = "https://apigargoyle.com/GargoyleApi/getDictionary?limit=10000&from=" + args.fromDate
-        clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000&from" + args.fromDate
+        dictionaryUrl = "https://apigargoyle.com/GargoyleApi/getDictionary?limit=10000"
+        clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000"
         hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
         hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.fromDate
         return {"zerodayproducts" : zeroDayUrl, "hackingitems" : hackingItemsUrl, "dictionary" : dictionaryUrl, "clusterstatistics" : clusterStatisticsUrl, "hackingposts" : hackingPostsUrl, "hackingthreads" : hackingThreadsUrl}
