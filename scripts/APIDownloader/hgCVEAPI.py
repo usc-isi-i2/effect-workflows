@@ -2,12 +2,14 @@ from APIDownloader import APIDownloader
 from argparse import ArgumentParser
 from pyspark import SparkContext, StorageLevel
 from pyspark.sql import HiveContext
+import json
 
 '''
 spark-submit --deploy-mode client \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
     hgCVEAPI.py \
     --output hg_cve1 \
+    --outputFolder /user/effect/data/hive \
     --team "hyperiongray" \
     --source "hg-cve" \
     --password <PASSWORD> \
@@ -20,6 +22,7 @@ if __name__ == "__main__":
     sqlContext = HiveContext(sc)
 
     parser = ArgumentParser()
+    parser.add_argument("-f", "--outputFolder", type=str, help="Output foldername", required=True)
     parser.add_argument("-o", "--output", type=str, help="Output tablename", required=True)
     parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
     parser.add_argument("-s", "--source", type=str, help="Source Name", required=True)
@@ -37,4 +40,6 @@ if __name__ == "__main__":
     results = apiDownloader.download_api(url, "isi", args.password)
     if results is not None:
         print "Downloaded ", len(results), " new data rows. Adding them to CDR"
+        rdd = sc.parallelize(results)
+        rdd.map(lambda x: (args.source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + args.source)
         apiDownloader.load_into_cdr(results, args.output, args.team, args.source)
