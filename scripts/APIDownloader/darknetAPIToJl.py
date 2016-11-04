@@ -13,10 +13,10 @@ from pyspark.sql import HiveContext
 spark-submit --deploy-mode client  \
 --files /etc/hive/conf/hive-site.xml \
 --py-files /home/hadoop/effect-workflows/lib/python-lib.zip darknetAPIToJl.py \
---fromDate 1970-01-01 \
+--date 1970-01-01 \
 --team asu \
 --outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/hive/19700101
---apiKey <APIKEY>
+--password <APIKEY>
 '''
 
 if __name__ == "__main__":
@@ -24,13 +24,13 @@ if __name__ == "__main__":
     sc = SparkContext()
     sqlContext = HiveContext(sc)
     parser = ArgumentParser()
-    parser.add_argument("-f", "--fromDate", type=str, help="from date", required=True)
-    parser.add_argument("-k", "--apiKey", type=str, help="api key for darknet", required=True)
+    parser.add_argument("-f", "--date", type=str, help="from date", required=True)
+    parser.add_argument("-k", "--password", type=str, help="api key for darknet", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    headers = {"userId" :"usc","apiKey": args.apiKey, "Connection" : "close"}
+    headers = {"userId" :"usc","apiKey": args.password, "Connection" : "close"}
 
     def write_output_to_file(file_name, result):
         out_file = open(file_name, 'w')
@@ -39,12 +39,12 @@ if __name__ == "__main__":
             out_file.write(line + "\n")
 
     def get_all_urls():
-        zeroDayUrl = "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.fromDate
-        hackingItemsUrl = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.fromDate
+        zeroDayUrl = "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.date
+        hackingItemsUrl = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.date
         dictionaryUrl = "https://apigargoyle.com/GargoyleApi/getDictionary?limit=10000"
         clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000"
-        hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
-        hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.fromDate
+        hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.date
+        hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.date
         return {"zero-day-products" : zeroDayUrl,
                 "hacking-items" : hackingItemsUrl,
                 "dictionary" : dictionaryUrl,
