@@ -24,8 +24,10 @@ if __name__ == "__main__":
     sc = SparkContext()
     sqlContext = HiveContext(sc)
     parser = ArgumentParser()
-    parser.add_argument("-f", "--date", type=str, help="from date", required=True)
-    parser.add_argument("-k", "--password", type=str, help="api key for darknet", required=True)
+    parser.add_argument("-f", "--outputFolder", type=str, help="Output foldername", required=True)
+    parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
+    parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
+    parser.add_argument("-p", "--password", type=str, help="api key", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
