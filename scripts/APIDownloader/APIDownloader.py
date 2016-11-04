@@ -34,14 +34,15 @@ class APIDownloader:
 
 
     def load_into_cdr(self, data, tablename, teamname, sourcename):
-        self.sqlContext.sql("DROP TABLE `" + tablename + "`")
-        self.sqlContext.sql("CREATE TABLE `" + tablename + "`(raw_content STRING) STORED AS TEXTFILE")
+        tablename = tablename.replace("-", "_")
+        self.sqlContext.sql("DROP TABLE " + tablename)
+        self.sqlContext.sql("CREATE TABLE " + tablename + "(raw_content STRING) STORED AS TEXTFILE")
         out_file = open(tablename + ".jl", "w")
         self.write_as_json_lines(data, out_file)
         out_file.close()
-        self.sqlContext.sql("LOAD DATA LOCAL INPATH '" + tablename + ".jl' INTO TABLE `" + tablename + "`")
+        self.sqlContext.sql("LOAD DATA LOCAL INPATH '" + tablename + ".jl' INTO TABLE " + tablename)
         today = date.today()
-        self.sqlContext.sql("FROM `" + tablename + "` h "
+        self.sqlContext.sql("FROM " + tablename + " h "
                             "INSERT INTO TABLE cdr PARTITION(year='" + str(today.year) + "', "
                                     "month='" + str(today.month) + "', day='" + str(today.day) + "') "
                             "SELECT concat('" + sourcename + "/', hex(hash(h.raw_content))), "
