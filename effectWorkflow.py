@@ -104,12 +104,15 @@ if __name__ == "__main__":
             {"name": "Vulnerability", "uri": "http://schema.dig.isi.edu/ontology/Vulnerability"},
             {"name": "SoftwareSystem", "uri":"http://schema.dig.isi.edu/ontology/SoftwareSystem"},
             {"name": "Identifier", "uri":"http://schema.dig.isi.edu/ontology/Identifier"},
-            {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"}
+            {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"},
+            {"name": "PriceSpecification", "uri": "http://schema.dig.isi.edu/ontology/PriceSpecification"},
+            {"name": "Exploit", "uri": "http://schema.dig.isi.edu/ontology/Exploit"}
         ]
 
         frames = [
             {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"},
-            {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"}
+            {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"},
+            {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"}
         ]
         type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
 
