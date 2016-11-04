@@ -9,7 +9,7 @@ spark-submit --deploy-mode client \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
     hgCVEAPI.py \
     --output hg_cve1 \
-    --outputFolder /user/effect/data/hive \
+    --outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/hive/20161002 \
     --team "hyperiongray" \
     --source "hg-cve" \
     --password <PASSWORD> \

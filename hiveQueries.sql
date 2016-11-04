@@ -4,7 +4,8 @@ COMMENT 'Used to store all CDR data'
 PARTITIONED BY (year INT, month INT, day INT)
 CLUSTERED BY(source_name) INTO 256 BUCKETS
 STORED AS ORC
-location 's3n://effect-hive-data/cdr';
+
+#location 's3n://effect-hive-data/cdr';
 
 
 

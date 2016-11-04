@@ -14,9 +14,9 @@ spark-submit --deploy-mode client  \
 --files /etc/hive/conf/hive-site.xml \
 --py-files /home/hadoop/effect-workflows/lib/python-lib.zip darknetAPIToJl.py \
 --fromDate 1970-01-01 \
---apiKey <APIKEY> \
---source 'ISI' \
---team 'ASU'
+--team asu \
+--outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/hive/19700101
+--apiKey <APIKEY>
 '''
 
 if __name__ == "__main__":
@@ -26,8 +26,6 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-f", "--fromDate", type=str, help="from date", required=True)
     parser.add_argument("-k", "--apiKey", type=str, help="api key for darknet", required=True)
-    parser.add_argument("-t", "--team", type=str, help="Team name", required=True)
-    parser.add_argument("-s", "--source", type=str, help="source name", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
@@ -47,19 +45,29 @@ if __name__ == "__main__":
         clusterStatisticsUrl = "https://apigargoyle.com/GargoyleApi/getClusterStatistics?limit=10000"
         hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.fromDate
         hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.fromDate
-        return {"zerodayproducts" : zeroDayUrl, "hackingitems" : hackingItemsUrl, "dictionary" : dictionaryUrl, "clusterstatistics" : clusterStatisticsUrl, "hackingposts" : hackingPostsUrl, "hackingthreads" : hackingThreadsUrl}
+        return {"zero-day-products" : zeroDayUrl,
+                "hacking-items" : hackingItemsUrl,
+                "dictionary" : dictionaryUrl,
+                "cluster-statistics" : clusterStatisticsUrl,
+                "hacking-posts" : hackingPostsUrl,
+                "hacking-threads" : hackingThreadsUrl}
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
     for url in urls:
-        if (url == "hackingthreads"):
-            res = apiDownloader.download_api(urls[url],None,None,headers)
+        source = args.team + "-" + url
+        if (url == "hacking-threads"):
+            res = apiDownloader.download_api(urls[url], None, None, headers)
             result = []
             for each_number in res['results'].keys():
                 result.append(res['results'][each_number])
             if result:
-                apiDownloader.load_into_cdr(result, url, args.team, args.source)
+                rdd = sc.parallelize(result)
+                rdd.map(lambda x: (args.source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)
+                apiDownloader.load_into_cdr(result, url, args.team, source)
         else:
             res = apiDownloader.download_api(urls[url],None,None,headers)
             if res is not None:
-                apiDownloader.load_into_cdr(res['results'], url, args.team, args.source)
+                rdd = sc.parallelize(res['results'])
+                rdd.map(lambda x: (args.source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)
+                apiDownloader.load_into_cdr(res['results'], url, args.team, source)
