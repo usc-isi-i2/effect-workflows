@@ -3,7 +3,11 @@ CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type S
 COMMENT 'Used to store all CDR data'
 PARTITIONED BY (year INT, month INT, day INT)
 CLUSTERED BY(source_name) INTO 256 BUCKETS
-STORED AS ORC;
+STORED AS ORC
+
+#location 's3n://effect-hive-data/cdr';
+
+
 
 
 # Create table for hackmagadden
@@ -25,14 +29,21 @@ SELECT concat('hackmageddon/', hex(hash(h.raw_content))), unix_timestamp(), h.ra
 #2. Convert JSON to Json Lines - jq -c .[] cve.json > cve.jl
 #3. Upload data to hdfs
 #4. Load into a hg_cve table
-CREATE TABLE hg_zdi (raw_content STRING)
+CREATE TABLE hg_cve (raw_content STRING)
 STORED AS TEXTFILE
 
-LOAD DATA INPATH '/user/effect/cve.jl' INTO TABLE hg_cve
+LOAD DATA INPATH '/user/effect/hg_cve.jl' INTO TABLE hg_cve;
+
 #5. Insert data into CDR from hg_cve
 FROM hg_cve h
 INSERT INTO TABLE cdr PARTITION(year='2016', month='10', day='18')
 SELECT concat('hg-cve/', hex(hash(h.raw_content))), unix_timestamp(),h.raw_content, 'application/json', concat('http://effect.isi.edu/input/hg/cve/',hex(hash(h.raw_content))),  "2.0", "hyperiongray", "hg-cve"
+
+
+CREATE TABLE hg_zdi (raw_content STRING)
+STORED AS TEXTFILE
+
+LOAD DATA INPATH '/user/effect/hg_zdi.jl' INTO TABLE hg_zdi
 
 
 FROM hg_zdi h

@@ -34,6 +34,7 @@ class APIDownloader:
 
 
     def load_into_cdr(self, data, tablename, teamname, sourcename):
+        tablename = tablename.replace("-", "_")
         self.sqlContext.sql("DROP TABLE " + tablename)
         self.sqlContext.sql("CREATE TABLE " + tablename + "(raw_content STRING) STORED AS TEXTFILE")
         out_file = open(tablename + ".jl", "w")
