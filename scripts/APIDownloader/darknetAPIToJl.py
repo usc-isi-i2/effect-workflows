@@ -54,7 +54,7 @@ if __name__ == "__main__":
                 "hacking-posts" : hackingPostsUrl,
                 "hacking-threads" : hackingThreadsUrl}
 
-    apiDownloader = APIDownloader(sc, sqlContext)
+    apiDownloader = APIDownloader(sqlContext    , sqlContext)
     urls = get_all_urls()
     for url in urls:
         source = args.team + "-" + url
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                 apiDownloader.load_into_cdr(result, source, args.team, source)
         else:
             res = apiDownloader.download_api(urls[url],None,None,headers)
-            if res is not None:
+            if (res is not None) and (res['results']):
                 rdd = sc.parallelize(res['results'])
                 rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)
                 apiDownloader.load_into_cdr(res['results'], source, args.team, source)
