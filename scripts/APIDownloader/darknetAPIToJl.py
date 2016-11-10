@@ -54,7 +54,7 @@ if __name__ == "__main__":
                 "hacking-posts" : hackingPostsUrl,
                 "hacking-threads" : hackingThreadsUrl}
 
-    apiDownloader = APIDownloader(sqlContext    , sqlContext)
+    apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
     for url in urls:
         source = args.team + "-" + url
