@@ -49,8 +49,8 @@ if __name__ == "__main__":
         hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.date
         return {"zero-day-products" : zeroDayUrl,
                 "hacking-items" : hackingItemsUrl,
-                "dictionary" : dictionaryUrl,
-                "cluster-statistics" : clusterStatisticsUrl,
+                #"dictionary" : dictionaryUrl,
+               # "cluster-statistics" : clusterStatisticsUrl,
                 "hacking-posts" : hackingPostsUrl,
                 "hacking-threads" : hackingThreadsUrl}
 

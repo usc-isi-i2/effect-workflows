@@ -1,7 +1,6 @@
 # Create table CDR
 CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type STRING, url STRING, version STRING, team STRING, source_name STRING)
 COMMENT 'Used to store all CDR data'
-PARTITIONED BY (year INT, month INT, day INT)
 CLUSTERED BY(source_name) INTO 256 BUCKETS
 STORED AS ORC
 TBLPROPERTIES('transactional'='true');
