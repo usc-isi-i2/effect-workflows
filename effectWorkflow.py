@@ -7,6 +7,7 @@ from cdrLoader import CDRLoader
 from py4j.java_gateway import java_import
 from digWorkflow.workflow import Workflow
 from digWorkflow.git_model_loader import GitModelLoader
+from argparse import ArgumentParser
 
 '''
 spark-submit --deploy-mode client  \
@@ -73,15 +74,32 @@ if __name__ == "__main__":
 
     print "Got models:", json.dumps(models)
 
-    inputTable = sys.argv[1]
-    outputFilename = sys.argv[2]
-    outputFileType = sys.argv[3]
-    numPartitions = int(sys.argv[4])
+    parser = ArgumentParser()
+    parser.add_argument("-i", "--inputTable", help="Input Table", required=True)
+    parser.add_argument("-o", "--output", help="Output Folder", required=True)
+    parser.add_argument("-n", "--partitions", help="Number of partitions", required=False, default=20)
+    parser.add_argument("-t", "--outputtype", help="Output file type - text or sequence", required=False, default="sequence")
+    parser.add_argument("-q", "--query", help="HIVE query to get data", default="", required=False)
+
+    args = parser.parse_args()
+    print ("Got arguments:", args)
+
+    inputTable = args.inputTable.strip()
+    outputFilename = args.output.strip()
+    outputFileType = args.outputtype.strip()
+    hiveQuery = args.query.strip()
+    numPartitions = int(args.partitions)
+
     numFramerPartitions = numPartitions/2
 
-    cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-        .partitionBy(numPartitions) \
-        .persist(StorageLevel.MEMORY_AND_DISK)
+    if len(hiveQuery) > 0:
+        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+            .partitionBy(numPartitions) \
+            .persist(StorageLevel.MEMORY_AND_DISK)
+    else:
+        cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
+            .partitionBy(numPartitions) \
+            .persist(StorageLevel.MEMORY_AND_DISK)
     cdr_data.setName("cdr_data")
 
     reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_data, models, context_url, base_uri,
@@ -106,7 +124,10 @@ if __name__ == "__main__":
             {"name": "Identifier", "uri":"http://schema.dig.isi.edu/ontology/Identifier"},
             {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"},
             {"name": "PriceSpecification", "uri": "http://schema.dig.isi.edu/ontology/PriceSpecification"},
-            {"name": "Exploit", "uri": "http://schema.dig.isi.edu/ontology/Exploit"}
+            {"name": "Exploit", "uri": "http://schema.dig.isi.edu/ontology/Exploit"},
+            {"name": "LoginCredential", "uri": "http://schema.dig.isi.edu/ontology/LoginCredential"},
+            {"name": "UserName", "uri": "http://schema.dig.isi.edu/ontology/UserName"},
+            {"name": "Password", "uri": "http://schema.dig.isi.edu/ontology/Password"}
         ]
 
         frames = [
