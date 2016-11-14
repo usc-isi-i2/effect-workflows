@@ -1,9 +1,11 @@
 # Create table CDR
 CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type STRING, url STRING, version STRING, team STRING, source_name STRING)
 COMMENT 'Used to store all CDR data'
+PARTITIONED BY (year INT, month INT, day INT)
 CLUSTERED BY(source_name) INTO 256 BUCKETS
 STORED AS ORC
-TBLPROPERTIES('transactional'='true');
+
+#TBLPROPERTIES('transactional'='true');
 
 #location 's3n://effect-hive-data/cdr';
 
@@ -52,13 +54,10 @@ SELECT concat('hg-zdi/', hex(hash(h.raw_content))), unix_timestamp(),h.raw_conte
 
 #---------------------------------------------------------------------------------------
 
-# Create table CDR Staging and load data from that into CDR
+# Adding data into CDR table from a temprary table It created the partitions
+#dynamically from the timestamp
+
 SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
-FROM
-    cdr_staging
-INSERT OVERWRITE TABLE
-    cdr
-PARTITION(year, month, day)
-SELECT
-    `_id`, timestamp, raw_content, content_type, url, version, team, year(from_unixtime(timestamp)) AS year, month(from_unixtime(timestamp)) AS month, day(from_unixtime(timestamp)) AS day
+
+INSERT OVERWRITE TABLE CDR PARTITION(year, month, day) SELECT `_id`, timestamp, raw_content, content_type, url, version, team, source_name, year(from_unixtime(timestamp)), month(from_unixtime(timestamp)), day(from_unixtime(timestamp)) FROM cdr_temp;
