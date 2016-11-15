@@ -10,6 +10,7 @@ spark-submit --deploy-mode client \
     --outputFolder <HDFS or s3 output folder> \
     --team "hyperiongray" \
     --password <PASSWORD> \
+    --date 2016-10-02T12:00:00+00:00
 '''
 if __name__ == "__main__":
 
@@ -21,12 +22,13 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-f", "--outputFolder", type=str, help="Output foldername", required=True)
     parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
+    parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
     parser.add_argument("-p", "--password", type=str, help="password for connecting to hyperion gray api", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    url = "https://effect.hyperiongray.com/api/ms-bulletin"
+    url = "https://effect.hyperiongray.com/api/ms-bulletin?query={\"updated\":{\"$gte\": " + str(args.date) + "}}"
     out_file = open(args.output, 'w')
 
     results = apiDownloader.download_api(url, "isi", args.password)
