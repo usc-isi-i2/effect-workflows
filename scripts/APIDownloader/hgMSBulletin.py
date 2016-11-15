@@ -3,7 +3,6 @@ from argparse import ArgumentParser
 from pyspark import SparkContext, StorageLevel
 from pyspark.sql import HiveContext
 import json
-from dateUtil import DateUtil
 '''
 spark-submit --deploy-mode client \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
