@@ -93,13 +93,14 @@ if __name__ == "__main__":
     numFramerPartitions = numPartitions/2
 
     if len(hiveQuery) > 0:
-        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-            .partitionBy(numPartitions) \
-            .persist(StorageLevel.MEMORY_AND_DISK)
-    else:
         cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
             .partitionBy(numPartitions) \
             .persist(StorageLevel.MEMORY_AND_DISK)
+    else:
+        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+            .partitionBy(numPartitions) \
+            .persist(StorageLevel.MEMORY_AND_DISK)
+
     cdr_data.setName("cdr_data")
 
     reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_data, models, context_url, base_uri,
@@ -125,15 +126,19 @@ if __name__ == "__main__":
             {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"},
             {"name": "PriceSpecification", "uri": "http://schema.dig.isi.edu/ontology/PriceSpecification"},
             {"name": "Exploit", "uri": "http://schema.dig.isi.edu/ontology/Exploit"},
-            {"name": "LoginCredential", "uri": "http://schema.dig.isi.edu/ontology/LoginCredential"},
+            {"name": "LoginCredentials", "uri": "http://schema.dig.isi.edu/ontology/LoginCredentials"},
             {"name": "UserName", "uri": "http://schema.dig.isi.edu/ontology/UserName"},
-            {"name": "Password", "uri": "http://schema.dig.isi.edu/ontology/Password"}
+            {"name": "Password", "uri": "http://schema.dig.isi.edu/ontology/Password"},
+            {"name": "Topic", "uri":"http://schema.dig.isi.edu/ontology/Topic"},
+            {"name": "Post", "uri": "http://schema.dig.isi.edu/ontology/Post"},
+            {"name": "Forum", "uri": "http://schema.dig.isi.edu/ontology/Forum"}
         ]
 
         frames = [
             {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"},
             {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"},
-            {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"}
+            {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"},
+            {"name": "topic", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/topic.json"}
         ]
         type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
 
