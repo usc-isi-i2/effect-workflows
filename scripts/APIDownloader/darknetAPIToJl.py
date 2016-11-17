@@ -44,11 +44,9 @@ if __name__ == "__main__":
         zeroDayUrl = "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.date
         hackingItemsUrl = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.date
         hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.date
-        hackingThreadsUrl = "https://apigargoyle.com/GargoyleApi/getHackingThreads?limit=10000&from=" + args.date
         return {"zero-day-products" : zeroDayUrl,
                 "hacking-items" : hackingItemsUrl,
-                "hacking-posts" : hackingPostsUrl,
-                "hacking-threads" : hackingThreadsUrl}
+                "hacking-posts" : hackingPostsUrl}
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
