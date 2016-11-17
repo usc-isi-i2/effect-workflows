@@ -28,9 +28,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    url = "https://effect.hyperiongray.com/api/ms-bulletin?query={\"updated\":{\"$gte\": " + str(args.date) + "}}"
-    out_file = open(args.output, 'w')
-
+    url = "https://effect.hyperiongray.com/api/ms-bulletin?query={\"updated\":{\"$gte\": \"" + str(args.date) + "\"}}"
+    
     results = apiDownloader.download_api(url, "isi", args.password)
     if results is not None:
         print "Downloaded ", len(results), " new ms bulletin data rows. Adding them to CDR"
