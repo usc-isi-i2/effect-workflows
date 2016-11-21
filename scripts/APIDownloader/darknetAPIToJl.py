@@ -41,12 +41,13 @@ if __name__ == "__main__":
             out_file.write(line + "\n")
 
     def get_all_urls():
-        zeroDayUrl = "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.date
-        hackingItemsUrl = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.date
-        hackingPostsUrl = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.date
-        return {"zero-day-products" : zeroDayUrl,
-                "hacking-items" : hackingItemsUrl,
-                "hacking-posts" : hackingPostsUrl}
+        return {
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.date,
+            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.date,
+            "hacking-items-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Item&limit=10000&from=" + args.date,
+            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.date,
+            "hacking-posts-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Post&limit=10000&from=" + args.date,
+        }
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
