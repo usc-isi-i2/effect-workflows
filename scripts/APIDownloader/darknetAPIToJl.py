@@ -42,11 +42,11 @@ if __name__ == "__main__":
 
     def get_all_urls():
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=10000&from=" + args.date,
-            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=20000&from=" + args.date,
-            "hacking-items-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Item&limit=10000&from=" + args.date,
-            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=10000&from=" + args.date,
-            "hacking-posts-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Post&limit=10000&from=" + args.date,
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=100000&from=" + args.date,
+            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=100000&from=" + args.date,
+            "hacking-items-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Item&limit=100000&from=" + args.date,
+            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=100000&from=" + args.date,
+            "hacking-posts-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Post&limit=100000&from=" + args.date,
         }
 
     apiDownloader = APIDownloader(sc, sqlContext)
