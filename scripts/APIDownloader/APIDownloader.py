@@ -24,6 +24,7 @@ class APIDownloader:
         auth = None
         if username is not None:
             auth = HTTPBasicAuth(username, password)
+        print "Download:", url
         response = requests.get(url, verify=False,	auth=auth, headers=headers)
         return self.byteify(json.loads(response.text))
 

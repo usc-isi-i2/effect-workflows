@@ -66,6 +66,7 @@ if __name__ == "__main__":
         else:
             res = apiDownloader.download_api(urls[url],None,None,headers)
             if (res is not None) and 'results' in res:
+                print url, ": num results:", len(res['results'])
                 if len(res['results']) > 0:
                     rdd = sc.parallelize(res['results'])
                     rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)

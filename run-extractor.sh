@@ -1,0 +1,33 @@
+ls /usr/lib/spark/bin
+mkdir bin
+cp /usr/lib/spark/bin/load-spark-env.sh bin
+mv pyspark bin/
+mkdir conf
+grep -v PYSPARK_PYTHON /usr/lib/spark/conf/spark-env.sh > conf/spark-env.sh
+
+export PYSPARK_PYTHON=./effect-env.zip/effect-env/bin/python
+export PYSPARK_DRIVER_PYTHON=./effect-env.zip/effect-env/bin/python
+export DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python
+./bin/pyspark \
+  --conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./effect-env.zip/effect-env/bin/python \
+  --conf spark.executorEnv.PYSPARK_PYTHON=./effect-env.zip/effect-env/bin/python \
+  --conf spark.executorEnv.DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python \
+   --deploy-mode client \
+      --executor-memory 7g --num-executors 5 --executor-cores 2 \
+     --archives effect-env.zip \
+    --conf spark.eventLog.enabled=true \
+    --conf spark.eventLog.dir=hdfs://memex/user/spark/applicationHistory \
+    --conf spark.yarn.historyServer.address=memex-spark-master.xdata.data-tactics-corp.com:18080 \
+    --conf spark.logConf=true \
+    effect-extractor-workflow.py \
+      --input $1 \
+     --output $2
+
+
+/usr/lib/spark/bin/spark-submit --deploy-mode client  \
+    --executor-memory 5g \
+    --driver-memory 5g \
+    --py-files python-lib.zip \
+    effect-extractor-workflow.py \
+     --input $1 \
+     --output $2

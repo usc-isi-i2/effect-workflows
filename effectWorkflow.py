@@ -159,4 +159,4 @@ if __name__ == "__main__":
         for type_name in type_to_rdd_json:
             type_to_rdd_json[type_name]["rdd"].unpersist()
 
-cdr_data.unpersist()
+    cdr_data.unpersist()
