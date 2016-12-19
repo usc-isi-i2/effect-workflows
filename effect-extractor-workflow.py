@@ -27,7 +27,7 @@ if __name__ == "__main__":
     email_extractor = EmailExtractor()\
             .set_metadata({'extractor': 'email'}) \
             .set_include_context(True) \
-            .set_renamed_input_fields('json_rep.postContent')
+            .set_renamed_input_fields('text')
 
     email_extractor_processor = ExtractorProcessor() \
             .set_name('email_from_extracted_text-regex') \
@@ -36,5 +36,5 @@ if __name__ == "__main__":
             .set_extractor(email_extractor)
 
     output_rdd = input_data.mapValues(lambda x: email_extractor_processor.extract(x))
-    output_rdd.saveAsSequenceFile(args.output)
+    output_rdd.mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(args.output)
 

@@ -42,32 +42,41 @@ if __name__ == "__main__":
 
     def get_all_urls():
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?limit=100000&from=" + args.date,
-            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?limit=100000&from=" + args.date,
-            "hacking-items-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Item&limit=100000&from=" + args.date,
-            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=100000&from=" + args.date,
-            "hacking-posts-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Post&limit=100000&from=" + args.date,
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?from=" + args.date,
+            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?from=" + args.date,
+            "hacking-items-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Item&from=" + args.date,
+            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?from=" + args.date,
+            "hacking-posts-cve": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Post&from=" + args.date,
         }
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
+    max_limit = 10000
+
     for url in urls:
         source = args.team + "-" + url
-        if (url == "hacking-threads"):
-            res = apiDownloader.download_api(urls[url], None, None, headers)
-            result = []
-            for each_number in res['results'].keys():
-                result.append(res['results'][each_number])
-            if result:
-                if len(result) > 0:
-                    rdd = sc.parallelize(result)
-                    rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)
-                    apiDownloader.load_into_cdr(result, source, args.team, source)
-        else:
-            res = apiDownloader.download_api(urls[url],None,None,headers)
+        done = False
+        start = 0
+        rdd_result = None
+        while done is False:
+            paging_url = urls[url] + "&start=" + str(start) + "&limit=" + str(max_limit)
+            num_results = 0
+            res = apiDownloader.download_api(paging_url, None, None, headers)
             if (res is not None) and 'results' in res:
-                print url, ": num results:", len(res['results'])
-                if len(res['results']) > 0:
+                num_results = len(res['results'])
+                print url, ": num results:", num_results
+                if num_results > 0:
                     rdd = sc.parallelize(res['results'])
-                    rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)
+                    if rdd_result is None:
+                        rdd_result = rdd
+                    else:
+                        rdd_result = rdd_result.union(rdd)
                     apiDownloader.load_into_cdr(res['results'], source, args.team, source)
+
+            if (num_results < max_limit) or (num_results == 0):
+                done = True
+            else:
+                start = start + num_results
+
+        if rdd_result is not None:
+            rdd_result.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source)
