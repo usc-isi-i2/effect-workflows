@@ -125,11 +125,12 @@ To load the data to ES,
 
 ## Running the Extractor Workflow
 
-1. Follow the Installation Instructions to install conda and conda-env
-2. Switch to the environment using `source activate effect-env`
-3. Run `.\make-extractor.sh`. This bundles up the entire environemnt, including python that is used to run the workflow
-4. If spark is not installed in the default `/usr/lib/spark/`, change paths in `run-extractor.sh`
-5. Run `run-extractor.sh`
+1. Follow the Installation Instructions to install conda and conda-env if you dont hav ethem installed
+2. Create the effect environement `conda env create`
+3. Switch to the environment using `source activate effect-env`
+4. Run `.\make-extractor.sh`. This bundles up the entire environemnt, including python that is used to run the workflow
+5. If spark is not installed in the default `/usr/lib/spark/`, change paths in `run-extractor.sh`
+6. Run `run-extractor.sh`
 
 
 ## Extras
