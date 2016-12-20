@@ -125,7 +125,7 @@ To load the data to ES,
 
 ## Running the Extractor Workflow
 
-1. Follow the Installation Instructions to install conda and conda-env if you dont hav ethem installed
+1. Follow the Installation Instructions to install conda and conda-env if you dont have them installed
 2. Create the effect environement `conda env create`
 3. Switch to the environment using `source activate effect-env`
 4. Run `.\make-extractor.sh`. This bundles up the entire environemnt, including python that is used to run the workflow
