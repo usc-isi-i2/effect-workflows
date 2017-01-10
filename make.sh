@@ -12,7 +12,7 @@ cd lib
 LIB_FOLDER=`pwd`
 conda create -m -p $LIB_FOLDER/effect-env --copy --clone effect-env
 mkdir tozip
-cp -rf effect-env/lib/python2.7/site-packages/* tozip/
+cp -rf effect-env/lib/python2.6/site-packages/* tozip/
 rm -rf effect-env
 
 cp ../*.py tozip/

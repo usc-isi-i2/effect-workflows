@@ -1,4 +1,4 @@
-from xmljson import yahoo as xmlConvertor
+#from xmljson import yahoo as xmlConvertor
 from xml.etree.ElementTree import fromstring
 import json
 
@@ -29,6 +29,7 @@ class CDRLoader:
     def generate_json_rep(self, content_type, raw_content):
         if content_type == "application/json":
             return json.loads(raw_content)
-        elif content_type == "application/xml":
-            return xmlConvertor.data(fromstring(raw_content))
+        # The xml convertor requires python 2.7 and up. Commented for now as we are using python 2.6
+        # elif content_type == "application/xml":
+        #     return xmlConvertor.data(fromstring(raw_content))
         return None

@@ -20,11 +20,13 @@ class APIDownloader:
         else:
             return input
 
-    def download_api(self, url, username=None, password=None, headers=None):
+    def download_api(self, url, username=None, password=None, headers=None, timeout=60):
+        #timeout is in seconds
         auth = None
         if username is not None:
             auth = HTTPBasicAuth(username, password)
-        response = requests.get(url, verify=False,	auth=auth, headers=headers)
+        print "Download:", url
+        response = requests.get(url, verify=False,	auth=auth, headers=headers, timeout=timeout)
         return self.byteify(json.loads(response.text))
 
     def write_as_json_lines(self, array, file_handler):
