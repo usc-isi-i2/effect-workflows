@@ -1,13 +1,10 @@
-from pyspark import SparkContext, StorageLevel
-from pyspark.sql import HiveContext
+from pyspark import SparkContext, StorageLevel, SparkConf
 import json
-import sys
 from digSparkUtil.fileUtil import FileUtil
-from cdrLoader import CDRLoader
 from py4j.java_gateway import java_import
 from digWorkflow.workflow import Workflow
-from digWorkflow.git_model_loader import GitModelLoader
 from argparse import ArgumentParser
+from digWorkflow.elastic_manager import ES
 
 '''
 spark-submit --deploy-mode client  \
@@ -22,90 +19,42 @@ spark-submit --deploy-mode client  \
 context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/development/versions/3.0/karma/karma-context.json"
 base_uri = "http://effect.isi.edu/data/"
 
-class EffectWorkflow(Workflow):
-    def __init__(self, spark_context, sql_context):
-        self.sc = spark_context
-        self.sqlContext = sql_context
-
-    def load_cdr_from_hive_query(self, query):
-        cdr_data = self.sqlContext.sql(query)
-        cdrLoader = CDRLoader()
-        return cdr_data.map(lambda x: cdrLoader.load_from_hive_row(x))
-
-    def load_cdr_from_hive_table(self, table):
-        return self.load_cdr_from_hive_query("FROM " + table + " SELECT *")
-
-    def apply_karma_model_per_msg_type(self, rdd, models, context_url, base_uri, partitions, outpartitions):
-        result_rdds = list()
-
-        for model in models:
-            if model["url"] != "":
-                model_rdd = rdd.filter(lambda x: x[1]["source_name"] == model["name"])
-                if not model_rdd.isEmpty():
-                    print "Apply model for", model["name"], ":", model["url"]
-                    #print json.dumps(model_rdd.first()[1])
-                    karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
-                                               num_partitions=partitions,
-                                               batch_size=10000)
-                    if not karma_rdd.isEmpty():
-                        #fileUtil.save_file(karma_rdd, outputFilename + '/' + model["name"], "text", "json")
-                        result_rdds.append(karma_rdd)
-
-                    print "Done applying model ", model["name"]
-
-        num_rdds = len(result_rdds)
-        if num_rdds > 0:
-            if num_rdds == 1:
-                return result_rdds[0]
-            return self.reduce_rdds(outpartitions, *result_rdds)
-        return None
-
-
 if __name__ == "__main__":
     sc = SparkContext()
-    sqlContext = HiveContext(sc)
+    conf = SparkConf()
 
     java_import(sc._jvm, "edu.isi.karma")
-    workflow = EffectWorkflow(sc, sqlContext)
+    workflow = Workflow(sc)
     fileUtil = FileUtil(sc)
 
-    gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
-    models = gitModelLoader.get_models_from_folder("models")
-
-    print "Got models:", json.dumps(models)
-
     parser = ArgumentParser()
-    parser.add_argument("-i", "--inputTable", help="Input Table", required=True)
-    parser.add_argument("-o", "--output", help="Output Folder", required=True)
+    parser.add_argument("-i", "--input", help="input folder", required=True)
+    parser.add_argument("-o", "--output", help="input folder", required=True)
     parser.add_argument("-n", "--partitions", help="Number of partitions", required=False, default=20)
-    parser.add_argument("-t", "--outputtype", help="Output file type - text or sequence", required=False, default="sequence")
-    parser.add_argument("-q", "--query", help="HIVE query to get data", default="", required=False)
-
+    parser.add_argument("-t", "--host", help="ES hostname", default="localhost", required=False)
+    parser.add_argument("-p", "--port", help="ES port", default="9200", required=False)
+    parser.add_argument("-x", "--index", help="ES Index name", required=True)
+    parser.add_argument("-d", "--doctype", help="ES Document types", required=True)
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    inputTable = args.inputTable.strip()
-    outputFilename = args.output.strip()
-    outputFileType = args.outputtype.strip()
-    hiveQuery = args.query.strip()
+    input = args.input.strip()
     numPartitions = int(args.partitions)
-
+    doc_type = args.doctype.strip()
+    outputFilename = args.output.strip()
     numFramerPartitions = numPartitions/2
+    inputRDD = workflow.batch_read_csv(input)
+    outputFileType = "sequence"
 
-    if len(hiveQuery) > 0:
-        cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
-            .partitionBy(numPartitions) \
-            .persist(StorageLevel.MEMORY_AND_DISK)
-    else:
-        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-            .partitionBy(numPartitions) \
-            .persist(StorageLevel.MEMORY_AND_DISK)
-
-    cdr_data.setName("cdr_data")
-
-    reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_data, models, context_url, base_uri,
-                                                              numPartitions, numFramerPartitions)
-
+    #2. Apply the karma Model
+    reduced_rdd = workflow.run_karma(inputRDD,
+                                   "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/models/ransonware/ransomware-model.ttl",
+                                   "http://effect.isi.edu/data/",
+                                   "http://schema.dig.isi.edu/ontology/Malware1",
+                                   "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/development/versions/3.0/karma/karma-context.json",
+                                   num_partitions=numPartitions,
+                                   data_type="csv",
+                                   additional_settings={"karma.input.delimiter":","})
     if reduced_rdd is not None:
         reduced_rdd = reduced_rdd.persist(StorageLevel.MEMORY_AND_DISK)
         fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', "text", "json")
@@ -159,8 +108,3 @@ if __name__ == "__main__":
             if not framer_output_one_frame.isEmpty():
                 fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
 
-        reduced_rdd.unpersist()
-        for type_name in type_to_rdd_json:
-            type_to_rdd_json[type_name]["rdd"].unpersist()
-
-    cdr_data.unpersist()
