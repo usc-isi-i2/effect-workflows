@@ -12,7 +12,7 @@ spark-submit --deploy-mode client \
     --outputFolder <HDFS or s3 output folder> \
     --team "hyperiongray" \
     --password <PASSWORD> \
-    --date 2016-10-02T12:00:00+00:00
+    --date 2016-10-02T12:00:00Z
 '''
 
 if __name__ == "__main__":
@@ -29,14 +29,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    timestamp = DateUtil.unix_timestamp(args.date, "%Y-%m-%dT%H:%M:%S%Z")
-    url_blogs = "https://effect.hyperiongray.com/api/blogs/?query={\"parsed\":{\"$gte\": \"" + str(args.date) + "\"}}"
+    url_blogs = "https://effect.hyperiongray.com/api/blogs/updates/" + str(args.date)
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
     results = apiDownloader.download_api(url_blogs, "isi", args.password)
     if results is not None:
-        print "Downloaded ", len(results), " new CVE data rows. Adding them to CDR"
+        print "Downloaded ", len(results), " new blogs data rows. Adding them to CDR"
         if len(results) > 0:
             rdd = sc.parallelize(results)
             rdd.map(lambda x: ("hg-blogs", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-blogs")
