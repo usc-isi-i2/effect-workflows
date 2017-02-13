@@ -29,14 +29,30 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    url_blogs = "https://effect.hyperiongray.com/api/blogs/updates/" + str(args.date)
+    if(args.date == "1970-01-01T00:00:00Z"):
+        url_blogs = "https://effect.hyperiongray.com/api/blogs" #To get everything
+    else:
+        url_blogs = "https://effect.hyperiongray.com/api/blogs/updates/" + str(args.date)
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
     results = apiDownloader.download_api(url_blogs, "isi", args.password)
     if results is not None:
-        print "Downloaded ", len(results), " new blogs data rows. Adding them to CDR"
-        if len(results) > 0:
-            rdd = sc.parallelize(results)
-            rdd.map(lambda x: ("hg-blogs", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-blogs")
+        num_results = len(results)
+        print "Downloaded ", num_results, " new blogs data rows. Adding them to CDR"
+        if num_results > 0:
             apiDownloader.load_into_cdr(results, "hg_blogs", args.team, "hg-blogs")
+            print "Done loading into CDR"
+            print "Taking backup on S3"
+            start = 0
+            batch_size = 5000
+            while (start < num_results):
+                end = start + batch_size
+                if(end > num_results):
+                    end = num_results
+                if(end > start):
+                    rdd = sc.parallelize(results[start:end])
+                    #rdd = sc.parallelize(results)
+                    rdd.map(lambda x: ("hg-blogs", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-blogs/" + str(start))
+                start = start+batch_size
+            print "Done taking backing on S3"
