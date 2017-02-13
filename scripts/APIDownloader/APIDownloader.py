@@ -20,7 +20,7 @@ class APIDownloader:
         else:
             return input
 
-    def download_api(self, url, username=None, password=None, headers=None, timeout=60):
+    def download_api(self, url, username=None, password=None, headers=None, timeout=600):
         #timeout is in seconds
         auth = None
         if username is not None:
