@@ -134,6 +134,7 @@ if __name__ == "__main__":
             {"name": "Forum", "uri": "http://schema.dig.isi.edu/ontology/Forum"},
             {"name": "Malware", "uri": "http://schema.dig.isi.edu/ontology/Forum"},
             {"name": "IPAddress", "uri": "http://schema.dig.isi.edu/ontology/IPAddress"},
+            {"name": "ComputerHardware", "uri": "http://schema.dig.isi.edu/ontology/ComputerHardware"},
             {"name": "Blog", "uri": "http://schema.org/Blog"}
         ]
 

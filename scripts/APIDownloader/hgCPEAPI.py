@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-f", "--outputFolder", type=str, help="Output foldername", required=True)
     parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
+    parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
     parser.add_argument("-p", "--password", type=str, help="password for connecting to hyperion gray api", required=True)
 
     args = parser.parse_args()
