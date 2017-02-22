@@ -29,7 +29,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    url_abusech = "https://effect.hyperiongray.com/api/ransomware-tracker/updates/" + str(args.date)
+    if(args.date == "1970-01-01T00:00:00Z"):
+        url_abusech = "https://effect.hyperiongray.com/api/ransomware-tracker"
+    else:
+        url_abusech = "https://effect.hyperiongray.com/api/ransomware-tracker/updates/" + str(args.date)
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
