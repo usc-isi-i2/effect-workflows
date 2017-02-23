@@ -133,7 +133,9 @@ if __name__ == "__main__":
             {"name": "Post", "uri": "http://schema.dig.isi.edu/ontology/Post"},
             {"name": "Forum", "uri": "http://schema.dig.isi.edu/ontology/Forum"},
             {"name": "Malware", "uri": "http://schema.dig.isi.edu/ontology/Forum"},
-            {"name": "IPAddress", "uri": "http://schema.dig.isi.edu/ontology/IPAddress"}
+            {"name": "IPAddress", "uri": "http://schema.dig.isi.edu/ontology/IPAddress"},
+            {"name": "ComputerHardware", "uri": "http://schema.dig.isi.edu/ontology/ComputerHardware"},
+            {"name": "Blog", "uri": "http://schema.org/Blog"}
         ]
 
         frames = [
@@ -142,7 +144,8 @@ if __name__ == "__main__":
             {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"},
             {"name": "topic", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/topic.json"},
             {"name": "post", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/post.json"},
-            {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"}
+            {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"},
+            {"name": "blog", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/blog.json"}
         ]
         type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
 
