@@ -12,6 +12,6 @@ export DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python
 ./bin/pyspark \
     --executor-memory 7g --num-executors 5 --executor-cores 2 \
     --archives ./effect-env.zip \
-    effect-extractor-workflow.py \
+    effect-emailextractor-workflow.py \
     --input /user/effect/data/part-00000 \
     --output /user/effect/data/extractor-out-cmd

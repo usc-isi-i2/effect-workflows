@@ -15,6 +15,6 @@ export DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python
    --deploy-mode client \
       --executor-memory 7g --num-executors 5 --executor-cores 2 \
      --archives effect-env.zip \
-    effect-extractor-workflow.py \
+    effect-emailextractor-workflow.py \
       --input $1 \
      --output $2
