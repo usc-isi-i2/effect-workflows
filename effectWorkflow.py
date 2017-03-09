@@ -9,6 +9,10 @@ from digWorkflow.workflow import Workflow
 from digWorkflow.git_model_loader import GitModelLoader
 from argparse import ArgumentParser
 
+from digRegexExtractor.regex_extractor import RegexExtractor
+from digExtractor.extractor_processor import ExtractorProcessor
+import re
+
 '''
 spark-submit --deploy-mode client  \
     --jars "/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
@@ -46,7 +50,8 @@ class EffectWorkflow(Workflow):
                     #print json.dumps(model_rdd.first()[1])
                     karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
                                                num_partitions=partitions,
-                                               batch_size=10000)
+                                               batch_size=10000,
+                                               additional_settings={"karma.provenance.properties":"source,publisher,dateRecorded:date"})
                     if not karma_rdd.isEmpty():
                         #fileUtil.save_file(karma_rdd, outputFilename + '/' + model["name"], "text", "json")
                         result_rdds.append(karma_rdd)
@@ -57,7 +62,7 @@ class EffectWorkflow(Workflow):
         if num_rdds > 0:
             if num_rdds == 1:
                 return result_rdds[0]
-            return self.reduce_rdds(outpartitions, *result_rdds)
+            return self.reduce_rdds_with_settings({"karma.provenance.properties":"source,publisher,dateRecorded:date"}, outpartitions, *result_rdds)
         return None
 
 
@@ -69,46 +74,70 @@ if __name__ == "__main__":
     workflow = EffectWorkflow(sc, sqlContext)
     fileUtil = FileUtil(sc)
 
-    gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
-    models = gitModelLoader.get_models_from_folder("models")
-
-    print "Got models:", json.dumps(models)
-
     parser = ArgumentParser()
     parser.add_argument("-i", "--inputTable", help="Input Table", required=True)
     parser.add_argument("-o", "--output", help="Output Folder", required=True)
     parser.add_argument("-n", "--partitions", help="Number of partitions", required=False, default=20)
     parser.add_argument("-t", "--outputtype", help="Output file type - text or sequence", required=False, default="sequence")
     parser.add_argument("-q", "--query", help="HIVE query to get data", default="", required=False)
-
+    parser.add_argument("-f", "--frame", help="Start with framer", type=bool, default=False, required=False)
     args = parser.parse_args()
     print ("Got arguments:", args)
 
     inputTable = args.inputTable.strip()
     outputFilename = args.output.strip()
     outputFileType = args.outputtype.strip()
-    hiveQuery = args.query.strip()
+    hiveQuery = args.query.strip() #"select * from CDR where source_name='hg-blogs' and raw_content like '%CVE-%'"
     numPartitions = int(args.partitions)
 
     numFramerPartitions = numPartitions/2
 
-    if len(hiveQuery) > 0:
-        cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
-            .partitionBy(numPartitions) \
-            .persist(StorageLevel.MEMORY_AND_DISK)
+    if args.frame:
+        reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x))
     else:
-        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-            .partitionBy(numPartitions) \
-            .persist(StorageLevel.MEMORY_AND_DISK)
+        if len(hiveQuery) > 0:
+            cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
+                .partitionBy(numPartitions) \
+                .persist(StorageLevel.MEMORY_AND_DISK)
+        else:
+            cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+                .partitionBy(numPartitions)
 
-    cdr_data.setName("cdr_data")
+        # Add all extractors that work on the CDR data
+        cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
+        cve_regex_extractor = RegexExtractor()\
+                .set_regex(cve_regex) \
+                .set_metadata({'extractor': 'cve-regex'}) \
+                .set_include_context(True) \
+                .set_renamed_input_fields('text')
 
-    reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_data, models, context_url, base_uri,
-                                                              numPartitions, numFramerPartitions)
+        cve_regex_extractor_processor = ExtractorProcessor() \
+                .set_name('cve_from_extracted_text-regex') \
+                .set_input_fields('json_rep.text') \
+                .set_output_field('extractions.cve') \
+                .set_extractor(cve_regex_extractor)
 
+        cdr_extractions_rdd = cdr_data.mapValues(lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
+        cdr_extractions_rdd.setName("cdr_extractions")
+
+        # These are models without provenance, if neeed.
+        # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
+
+        gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
+        models = gitModelLoader.get_models_from_folder("models")
+
+        print "Got models:", json.dumps(models)
+        # reduced_rdd = None
+        # Run karma model as per the source of the data
+        reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url, base_uri,
+                                                                  numPartitions, numFramerPartitions)
+
+    # Frame the results
     if reduced_rdd is not None:
         reduced_rdd = reduced_rdd.persist(StorageLevel.MEMORY_AND_DISK)
-        fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', "text", "json")
+        # print reduced_rdd.first()
+        if args.frame == False:
+            fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
         reduced_rdd.setName("karma_out_reduced")
 
         types = [
@@ -158,7 +187,8 @@ if __name__ == "__main__":
                                               None)
 
         for frame_name in framer_output:
-            framer_output_one_frame = framer_output[frame_name].coalesce(numFramerPartitions)
+            framer_output_one_frame = framer_output[frame_name] #.coalesce(numFramerPartitions)
+            print "Save frame:", frame_name
             if not framer_output_one_frame.isEmpty():
                 fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
 
@@ -166,4 +196,5 @@ if __name__ == "__main__":
         for type_name in type_to_rdd_json:
             type_to_rdd_json[type_name]["rdd"].unpersist()
 
-    cdr_data.unpersist()
+    if cdr_extractions_rdd:
+        cdr_extractions_rdd.unpersist()
