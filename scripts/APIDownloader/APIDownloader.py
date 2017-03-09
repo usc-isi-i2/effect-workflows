@@ -46,7 +46,7 @@ class APIDownloader:
         today = date.today()
         self.sqlContext.sql("FROM " + tablename + " h "
                             "INSERT INTO TABLE cdr PARTITION(year='" + str(today.year) + "', "
-                                    "month='" + str(today.month) + "', day='" + str(today.day) + "') "
+                                    "month='" + str(today.month) + "') "
                             "SELECT concat('" + sourcename + "/', hex(hash(h.raw_content))), "
                                     "unix_timestamp(),"
                                     "h.raw_content, "
