@@ -12,3 +12,4 @@ dependencies:
         - digEmailExtractor
         - jsonpath-rw
         - jsonpath-rw-ext
+        - hdfs
