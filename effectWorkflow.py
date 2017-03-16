@@ -73,7 +73,8 @@ if __name__ == "__main__":
     java_import(sc._jvm, "edu.isi.karma")
     workflow = EffectWorkflow(sc, sqlContext)
     fileUtil = FileUtil(sc)
-    hdfs_client = Config().get_client()
+    hdfs_client = Config().get_client('dev')
+    #sc._jsc.hadoopConfiguration()
 
     parser = ArgumentParser()
     parser.add_argument("-i", "--inputTable", help="Input Table", required=True)
@@ -177,19 +178,26 @@ if __name__ == "__main__":
                 {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"},
                 {"name": "blog", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/blog.json"}
             ]
+
+            hdfsRelativeFilname = outputFilename
+            if hdfsRelativeFilname.startswith("hdfs://"):
+                idx = hdfsRelativeFilname.find("/", 8)
+                if idx != -1:
+                    hdfsRelativeFilname = hdfsRelativeFilname[idx:]
+
             frames = []
             # If there is a restart and the frames are already done, dont restart them
             for frame in all_frames:
-                name = frame.name
+                name = frame["name"]
                 include_frame = True
-                if hdfs_client.status(outputFilename + "/" + name, False):
+                if hdfs_client.content(hdfsRelativeFilname + "/" + name, False):
                     #Folder exists, check if it was created successfully
-                    if hdfs_client.status(outputFilename + "/" + name + "/_SUCCESS", False):
+                    if hdfs_client.content(hdfsRelativeFilname + "/" + name + "/_SUCCESS", False):
                         #There is success folder, so its already frames
                         include_frame = False
                     else:
                         #No success file, but folder exists, so delete the folder
-                        hdfs_client.delete(outputFilename + "/" + name)
+                        hdfs_client.delete(hdfsRelativeFilname + "/" + name)
                 if include_frame is True:
                     frames.append(frame)
 
