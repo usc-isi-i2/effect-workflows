@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument("-p", "--port", help="ES port", default="9200", required=False)
     parser.add_argument("-x", "--index", help="ES Index name", required=True)
     parser.add_argument("-d", "--doctype", help="ES Document types", required=True)
-    parser.add_argument("-t", "--partitions", help="Number of partitions", required=False, default=10)
+    parser.add_argument("-t", "--partitions", help="Number of partitions", required=False, default=20)
     parser.add_argument("-i", "--input", help="Input Folder", required=True)
 
     args = parser.parse_args()
@@ -39,22 +39,38 @@ if __name__ == '__main__':
     document_types = args.doctype.split(",")
     for doc_type in document_types:
         doc_type = doc_type.strip()
-        input_rdd = sc.sequenceFile(args.input + "/" + doc_type).partitionBy(args.partitions)
+        input_rdd = sc.sequenceFile(args.input + "/" + doc_type) #.partitionBy(args.partitions)
 
-        es_write_conf = {
-        "es.nodes" : args.host,
-        "es.port" : args.port,
-        "es.nodes.discover" : "false",
-        'es.nodes.wan.only': "true",
-        "es.resource" : args.index + '/' + doc_type, # use domain as `doc_type`
-        "es.http.timeout": "30s",
-        "es.http.retries": "20",
-        "es.batch.write.retry.count": "20", # maximum number of retries set
-        "es.batch.write.retry.wait": "300s", # on failure, time to wait prior to retrying
-        "es.batch.size.entries": "200000", # number of docs per batch
-        "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
-        "es.input.json": "true"
-        }
+        if doc_type == 'topic' or doc_type == 'post':
+           es_write_conf = {
+            "es.nodes" : args.host,
+            "es.port" : args.port,
+            "es.nodes.discover" : "false",
+            'es.nodes.wan.only': "true",
+            "es.resource" : args.index + '/' + doc_type, # use domain as `doc_type`
+            "es.http.timeout": "60s",
+            "es.http.retries": "20",
+            "es.batch.write.retry.count": "20", # maximum number of retries set
+            "es.batch.write.retry.wait": "600s", # on failure, time to wait prior to retrying
+            "es.batch.size.entries": "50", # number of docs per batch
+            "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
+            "es.input.json": "true"
+            }
+        else:
+            es_write_conf = {
+            "es.nodes" : args.host,
+            "es.port" : args.port,
+            "es.nodes.discover" : "false",
+            'es.nodes.wan.only': "true",
+            "es.resource" : args.index + '/' + doc_type, # use domain as `doc_type`
+            "es.http.timeout": "30s",
+            "es.http.retries": "20",
+            "es.batch.write.retry.count": "20", # maximum number of retries set
+            "es.batch.write.retry.wait": "300s", # on failure, time to wait prior to retrying
+            "es.batch.size.entries": "200000", # number of docs per batch
+            "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
+            "es.input.json": "true"
+            }
 
         print json.dumps(es_write_conf)
 

@@ -51,7 +51,7 @@ class EffectWorkflow(Workflow):
                     #print json.dumps(model_rdd.first()[1])
                     karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
                                                num_partitions=partitions,
-                                               batch_size=10000,
+                                               batch_size=1000,
                                                additional_settings={"karma.provenance.properties":"source,publisher,dateRecorded:date"})
                     if not karma_rdd.isEmpty():
                         #fileUtil.save_file(karma_rdd, outputFilename + '/' + model["name"], "text", "json")
