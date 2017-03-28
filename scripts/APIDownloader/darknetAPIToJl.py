@@ -42,11 +42,11 @@ if __name__ == "__main__":
 
     def get_all_urls():
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?from=" + args.date,
-            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?from=" + args.date,
-            "vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Item&from=" + args.date,
-            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?from=" + args.date,
-            "vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?indicator=Post&from=" + args.date,
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&from=" + args.date,
+            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&from=" + args.date,
+            "vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Item&from=" + args.date,
+            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&from=" + args.date,
+            "vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Post&from=" + args.date,
         }
 
     apiDownloader = APIDownloader(sc, sqlContext)
@@ -65,6 +65,7 @@ if __name__ == "__main__":
                 num_results = len(res['results'])
                 print url, ": num results:", num_results
                 if num_results > 0:
+                    print res['results'][0]
                     rdd = sc.parallelize(res['results'])
                     apiDownloader.load_into_cdr(res['results'], source, args.team, source)
                     rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
