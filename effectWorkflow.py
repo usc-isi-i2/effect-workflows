@@ -95,47 +95,65 @@ if __name__ == "__main__":
     numPartitions = int(args.partitions)
 
     numFramerPartitions = numPartitions/2
+    hdfsRelativeFilname = outputFilename
+    if hdfsRelativeFilname.startswith("hdfs://"):
+        idx = hdfsRelativeFilname.find("/", 8)
+        if idx != -1:
+            hdfsRelativeFilname = hdfsRelativeFilname[idx:]
 
     if not args.karma:
         reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(StorageLevel.MEMORY_AND_DISK)
     else:
-        if len(hiveQuery) > 0:
-            cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
-                .partitionBy(numPartitions) \
-                .persist(StorageLevel.MEMORY_AND_DISK)
+        reduced_rdd_done = False
+        if hdfs_client.content(hdfsRelativeFilname + "/reduced_rdd", False):
+            #Folder exists, check if it was created successfully
+            if hdfs_client.content(hdfsRelativeFilname + "/reduced_rdd/_SUCCESS", False):
+                #There is success folder, so its already frames
+                reduced_rdd_done = True
+            else:
+                #No success file, but folder exists, so delete the folder
+                hdfs_client.delete(hdfsRelativeFilname + "/reduced_rdd")
+
+        if reduced_rdd_done is True:
+            reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(StorageLevel.MEMORY_AND_DISK)
         else:
-            cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-                .partitionBy(numPartitions)
+            if len(hiveQuery) > 0:
+                cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
+                    .partitionBy(numPartitions) \
+                    .persist(StorageLevel.MEMORY_AND_DISK)
+            else:
+                cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+                    .partitionBy(numPartitions)
 
-        # Add all extractors that work on the CDR data
-        cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
-        cve_regex_extractor = RegexExtractor()\
-                .set_regex(cve_regex) \
-                .set_metadata({'extractor': 'cve-regex'}) \
-                .set_include_context(True) \
-                .set_renamed_input_fields('text')
+            # Add all extractors that work on the CDR data
+            cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
+            cve_regex_extractor = RegexExtractor()\
+                    .set_regex(cve_regex) \
+                    .set_metadata({'extractor': 'cve-regex'}) \
+                    .set_include_context(True) \
+                    .set_renamed_input_fields('text')
 
-        cve_regex_extractor_processor = ExtractorProcessor() \
-                .set_name('cve_from_extracted_text-regex') \
-                .set_input_fields('json_rep.text') \
-                .set_output_field('extractions.cve') \
-                .set_extractor(cve_regex_extractor)
+            cve_regex_extractor_processor = ExtractorProcessor() \
+                    .set_name('cve_from_extracted_text-regex') \
+                    .set_input_fields('json_rep.text') \
+                    .set_output_field('extractions.cve') \
+                    .set_extractor(cve_regex_extractor)
 
-        cdr_extractions_rdd = cdr_data.mapValues(lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
-        cdr_extractions_rdd.setName("cdr_extractions")
+            cdr_extractions_rdd = cdr_data.mapValues(lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
+            cdr_extractions_rdd.setName("cdr_extractions")
 
-        # These are models without provenance, if neeed.
-        # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
+            # These are models without provenance, if neeed.
+            # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
 
-        gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
-        models = gitModelLoader.get_models_from_folder("models")
+            gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
+            models = gitModelLoader.get_models_from_folder("models")
 
-        print "Got models:", json.dumps(models)
-        # reduced_rdd = None
-        # Run karma model as per the source of the data
-        reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url, base_uri,
-                                                                  numPartitions, numFramerPartitions).persist(StorageLevel.MEMORY_AND_DISK)
-        fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
+            print "Got models:", json.dumps(models)
+            # reduced_rdd = None
+            # Run karma model as per the source of the data
+            reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url, base_uri,
+                                                                      numPartitions, numFramerPartitions).persist(StorageLevel.MEMORY_AND_DISK)
+            fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
 
     # Frame the results
     if reduced_rdd is not None:
@@ -173,17 +191,11 @@ if __name__ == "__main__":
                 {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"},
                 {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"},
                 {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"},
-                {"name": "topic", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/topic.json"},
+                #{"name": "topic", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/topic.json"},
                 {"name": "post", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/post.json"},
                 {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"},
                 {"name": "blog", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/blog.json"}
             ]
-
-            hdfsRelativeFilname = outputFilename
-            if hdfsRelativeFilname.startswith("hdfs://"):
-                idx = hdfsRelativeFilname.find("/", 8)
-                if idx != -1:
-                    hdfsRelativeFilname = hdfsRelativeFilname[idx:]
 
             frames = []
             # If there is a restart and the frames are already done, dont restart them
