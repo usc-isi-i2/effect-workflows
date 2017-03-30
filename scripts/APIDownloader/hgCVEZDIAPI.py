@@ -29,11 +29,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    url_cve = "https://effect.hyperiongray.com/api/cve/?query=" \
+    if(args.date == "1970-01-01T00:00:00+00:00"):
+        url_cve = "https://effect.hyperiongray.com/api/cve/"
+        url_zdi = "https://effect.hyperiongray.com/api/zdi/"
+    else:
+        url_cve = "https://effect.hyperiongray.com/api/cve/?query=" \
           "{\"vulnerability_scoring.cvss:base_metrics.cvss:generated-on-datetime\":{\"$gte\":\"" + args.date + "\"}}"
-
-    timestamp = DateUtil.unix_timestamp(args.date, "%Y-%m-%dT%H:%M:%S%Z")
-    url_zdi = "https://effect.hyperiongray.com/api/zdi/?query={\"date\":{\"$gte\": {\"$date\": " + str(timestamp) + "}}}"
+        timestamp = DateUtil.unix_timestamp(args.date, "%Y-%m-%dT%H:%M:%S%Z")
+        url_zdi = "https://effect.hyperiongray.com/api/zdi/?query={\"date\":{\"$gte\": {\"$date\": " + str(timestamp) + "}}}"
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
