@@ -46,8 +46,24 @@ if __name__ == "__main__":
 
         results = apiDownloader.download_api(url_taxii, "isi", args.password)
         if results is not None:
-            print "Downloaded ", len(results), " new taxii data rows. Adding them to CDR"
-            if len(results) > 0:
-                rdd = sc.parallelize(results)
-                rdd.map(lambda x: ("hg-taxii", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-taxii/" + feed_name)
+            num_results = len(results)
+            print "Downloaded ", num_results, " new taxii data rows. Adding them to CDR"
+            if num_results > 0:
                 apiDownloader.load_into_cdr(results, "hg_taxii", args.team, "hg-taxii")
+                print "Done loading into CDR"
+                print "Taking backup on S3"
+                # We need to do this as the data is too big to be parallelized it memory and gives
+                # an OutOfMemoryError
+                start = 0
+                batch_size = 5000
+                while (start < num_results):
+                    end = start + batch_size
+                    if(end > num_results):
+                        end = num_results
+                    if(end > start):
+                        rdd = sc.parallelize(results[start:end])
+                        #rdd = sc.parallelize(results)
+                        rdd.map(lambda x: ("hg-taxii", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-taxii/" + feed_name + "/" + str(start))
+                    start = start+batch_size
+                print "Done taking backing on S3"
+
