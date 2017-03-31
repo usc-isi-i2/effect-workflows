@@ -29,8 +29,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    urls = ["/api/abuse_ch", "/api/lehigh_edu", "/api/phishtank"]
-    for url in urls:
+    feeds = {
+        "abusech": "/api/abuse_ch",
+        "lehingh": "/api/lehigh_edu",
+        "phistank": "/api/phishtank"
+    }
+    for feed_name in feeds:
+        url = feeds[feed_name]
+
         if(args.date == "1970-01-01T00:00:00Z"):
             url_taxii = "https://effect.hyperiongray.com" + url
         else:
@@ -43,5 +49,5 @@ if __name__ == "__main__":
             print "Downloaded ", len(results), " new taxii data rows. Adding them to CDR"
             if len(results) > 0:
                 rdd = sc.parallelize(results)
-                rdd.map(lambda x: ("hg-taxii", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-taxii")
+                rdd.map(lambda x: ("hg-taxii", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-taxii/" + feed_name)
                 apiDownloader.load_into_cdr(results, "hg_taxii", args.team, "hg-taxii")
