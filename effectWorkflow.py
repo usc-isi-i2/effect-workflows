@@ -7,6 +7,7 @@ from cdrLoader import CDRLoader
 from py4j.java_gateway import java_import
 from digWorkflow.workflow import Workflow
 from digWorkflow.git_model_loader import GitModelLoader
+from digWorkflow.git_frame_loader import GitFrameLoader
 from argparse import ArgumentParser
 
 from digRegexExtractor.regex_extractor import RegexExtractor
@@ -67,7 +68,7 @@ class EffectWorkflow(Workflow):
         return None
 
 if __name__ == "__main__":
-    sc = SparkContext()
+    sc = SparkContext(appName="EFFECT-WORKFLOW")
     sqlContext = HiveContext(sc)
 
     java_import(sc._jvm, "edu.isi.karma")
@@ -112,7 +113,7 @@ if __name__ == "__main__":
                 reduced_rdd_done = True
             else:
                 #No success file, but folder exists, so delete the folder
-                hdfs_client.delete(hdfsRelativeFilname + "/reduced_rdd")
+                hdfs_client.delete(hdfsRelativeFilname + "/reduced_rdd", recursive=True)
 
         if reduced_rdd_done is True:
             reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(StorageLevel.MEMORY_AND_DISK)
@@ -160,42 +161,10 @@ if __name__ == "__main__":
         if args.framer:
             reduced_rdd.setName("karma_out_reduced")
 
-            types = [
-                {"name": "AttackEvent", "uri": "http://schema.dig.isi.edu/ontology/AttackEvent"},
-                {"name": "EmailAddress", "uri": "http://schema.dig.isi.edu/ontology/EmailAddress"},
-                {"name": "GeoCoordinates", "uri": "http://schema.org/GeoCoordinates"},
-                {"name": "Organization", "uri": "http://schema.org/Organization"},
-                {"name": "PersonOrOrganization", "uri": "http://schema.dig.isi.edu/ontology/PersonOrOrganization"},
-                {"name": "PhoneNumber", "uri": "http://schema.dig.isi.edu/ontology/PhoneNumber"},
-                {"name": "Place", "uri": "http://schema.org/Place"},
-                {"name": "PostalAddress", "uri": "http://schema.org/PostalAddress"},
-                {"name": "Vulnerability", "uri": "http://schema.dig.isi.edu/ontology/Vulnerability"},
-                {"name": "SoftwareSystem", "uri":"http://schema.dig.isi.edu/ontology/SoftwareSystem"},
-                {"name": "Identifier", "uri":"http://schema.dig.isi.edu/ontology/Identifier"},
-                {"name": "CVSS", "uri":"http://schema.dig.isi.edu/ontology/CVSS"},
-                {"name": "PriceSpecification", "uri": "http://schema.dig.isi.edu/ontology/PriceSpecification"},
-                {"name": "Exploit", "uri": "http://schema.dig.isi.edu/ontology/Exploit"},
-                {"name": "LoginCredentials", "uri": "http://schema.dig.isi.edu/ontology/LoginCredentials"},
-                {"name": "UserName", "uri": "http://schema.dig.isi.edu/ontology/UserName"},
-                {"name": "Password", "uri": "http://schema.dig.isi.edu/ontology/Password"},
-                {"name": "Topic", "uri":"http://schema.dig.isi.edu/ontology/Topic"},
-                {"name": "Post", "uri": "http://schema.dig.isi.edu/ontology/Post"},
-                {"name": "Forum", "uri": "http://schema.dig.isi.edu/ontology/Forum"},
-                {"name": "Malware", "uri": "http://schema.dig.isi.edu/ontology/Forum"},
-                {"name": "IPAddress", "uri": "http://schema.dig.isi.edu/ontology/IPAddress"},
-                {"name": "ComputerHardware", "uri": "http://schema.dig.isi.edu/ontology/ComputerHardware"},
-                {"name": "Blog", "uri": "http://schema.org/Blog"}
-            ]
-
-            all_frames = [
-                {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"},
-                {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"},
-                {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"},
-                #{"name": "topic", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/topic.json"},
-                {"name": "post", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/post.json"},
-                {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"},
-                {"name": "blog", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/blog.json"}
-            ]
+            gitFrameLoader = GitFrameLoader("usc-isi-i2", "effect-alignment", "master")
+            all_frames = gitFrameLoader.get_frames_from_folder("frames")
+            gitFrameLoader.load_context(context_url)
+            types = gitFrameLoader.get_types_in_all_frames()
 
             frames = []
             # If there is a restart and the frames are already done, dont restart them
@@ -209,7 +178,7 @@ if __name__ == "__main__":
                         include_frame = False
                     else:
                         #No success file, but folder exists, so delete the folder
-                        hdfs_client.delete(hdfsRelativeFilname + "/" + name)
+                        hdfs_client.delete(hdfsRelativeFilname + "/" + name, recursive=True)
                 if include_frame is True:
                     frames.append(frame)
 
