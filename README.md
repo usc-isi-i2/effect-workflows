@@ -59,8 +59,8 @@ DIG workflow processing for the EFFECT project.
 To build the python libraries required by the workflows,
 
 1. Edit make.sh and update the path to `dig-workflows`
-2. Run `./make.sh`. This will create `lib\python-lib.zip` that can be attached with the `--py-files` option to the spark workflow
-3. Copy the `python-lib.zip` file to AWS - `scp lib/python-lib.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib`
+2. Run `./make.sh`. This will create `effect-env.zip` that can be attached with the `--archives` option to the spark workflow
+3. Copy the `effect-env.zip` file to AWS - `scp effect-env.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib`
 4. zip your karma home folder into `karma.zip` and copt to AWS - `scp karma.zip hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/`
 5. Build a shaded karma-spark jar -
 
@@ -70,18 +70,7 @@ To build the python libraries required by the workflows,
    scp lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com:/home/hadoop/effect-workflows/lib
    ```
 
-6. Login to AWS and run the workflow
-
-```
-ssh -L 8888:localhost:8888 hadoop@ec2-52-42-169-124.us-west-2.compute.amazonaws.com
-spark-submit --deploy-mode client  \
-    --jars "/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
-    --conf "spark.driver.extraClassPath=/home/hadoop/effect-workflows/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
-    --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
-    --archives /home/hadoop/effect-workflows/karma.zip
-    /home/hadoop/effect-workflows/effectWorkflow.py \
-    cdr hdfs://ip-172-31-19-102/user/effect/data/cdr-framed sequence 10
-```
+6. Login to AWS and run the workflow using the script `run_karma_workflow.sh`
 This will load data from HIVE table CDR, apply karma models to it and save the output to HDFS.
 
 To load the data to ES, 

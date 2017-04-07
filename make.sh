@@ -1,28 +1,10 @@
-#!/usr/bin/env bash
+WORKFLOWSBASE=/mnt/github/dig-workflows
 
-#Change the paths here
-WORKFLOWSBASE=~/github/dig/dig-workflows
-
-
-# This script needs to change only if we add new non installed packages
-CURRENT=`pwd`
-rm -rf lib
-mkdir lib
-cd lib
-LIB_FOLDER=`pwd`
-conda create -m -p $LIB_FOLDER/effect-env --copy --clone effect-env
-mkdir tozip
-cp -rf effect-env/lib/python2.6/site-packages/* tozip/
+CONDA_PY_DEST=effect-env/lib/python2.6/site-packages
+conda env create -f environment.yml
 rm -rf effect-env
-
-cp ../*.py tozip/
-cp ../scripts/APIDownloader/*.py tozip/
-cd tozip
-
-mkdir digWorkflow
-cp $WORKFLOWSBASE/pySpark-workflows/digWorkflow/*  ./digWorkflow/
-zip -r python-lib.zip *
-mv python-lib.zip ../
-cd ..
-rm -rf tozip
-cd ..
+conda create -m -p $(pwd)/effect-env/ --copy --clone effect-env
+cp cdrLoader.py $CONDA_PY_DEST/
+mkdir $CONDA_PY_DEST/digWorkflow
+cp $WORKFLOWSBASE/pySpark-workflows/digWorkflow/* $CONDA_PY_DEST/digWorkflow/ 
+zip -r effect-env.zip effect-env
