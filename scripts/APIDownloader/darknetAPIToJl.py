@@ -41,12 +41,14 @@ if __name__ == "__main__":
             out_file.write(line + "\n")
 
     def get_all_urls():
+        date_filter = "from=" + args.date + "&to=" + args.date
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&from=" + args.date,
-            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&from=" + args.date,
-            "vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Item&from=" + args.date,
-            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&from=" + args.date,
-            "vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Post&from=" + args.date,
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
+            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
+            "vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Item&" + date_filter,
+            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + args.date,
+            "vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Post&" + date_filter,
+            "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?order=scrapedDate&" + date_filter,
         }
 
     apiDownloader = APIDownloader(sc, sqlContext)
