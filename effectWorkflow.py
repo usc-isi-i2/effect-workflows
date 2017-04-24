@@ -27,11 +27,13 @@ spark-submit --deploy-mode client  \
 
 context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/development/versions/3.0/karma/karma-context.json"
 base_uri = "http://effect.isi.edu/data/"
+save_intermediate_files = False
 
 class EffectWorkflow(Workflow):
-    def __init__(self, spark_context, sql_context):
+    def __init__(self, spark_context, sql_context, hdfs_client):
         self.sc = spark_context
         self.sqlContext = sql_context
+        self.hdfsClient = hdfs_client
 
     def load_cdr_from_hive_query(self, query):
         cdr_data = self.sqlContext.sql(query)
@@ -46,42 +48,83 @@ class EffectWorkflow(Workflow):
 
         for model in models:
             if model["url"] != "":
-                model_rdd = rdd.filter(lambda x: x[1]["source_name"] == model["name"])
-                if not model_rdd.isEmpty():
-                    print "Apply model for", model["name"], ":", model["url"]
-                    #print json.dumps(model_rdd.first()[1])
-                    karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
-                                               num_partitions=partitions,
-                                               batch_size=1000,
-                                               additional_settings={"karma.provenance.properties":"source,publisher,dateRecorded:date"})
-                    if not karma_rdd.isEmpty():
-                        #fileUtil.save_file(karma_rdd, outputFilename + '/' + model["name"], "text", "json")
-                        result_rdds.append(karma_rdd)
+                if not hdfs_data_done(self.hdfsClient, outputFilename + '/models-out/' + model["name"]):
+                    model_rdd = rdd.filter(lambda x: x[1]["source_name"] == model["name"])
+                    if model["name"] == 'hg-taxii':
+                        model_rdd = model_rdd.partitionBy(partitions * 4)
+                    if not model_rdd.isEmpty():
 
-                    print "Done applying model ", model["name"]
+                        print "Apply model for", model["name"], ":", model["url"]
+                        #print json.dumps(model_rdd.first()[1])
+                        karma_rdd = self.run_karma(model_rdd, model["url"], base_uri, model["root"], context_url,
+                                                   num_partitions=partitions,
+                                                   batch_size=1000,
+                                                   additional_settings={
+                                                   "karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date",
+                                                   # "karma.reducer.run": "false"
+                                                   })
+                        if not karma_rdd.isEmpty():
+                            if save_intermediate_files is True:
+                                fileUtil.save_file(karma_rdd, outputFilename + '/models-out/' + model["name"], "sequence",
+                                               "json")
+                            result_rdds.append(karma_rdd)
+                else:
+                    print "Loaded " + outputFilename + '/models-out/' + model["name"] + " from HDFS"
+                    karma_rdd = self.sc.sequenceFile(outputFilename + '/models-out/' + model["name"]).mapValues(
+                        lambda x: json.loads(x))
+                    result_rdds.append(karma_rdd)
 
+                print "Done applying model ", model["name"]
+
+        if save_intermediate_files is True and not hdfs_data_done(self.hdfsClient, outputFilename + '/models-out/all'):
+            all_done = self.sc.parallelize([{'a': 'Class', 'done': 'true'}]).map(lambda x: ("done", x))
+            fileUtil.save_file(all_done, outputFilename + '/models-out/all', "text", "json")
         num_rdds = len(result_rdds)
         if num_rdds > 0:
             if num_rdds == 1:
                 return result_rdds[0]
-            return self.reduce_rdds_with_settings({"karma.provenance.properties":"source,publisher,dateRecorded:date"}, outpartitions, *result_rdds)
+            return self.reduce_rdds_with_settings({"karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date"},
+                                                  outpartitions, *result_rdds)
         return None
+
+
+def hdfs_data_done(hdfs_client, folder):
+    data_done = False
+    if folder.startswith("hdfs://"):
+        idx = folder.find("/", 8)
+        if idx != -1:
+            folder = folder[idx:]
+
+    if hdfs_client.content(folder, False):
+        #Folder exists, check if it was created successfully
+        if hdfs_client.content(folder + "/_SUCCESS", False):
+            #There is success folder, so its already frames
+            data_done = True
+        else:
+            #No success file, but folder exists, so delete the folder
+            hdfs_client.delete(folder, recursive=True)
+
+    print "Check folder exists:", folder, ":", data_done
+    return data_done
+
 
 if __name__ == "__main__":
     sc = SparkContext(appName="EFFECT-WORKFLOW")
     sqlContext = HiveContext(sc)
 
     java_import(sc._jvm, "edu.isi.karma")
-    workflow = EffectWorkflow(sc, sqlContext)
+
     fileUtil = FileUtil(sc)
     hdfs_client = Config().get_client('dev')
     #sc._jsc.hadoopConfiguration()
+    workflow = EffectWorkflow(sc, sqlContext, hdfs_client)
 
     parser = ArgumentParser()
     parser.add_argument("-i", "--inputTable", help="Input Table", required=True)
     parser.add_argument("-o", "--output", help="Output Folder", required=True)
     parser.add_argument("-n", "--partitions", help="Number of partitions", required=False, default=20)
-    parser.add_argument("-t", "--outputtype", help="Output file type - text or sequence", required=False, default="sequence")
+    parser.add_argument("-t", "--outputtype", help="Output file type - text or sequence", required=False,
+                        default="sequence")
     parser.add_argument("-q", "--query", help="HIVE query to get data", default="", required=False)
     parser.add_argument("-k", "--karma", help="Run Karma", default=False, required=False, action="store_true")
     parser.add_argument("-f", "--framer", help="Run the framer", default=False, required=False, action="store_true")
@@ -92,10 +135,10 @@ if __name__ == "__main__":
     inputTable = args.inputTable.strip()
     outputFilename = args.output.strip()
     outputFileType = args.outputtype.strip()
-    hiveQuery = args.query.strip() #"select * from CDR where source_name='hg-blogs' and raw_content like '%CVE-%'"
+    hiveQuery = args.query.strip()  #"select * from CDR where source_name='hg-blogs' and raw_content like '%CVE-%'"
     numPartitions = int(args.partitions)
 
-    numFramerPartitions = numPartitions/2
+    numFramerPartitions = numPartitions / 2
     hdfsRelativeFilname = outputFilename
     if hdfsRelativeFilname.startswith("hdfs://"):
         idx = hdfsRelativeFilname.find("/", 8)
@@ -103,46 +146,15 @@ if __name__ == "__main__":
             hdfsRelativeFilname = hdfsRelativeFilname[idx:]
 
     if not args.karma:
-        reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(StorageLevel.MEMORY_AND_DISK)
+        reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(
+            StorageLevel.MEMORY_AND_DISK)
     else:
-        reduced_rdd_done = False
-        if hdfs_client.content(hdfsRelativeFilname + "/reduced_rdd", False):
-            #Folder exists, check if it was created successfully
-            if hdfs_client.content(hdfsRelativeFilname + "/reduced_rdd/_SUCCESS", False):
-                #There is success folder, so its already frames
-                reduced_rdd_done = True
-            else:
-                #No success file, but folder exists, so delete the folder
-                hdfs_client.delete(hdfsRelativeFilname + "/reduced_rdd", recursive=True)
+        reduced_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/reduced_rdd")
 
         if reduced_rdd_done is True:
-            reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(StorageLevel.MEMORY_AND_DISK)
+            reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(
+                StorageLevel.MEMORY_AND_DISK)
         else:
-            if len(hiveQuery) > 0:
-                cdr_data = workflow.load_cdr_from_hive_query(hiveQuery)\
-                    .partitionBy(numPartitions) \
-                    .persist(StorageLevel.MEMORY_AND_DISK)
-            else:
-                cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-                    .partitionBy(numPartitions)
-
-            # Add all extractors that work on the CDR data
-            cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
-            cve_regex_extractor = RegexExtractor()\
-                    .set_regex(cve_regex) \
-                    .set_metadata({'extractor': 'cve-regex'}) \
-                    .set_include_context(True) \
-                    .set_renamed_input_fields('text')
-
-            cve_regex_extractor_processor = ExtractorProcessor() \
-                    .set_name('cve_from_extracted_text-regex') \
-                    .set_input_fields('json_rep.text') \
-                    .set_output_field('extractions.cve') \
-                    .set_extractor(cve_regex_extractor)
-
-            cdr_extractions_rdd = cdr_data.mapValues(lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
-            cdr_extractions_rdd.setName("cdr_extractions")
-
             # These are models without provenance, if neeed.
             # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
 
@@ -150,10 +162,49 @@ if __name__ == "__main__":
             models = gitModelLoader.get_models_from_folder("models")
 
             print "Got models:", json.dumps(models)
-            # reduced_rdd = None
-            # Run karma model as per the source of the data
-            reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url, base_uri,
-                                                                      numPartitions, numFramerPartitions).persist(StorageLevel.MEMORY_AND_DISK)
+
+            if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/models-out/all"):
+                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/cdr_extractions"):
+                    if len(hiveQuery) > 0:
+                        cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
+                            .partitionBy(numPartitions) \
+                            .persist(StorageLevel.MEMORY_AND_DISK)
+                    else:
+                        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+                            .partitionBy(numPartitions)
+
+                    # Add all extractors that work on the CDR data
+                    cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
+                    cve_regex_extractor = RegexExtractor() \
+                        .set_regex(cve_regex) \
+                        .set_metadata({'extractor': 'cve-regex'}) \
+                        .set_include_context(True) \
+                        .set_renamed_input_fields('text')
+
+                    cve_regex_extractor_processor = ExtractorProcessor() \
+                        .set_name('cve_from_extracted_text-regex') \
+                        .set_input_fields('json_rep.text') \
+                        .set_output_field('extractions.cve') \
+                        .set_extractor(cve_regex_extractor)
+
+                    cdr_extractions_rdd = cdr_data.mapValues(
+                        lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
+                    if save_intermediate_files is True:
+                        fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions', outputFileType, "json")
+                else:
+                    cdr_extractions_rdd = sc.sequenceFile(outputFilename + "/cdr_extractions").mapValues(
+                        lambda x: json.loads(x)).partitionBy(numPartitions).persist(StorageLevel.MEMORY_AND_DISK)
+                cdr_extractions_rdd.setName("cdr_extractions")
+
+                # Run karma model as per the source of the data
+                reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
+                                                                      base_uri,
+                                                                      numPartitions, numFramerPartitions).persist(
+                    StorageLevel.MEMORY_AND_DISK)
+            else:
+                reduced_rdd = workflow.apply_karma_model_per_msg_type(None, models, context_url, base_uri,
+                                                                      numPartitions, numFramerPartitions).persist(
+                    StorageLevel.MEMORY_AND_DISK)
             fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
 
     # Frame the results
@@ -170,22 +221,14 @@ if __name__ == "__main__":
             # If there is a restart and the frames are already done, dont restart them
             for frame in all_frames:
                 name = frame["name"]
-                include_frame = True
-                if hdfs_client.content(hdfsRelativeFilname + "/" + name, False):
-                    #Folder exists, check if it was created successfully
-                    if hdfs_client.content(hdfsRelativeFilname + "/" + name + "/_SUCCESS", False):
-                        #There is success folder, so its already frames
-                        include_frame = False
-                    else:
-                        #No success file, but folder exists, so delete the folder
-                        hdfs_client.delete(hdfsRelativeFilname + "/" + name, recursive=True)
-                if include_frame is True:
+                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/" + name):
                     frames.append(frame)
 
             type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
 
             for type_name in type_to_rdd_json:
-                type_to_rdd_json[type_name]["rdd"] = type_to_rdd_json[type_name]["rdd"].persist(StorageLevel.MEMORY_AND_DISK)
+                type_to_rdd_json[type_name]["rdd"] = type_to_rdd_json[type_name]["rdd"].persist(
+                    StorageLevel.MEMORY_AND_DISK)
                 type_to_rdd_json[type_name]["rdd"].setName(type_name)
 
             framer_output = workflow.apply_framer(reduced_rdd, type_to_rdd_json, frames,
@@ -193,14 +236,15 @@ if __name__ == "__main__":
                                                   None)
 
             for frame_name in framer_output:
-                framer_output_one_frame = framer_output[frame_name] #.coalesce(numFramerPartitions)
+                framer_output_one_frame = framer_output[frame_name]  #.coalesce(numFramerPartitions)
                 print "Save frame:", frame_name
                 if not framer_output_one_frame.isEmpty():
-                    fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
+                    fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType,
+                                       "json")
 
             reduced_rdd.unpersist()
             for type_name in type_to_rdd_json:
                 type_to_rdd_json[type_name]["rdd"].unpersist()
 
-    if args.karma:
-        cdr_extractions_rdd.unpersist()
+    # if args.karma:
+    #     cdr_extractions_rdd.unpersist()
