@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 from digRegexExtractor.regex_extractor import RegexExtractor
 from digExtractor.extractor_processor import ExtractorProcessor
 import re
-from hdfs import Config
+from hdfs.client import Client
 
 '''
 spark-submit --deploy-mode client  \
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     java_import(sc._jvm, "edu.isi.karma")
 
     fileUtil = FileUtil(sc)
-    hdfs_client = Config().get_client('dev')
+    hdfs_client = Client("http://cloudmgr03.isi.edu:50070")#Config().get_client('dev')
     #sc._jsc.hadoopConfiguration()
     workflow = EffectWorkflow(sc, sqlContext, hdfs_client)
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
             # If there is a restart and the frames are already done, dont restart them
             for frame in all_frames:
                 name = frame["name"]
-                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/" + name):
+                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/frames/" + name):
                     frames.append(frame)
 
             type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
@@ -239,12 +239,11 @@ if __name__ == "__main__":
                 framer_output_one_frame = framer_output[frame_name]  #.coalesce(numFramerPartitions)
                 print "Save frame:", frame_name
                 if not framer_output_one_frame.isEmpty():
-                    fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType,
+                    fileUtil.save_file(framer_output_one_frame, outputFilename + '/frames/' + frame_name, outputFileType,
                                        "json")
 
             reduced_rdd.unpersist()
             for type_name in type_to_rdd_json:
                 type_to_rdd_json[type_name]["rdd"].unpersist()
 
-    # if args.karma:
-    #     cdr_extractions_rdd.unpersist()
+    

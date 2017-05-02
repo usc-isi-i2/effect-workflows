@@ -1,6 +1,6 @@
 name: effect-env
 dependencies:
-    - python=2.6
+    - python=2.7.12=1
     - psycopg2
     - pip:
         - digEntityMerger
