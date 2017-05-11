@@ -12,7 +12,7 @@ WORKFLOWSBASE="$PWD"
 cd $CUR_DIR
 echo "Updating make.sh.."
 grep -v "WORKFLOWSBASE=" make.sh > make2.sh
-echo WORKFLOWSBASE=WORKFLOWSBASE > make.sh
+echo WORKFLOWSBASE=$WORKFLOWSBASE > make.sh
 cat make2.sh >> make.sh
 rm make2.sh
 
