@@ -7,12 +7,12 @@ git clone https://github.com/usc-isi-i2/dig-workflows.git
 cd dig-workflows
 git pull
 
-WORKFLOWBASE="$PWD"
+WORKFLOWSBASE="$PWD"
 
 cd $CUR_DIR
 echo "Updating make.sh.."
 grep -v "WORKFLOWSBASE=" make.sh > make2.sh
-echo WORKFLOWBASE=$WORKFLOWBASE > make.sh
+echo WORKFLOWSBASE=WORKFLOWSBASE > make.sh
 cat make2.sh >> make.sh
 rm make2.sh
 
