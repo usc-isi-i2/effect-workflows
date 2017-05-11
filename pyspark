@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-export SPARK_HOME=/usr/lib/spark
+export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark
 
 source bin/load-spark-env.sh
 export _SPARK_CMD_USAGE="Usage: ./bin/pyspark [options]"
