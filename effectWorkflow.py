@@ -113,12 +113,6 @@ if __name__ == "__main__":
     sqlContext = HiveContext(sc)
 
     java_import(sc._jvm, "edu.isi.karma")
-
-    fileUtil = FileUtil(sc)
-    hdfs_client = Client("http://cloudmgr03.isi.edu:50070")#Config().get_client('dev')
-    #sc._jsc.hadoopConfiguration()
-    workflow = EffectWorkflow(sc, sqlContext, hdfs_client)
-
     parser = ArgumentParser()
     parser.add_argument("-i", "--inputTable", help="Input Table", required=True)
     parser.add_argument("-o", "--output", help="Output Folder", required=True)
@@ -128,9 +122,15 @@ if __name__ == "__main__":
     parser.add_argument("-q", "--query", help="HIVE query to get data", default="", required=False)
     parser.add_argument("-k", "--karma", help="Run Karma", default=False, required=False, action="store_true")
     parser.add_argument("-f", "--framer", help="Run the framer", default=False, required=False, action="store_true")
+    parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
+
+    fileUtil = FileUtil(sc)
+    hdfs_client = Client(args.hdfsManager)#Config().get_client('dev')
+    #sc._jsc.hadoopConfiguration()
+    workflow = EffectWorkflow(sc, sqlContext, hdfs_client)
 
     inputTable = args.inputTable.strip()
     outputFilename = args.output.strip()

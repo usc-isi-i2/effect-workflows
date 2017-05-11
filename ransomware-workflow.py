@@ -57,7 +57,7 @@ if __name__ == "__main__":
                                    additional_settings={"karma.input.delimiter":","})
     if reduced_rdd is not None:
         reduced_rdd = reduced_rdd.persist(StorageLevel.MEMORY_AND_DISK)
-        fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', "text", "json")
+        fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', "sequence", "json")
         reduced_rdd.setName("karma_out_reduced")
 
         types = [
@@ -86,12 +86,7 @@ if __name__ == "__main__":
         ]
 
         frames = [
-            {"name": "attack", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/attackevent.json"},
-            {"name": "vulnerability", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/vulnerability.json"},
-            {"name": "exploit", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/exploit.json"},
-            {"name": "topic", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/topic.json"},
-            {"name": "post", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/post.json"},
-            {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"}
+           {"name": "malware", "url": "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/frames/malware.json"}
         ]
         type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
 
@@ -107,4 +102,3 @@ if __name__ == "__main__":
             framer_output_one_frame = framer_output[frame_name].coalesce(numFramerPartitions)
             if not framer_output_one_frame.isEmpty():
                 fileUtil.save_file(framer_output_one_frame, outputFilename + '/' + frame_name, outputFileType, "json")
-

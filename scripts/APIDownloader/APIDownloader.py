@@ -27,7 +27,10 @@ class APIDownloader:
             auth = HTTPBasicAuth(username, password)
         print "Download:", url
         response = requests.get(url, verify=False,	auth=auth, headers=headers, timeout=timeout)
-        return self.byteify(json.loads(response.text))
+        text = response.text
+        if len(text) > 0:
+            return self.byteify(json.loads(text))
+        return []
 
     def write_as_json_lines(self, array, file_handler):
         for line in array:

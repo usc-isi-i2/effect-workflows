@@ -30,13 +30,13 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--doctype", help="ES Document types", required=False)
     parser.add_argument("-t", "--partitions", help="Number of partitions", required=False, default=20)
     parser.add_argument("-i", "--input", help="Input Folder", required=True)
-
+    parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
     args = parser.parse_args()
 
 
     sc = SparkContext(appName="EFFECT-LOAD-TO-ES")
     conf = SparkConf()
-    hdfs_client = Client("http://cloudmgr03.isi.edu:50070")
+    hdfs_client = Client(args.hdfsManager)
     hdfsRelativeFilname = args.input
     if hdfsRelativeFilname.startswith("hdfs://"):
         idx = hdfsRelativeFilname.find("/", 8)
@@ -65,7 +65,7 @@ if __name__ == '__main__':
             "es.http.retries": "20",
             "es.batch.write.retry.count": "20", # maximum number of retries set
             "es.batch.write.retry.wait": "600s", # on failure, time to wait prior to retrying
-            "es.batch.size.entries": "50", # number of docs per batch
+            "es.batch.size.entries": "10000", # number of docs per batch
             "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
             "es.input.json": "true"
             }
