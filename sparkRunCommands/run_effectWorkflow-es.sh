@@ -5,5 +5,5 @@ spark-submit --master yarn --deploy-mode client  \
     effectWorkflow-es.py \
     --host 128.9.35.71 \
     --port 9200 \
-    --hdfsManager "http://cloudmgr03.isi.edu:50070"
+    --hdfsManager "http://cloudmgr03.isi.edu:50070" \
     $@

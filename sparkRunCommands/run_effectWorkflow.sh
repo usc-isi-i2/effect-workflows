@@ -19,5 +19,5 @@ export DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python
       --conf "spark.driver.extraClassPath=karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar" \
      --archives effect-env.zip,karma.zip \
      effectWorkflow.py \
-     --hdfsManager "http://cloudmgr03.isi.edu:50070"
+     --hdfsManager "http://cloudmgr03.isi.edu:50070" \
      $@
