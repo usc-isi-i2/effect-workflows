@@ -1,6 +1,7 @@
 #!/bin/sh
 CUR_DIR="$PWD"
 
+/bin/bash ./clean.sh
 cd ..
 git clone https://github.com/usc-isi-i2/dig-workflows.git
 cd dig-workflows
@@ -39,9 +40,9 @@ echo "Copying all files to hdfs..."
 hdfs dfs -mkdir /user/effect
 hdfs dfs -mkdir /user/effect/workflow
 hdfs dfs -mkdir /user/effect/workflow/lib
-hdfs dfs -mkdir /user/effect/workflow/data
-hdfs dfs -mkdir /user/effect/workflow/data/hive-backup
-hdfs dfs -mkdir /user/effect/workflow/data/karma-out
+hdfs dfs -mkdir /user/effect/data
+hdfs dfs -mkdir /user/effect/data/hive-backup
+hdfs dfs -mkdir /user/effect/data/karma-out
 
 hdfs dfs -put -f python-lib.zip /user/effect/workflow/lib/
 hdfs dfs -put -f effect-env.zip /user/effect/workflow/lib/
@@ -49,8 +50,10 @@ hdfs dfs -put -f pyspark /user/effect/workflow/lib/
 hdfs dfs -put -f jars/elasticsearch-hadoop-2.4.0.jar /user/effect/workflow/lib/
 hdfs dfs -put -f jars/karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar /user/effect/workflow/lib/
 hdfs dfs -put -f karma.zip /user/effect/workflow/lib/
-hdfs dfs -put -f APIDownloader/*.py /user/effect/workflow/
+hdfs dfs -put -f scripts/APIDownloader/*.py /user/effect/workflow/
 hdfs dfs -put -f effectWorkflow.py /user/effect/workflow/
 hdfs dfs -put -f effectWorkflow-es.py /user/effect/workflow/
 hdfs dfs -put -f ransomware-workflow.py /user/effect/workflow/
 hdfs dfs -put -f sparkRunCommands/*.sh /user/effect/workflow/
+
+echo "DONE"
