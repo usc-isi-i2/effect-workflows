@@ -8,6 +8,7 @@ rm python-lib.zip
 
 conda create -m -p $(pwd)/effect-env/ --copy --clone effect-env
 cp cdrLoader.py $CONDA_PY_DEST/
+cp scripts/APIDownloader/APIDownloader.py $CONDA_PY_DEST/
 mkdir $CONDA_PY_DEST/digWorkflow
 cp $WORKFLOWSBASE/pySpark-workflows/digWorkflow/* $CONDA_PY_DEST/digWorkflow/
 CUR_DIR="$PWD"
