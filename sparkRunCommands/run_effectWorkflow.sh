@@ -15,7 +15,7 @@ export DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python
   --master yarn \
    --deploy-mode client \
       --executor-memory 25g --num-executors 12 --executor-cores 2 \
-     --jars "karma-spark-0.0.1-SNAPSHOT-shaded.jar" \
+     --jars "karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar" \
       --conf "spark.driver.extraClassPath=karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar" \
      --archives effect-env.zip,karma.zip \
      effectWorkflow.py \

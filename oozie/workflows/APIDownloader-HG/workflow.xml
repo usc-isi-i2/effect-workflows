@@ -1,0 +1,97 @@
+<workflow-app name="APIDownloader-HG" xmlns="uri:oozie:workflow:0.5">
+    <start to="shell-5480"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="shell-5480">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run_hgCVEZDIAPI.sh</exec>
+              <argument>${date}T00:00:00+00:00</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run_hgCVEZDIAPI.sh#run_hgCVEZDIAPI.sh</file>
+            <file>/user/effect/workflow/hgCVEZDIAPI.py#hgCVEZDIAPI.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="shell-1cd2"/>
+        <error to="Kill"/>
+    </action>
+    <action name="shell-1cd2">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run-hgBlogsAPI.sh</exec>
+              <argument>${date}T00:00:00Z</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run-hgBlogsAPI.sh#run-hgBlogsAPI.sh</file>
+            <file>/user/effect/workflow/hgblogsAPI.py#hgblogsAPI.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="shell-fa2a"/>
+        <error to="Kill"/>
+    </action>
+    <action name="shell-fa2a">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run-hgAbuseCh.sh</exec>
+              <argument>${date}T00:00:00Z</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run-hgAbuseCh.sh#run-hgAbuseCh.sh</file>
+            <file>/user/effect/workflow/hgAbuseCh.py#hgAbuseCh.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="shell-8c47"/>
+        <error to="Kill"/>
+    </action>
+    <action name="shell-8c47">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run_hgTaxii.sh</exec>
+              <argument>${date}T00:00:00Z</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run_hgTaxii.sh#run_hgTaxii.sh</file>
+            <file>/user/effect/workflow/hgTaxii.py#hgTaxii.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="shell-425f"/>
+        <error to="Kill"/>
+    </action>
+    <action name="shell-425f">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run-hgCPEAPI.sh</exec>
+              <argument>${date}T00:00:00Z</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run-hgCPEAPI.sh#run-hgCPEAPI.sh</file>
+            <file>/user/effect/workflow/hgCPEAPI.py#hgCPEAPI.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="shell-4116"/>
+        <error to="Kill"/>
+    </action>
+    <action name="shell-4116">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run_hgConference.sh</exec>
+              <argument>${date}T00:00:00Z</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run_hgConference.sh#run_hgConference.sh</file>
+            <file>/user/effect/workflow/hgConference.py#hgConference.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>

@@ -1,0 +1,55 @@
+<workflow-app name="CDRKarma" xmlns="uri:oozie:workflow:0.5">
+    <start to="shell-5480"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="shell-5480">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run_effectWorkflow.sh</exec>
+              <argument>--inputTable</argument>
+              <argument>cdr</argument>
+              <argument>--output</argument>
+              <argument>${karma_out_folder}</argument>
+              <argument>--partitions</argument>
+              <argument>80</argument>
+              <argument>--karma</argument>
+            <file>/user/effect/workflow/run_effectWorkflow.sh#run_effectWorkflow.sh</file>
+            <file>/user/effect/workflow/effectWorkflow.py#effectWorkflow.py</file>
+            <file>/user/effect/workflow/lib/effect-env.zip#effect-env.zip</file>
+            <file>/user/effect/workflow/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar#karma-spark-0.0.1-SNAPSHOT-shaded.jar</file>
+            <file>/user/effect/workflow/lib/karma.zip#karma.zip</file>
+            <file>/user/effect/workflow/lib/pyspark#pyspark</file>
+            <archive>/user/effect/workflow/lib/effect-env.zip#effect-env</archive>
+              <capture-output/>
+        </shell>
+        <ok to="shell-1af9"/>
+        <error to="Kill"/>
+    </action>
+    <action name="shell-1af9">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./run_effectWorkflow.sh</exec>
+              <argument>--inputTable</argument>
+              <argument>cdr</argument>
+              <argument>--output</argument>
+              <argument>${karma_out_folder}</argument>
+              <argument>--partitions</argument>
+              <argument>80</argument>
+              <argument>--framer</argument>
+            <file>/user/effect/workflow/run_effectWorkflow.sh#run_effectWorkflow.sh</file>
+            <file>/user/effect/workflow/effectWorkflow.py#effectWorkflow.py</file>
+            <file>/user/effect/workflow/lib/effect-env.zip#effect-env.zip</file>
+            <file>/user/effect/workflow/lib/karma-spark-0.0.1-SNAPSHOT-shaded.jar#karma-spark-0.0.1-SNAPSHOT-shaded.jar</file>
+            <file>/user/effect/workflow/lib/karma.zip#karma.zip</file>
+            <file>/user/effect/workflow/lib/pyspark#pyspark</file>
+            <archive>/user/effect/workflow/lib/effect-env.zip#effect-env</archive>
+              <capture-output/>
+        </shell>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
