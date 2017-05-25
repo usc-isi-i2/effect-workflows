@@ -13,7 +13,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-i", "--input", help="Input filename", required=True)
     parser.add_argument("-o", "--output", type=str, help="Output filename", required=True)
-    parser.add_argument("-f", "--format", help="Input Data Format - csv/json/xml/cdr", required=True)
+    parser.add_argument("-f", "--format", help="Input Data Format - csv/json/xml/cdr", required=False, default="json")
     parser.add_argument("-n", "--source", type=str, help="Source Name", required=True)
     parser.add_argument("-s", "--separator", type=str, help="Input Separator fro CSV Files", default=",", required=False)
 
