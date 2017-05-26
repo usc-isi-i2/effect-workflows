@@ -10,8 +10,6 @@ STORED AS ORC;
 #location 's3n://effect-hive-data/cdr';
 
 # Create table for monitoring API Sources
-ALTER TABLE daily_audit_data RENAME TO daily_audit_data_backup;
-
 CREATE TABLE IF NOT EXISTS daily_audit_data (
 date_of_pull string,
 source_name string,
@@ -32,8 +30,6 @@ COUNT(*) AS count
 FROM cdr
 GROUP BY
 FROM_UNIXTIME(TIMESTAMP,"MM/dd/yyyy"),source_name;
-
-DROP TABLE IF EXISTS daily_audit_data_backup;
 
 # Create table for hackmagadden
 CREATE TABLE hackmageddon (raw_content STRING)
