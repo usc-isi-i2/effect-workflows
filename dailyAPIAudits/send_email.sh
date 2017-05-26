@@ -3,12 +3,13 @@
 irregularities_path="/user/hive/warehouse/effect_daily_irregularitites"
 smtpServer="smtp.isi.edu"
 fromMailID="osuba@isi.edu"
-toMailIDs="osuba@isi.edu,yellappa@isi.edu"
+toMailIDs="osuba@isi.edu,yellappa@isi.edu,dipsykapoor@gmail.com"
 subject="EFFECT DAILT AUDIT EMAIL"
 body="Please find below the sources with probable inconsistencies in the number of records:"
 team="ISI" #ISI
 
 records=`hdfs dfs -cat $irregularities_path/* | wc -l`
+echo "Got $records"
 
 if [ $records > 0 ]; then
 
