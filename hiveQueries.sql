@@ -10,23 +10,26 @@ STORED AS ORC;
 #location 's3n://effect-hive-data/cdr';
 
 # Create table for monitoring API Sources
-create table if not exists daily_audit_data (
+CREATE TABLE IF NOT EXISTS daily_audit_data (
 date_of_pull string,
 source_name string,
-count int)
-row format delimited
+count INT)
+ROW FORMAT delimited
 fields terminated by ','
 lines terminated by '\n'
-stored as textfile;
+STORED AS textfile;
 
-insert into table daily_audit_data
-select
-from_unixtime(timestamp,"MM/dd/yyyy") as date_of_pull,
+SET hive.exec.compress.intermediate=true;
+SET hive.exec.compress.output=true;
+
+INSERT INTO table daily_audit_data
+SELECT
+FROM_UNIXTIME(TIMESTAMP,"MM/dd/yyyy") AS date_of_pull,
 source_name,
-count(*) as count
-from cdr
-group by
-from_unixtime(timestamp,"MM/dd/yyyy"),source_name;
+COUNT(*) AS count
+FROM cdr
+GROUP BY
+FROM_UNIXTIME(TIMESTAMP,"MM/dd/yyyy"),source_name;
 
 # Create table for hackmagadden
 CREATE TABLE hackmageddon (raw_content STRING)
