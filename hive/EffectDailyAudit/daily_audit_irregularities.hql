@@ -1,6 +1,6 @@
 SET hive.exec.parallel=true;
 SET hive.exec.compress.intermediate=true;
-SET hive.exec.compress.output=true;
+SET hive.exec.compress.output=false;
 SET hive.auto.convert.join=true;
 
 INSERT INTO table daily_audit_irregularities

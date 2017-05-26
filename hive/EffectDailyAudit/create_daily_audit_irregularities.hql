@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS daily_audit_irregularities;
 CREATE TABLE IF NOT EXISTS daily_audit_irregularities  (
 source_name string,
 count INT,
-threshold INT)
+threshold string)
 ROW FORMAT delimited
 fields terminated by '\t'
 lines terminated by '\n'
