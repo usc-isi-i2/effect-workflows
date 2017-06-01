@@ -2,7 +2,7 @@ spark-submit \
    --master local[1] \
     --deploy-mode client \
     --py-files python-lib.zip \
-    hgCVEZDIAPI.py \
+    hgZDIAPI.py \
     --output "hg_cve1" \
    --outputFolder /user/effect/data/hive-backup/$2 \
     --team "hyperiongray" \

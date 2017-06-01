@@ -127,3 +127,5 @@ To load the data to ES,
 * To remove the environment run `conda env remove -n effect-env`
 * To see all environments run `conda env list`
 
+** Run OOZIE workflow from command line - takes in job.properties and workflow.xml
+

@@ -28,4 +28,3 @@ if len(file_contents) > 0:
         s = smtplib.SMTP('smtp.isi.edu')
         s.sendmail(from_addr, to_addr, msg.as_string())
         s.quit()
-

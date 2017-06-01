@@ -1,6 +1,7 @@
 from pyspark import SparkContext, StorageLevel
 from pyspark.sql import HiveContext
 import json
+import zipfile
 import sys
 from digSparkUtil.fileUtil import FileUtil
 from cdrLoader import CDRLoader
@@ -108,6 +109,30 @@ def hdfs_data_done(hdfs_client, folder):
     return data_done
 
 
+def find(element, json):
+    x = reduce(lambda d, key: d.get(key, {}), element.split("."), json)
+    if any(x) is True:
+        return x
+    return None
+
+
+def remove_blank_lines(json_data, attribute_name):
+    raw_text = find(attribute_name, json_data)
+    if raw_text is not None:
+        if type(raw_text) is list:
+            clean_text = list()
+            for raw_text_item in raw_text:
+                clean_text.append(' \n '.join([i.strip() for i in raw_text_item.split('\n') if len(i.strip()) > 0]))
+        else:
+            clean_text = ' \n '.join([i.strip() for i in raw_text.split('\n') if len(i.strip()) > 0])
+        parts = attribute_name.split(".")
+        attribute_end_name = parts[len(parts)-1]
+        json_end = json_data
+        for i in range(0, len(parts)-1):
+            json_end = json_end[parts[i]]
+        json_end[attribute_end_name] = clean_text
+    return json_data
+
 if __name__ == "__main__":
     sc = SparkContext(appName="EFFECT-WORKFLOW")
     sqlContext = HiveContext(sc)
@@ -135,7 +160,9 @@ if __name__ == "__main__":
     inputTable = args.inputTable.strip()
     outputFilename = args.output.strip()
     outputFileType = args.outputtype.strip()
-    hiveQuery = args.query.strip()  #"select * from CDR where source_name='hg-blogs' and raw_content like '%CVE-%'"
+    hiveQuery = args.query.strip()
+    #hiveQuery = "select * from CDR where source_name='hg-blogs' and raw_content like '%CVE-%'"
+    # hiveQuery = "select * from CDR where source_name='asu-twitter'"
     numPartitions = int(args.partitions)
 
     numFramerPartitions = numPartitions / 2
@@ -183,14 +210,53 @@ if __name__ == "__main__":
 
                     cve_regex_extractor_processor = ExtractorProcessor() \
                         .set_name('cve_from_extracted_text-regex') \
-                        .set_input_fields('json_rep.text') \
+                        .set_input_fields('raw_content') \
                         .set_output_field('extractions.cve') \
                         .set_extractor(cve_regex_extractor)
 
-                    cdr_extractions_rdd = cdr_data.mapValues(
+                    cdr_extractions_cve_rdd = cdr_data.mapValues(
                         lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
+
+                    from bbn.parameters import Parameters
+                    params = Parameters('ner.params')
+                    params.print_params()
+
+                    zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
+                    zip_ref.extractall()
+                    zip_ref.close()
+
+
+                    from bbn.ner_feature import NerFeature
+
+                    ner_fea = NerFeature(params)
+
+                    from bbn import decoder
+                    from bbn.decoder import Decoder
+
+                    def apply_bbn_extractor(data):
+                        content_type = None
+                        attribute_name = None
+
+                        if data["source_name"] == 'hg-blogs':
+                            content_type = "Blog"
+                            attribute_name = "json_rep.text"
+                        elif data["source_name"] == 'asu-twitter':
+                            content_type = "SocialMediaPosting"
+                            attribute_name = "json_rep.tweetContent"
+
+                        if content_type is not None:
+                            data = remove_blank_lines(data, attribute_name)
+                            return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
+                        return data
+
+                    cdr_extractions_rdd = cdr_extractions_cve_rdd.repartition(numPartitions*20)\
+                            .mapValues(lambda x : apply_bbn_extractor(x))\
+                            .repartition(numPartitions)\
+                            .persist(StorageLevel.MEMORY_AND_DISK)
+
                     if save_intermediate_files is True:
                         fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions', outputFileType, "json")
+                    #cdr_extractions_rdd.mapValues(lambda x: json.dumps(x)).map(lambda x: x[1]).saveAsTextFile(outputFilename + "/cdr_extractions_txt")
                 else:
                     cdr_extractions_rdd = sc.sequenceFile(outputFilename + "/cdr_extractions").mapValues(
                         lambda x: json.loads(x)).partitionBy(numPartitions).persist(StorageLevel.MEMORY_AND_DISK)
@@ -199,12 +265,12 @@ if __name__ == "__main__":
                 # Run karma model as per the source of the data
                 reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
                                                                       base_uri,
-                                                                      numPartitions, numFramerPartitions).persist(
-                    StorageLevel.MEMORY_AND_DISK)
+                                                                      numPartitions, numFramerPartitions)\
+                                        .persist(StorageLevel.MEMORY_AND_DISK)
             else:
                 reduced_rdd = workflow.apply_karma_model_per_msg_type(None, models, context_url, base_uri,
-                                                                      numPartitions, numFramerPartitions).persist(
-                    StorageLevel.MEMORY_AND_DISK)
+                                                                      numPartitions, numFramerPartitions)\
+                                        .persist(StorageLevel.MEMORY_AND_DISK)
             fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
 
     # Frame the results
@@ -246,4 +312,3 @@ if __name__ == "__main__":
             for type_name in type_to_rdd_json:
                 type_to_rdd_json[type_name]["rdd"].unpersist()
 
-    
