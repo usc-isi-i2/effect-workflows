@@ -2,8 +2,8 @@
 
 irregularities_path="/user/hive/warehouse/effect_daily_irregularitites"
 smtpServer="smtp.isi.edu"
-fromMailID="osuba@isi.edu"
-toMailIDs="osuba@isi.edu,yellappa@isi.edu,dipsykapoor@gmail.com"
+fromMailID="dipsy@isi.edu"
+toMailIDs="dipsykapoor@gmail.com"
 subject="EFFECT DAILT AUDIT EMAIL"
 body="Please find below the sources with probable inconsistencies in the number of records:"
 team="ISI" #ISI
@@ -24,6 +24,6 @@ if [ $records > 0 ]; then
 	echo $'\n' >> body.txt
 
 	echo $team >> body.txt
-	mailx -S smtp=$smtpServer -r $fromMailID -s $subject -v $toMailIDs < body.txt
+	mail -S smtp=$smtpServer -r $fromMailID -s $subject -v $toMailIDs < body.txt
 
 fi

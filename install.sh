@@ -9,15 +9,27 @@ git pull
 
 WORKFLOWSBASE="$PWD"
 
+cd ..
+git clone https://gitlab.com/isi-bbn/bbn-spark.git
+cd bbn-spark
+git pull
+BBNBASE="$PWD"
+
 cd $CUR_DIR
 echo "Updating make.sh.."
 grep -v "WORKFLOWSBASE=" make.sh > make2.sh
+grep -v "BBNBASE=" make2.sh > make3.sh
 echo WORKFLOWSBASE=$WORKFLOWSBASE > make.sh
-cat make2.sh >> make.sh
+echo BBNBASE=$BBNBASE > make.sh
+cat make3.sh >> make.sh
 rm make2.sh
+rm make3.sh
 
 echo "Running make.sh..."
 conda env create -f environment.yml
+source activate effect-env
+python -m spacy.en.download
+source deactivate
 /bin/bash ./make.sh
 
 echo "Downloading Karma"
