@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     #url_cpe = "https://effect.hyperiongray.com/api/cpe/"
     if(args.date == "1970-01-01T00:00:00Z"):
-        url_cpe = "https://effect.hyperiongray.com/api/cpe" #To get everything
+        url_cpe = "https://effect.hyperiongray.com/api/cpe/" #To get everything
     else:
         url_cpe = "https://effect.hyperiongray.com/api/cpe/updates/" + str(args.date)
 

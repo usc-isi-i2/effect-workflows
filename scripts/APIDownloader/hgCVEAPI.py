@@ -29,7 +29,7 @@ if __name__ == "__main__":
     print ("Got arguments:", args)
 
     if(args.date == "1970-01-01T00:00:00Z"):
-        url_cve = "https://effect.hyperiongray.com/api/cve" #To get everything
+        url_cve = "https://effect.hyperiongray.com/api/cve/" #To get everything
     else:
         url_cve = "https://effect.hyperiongray.com/api/cve/updates/" + str(args.date)
 
