@@ -45,9 +45,9 @@ if __name__ == "__main__":
         return {
             "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
             "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
-            "vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Item&" + date_filter,
+            #"vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Item&" + date_filter,
             "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
-            "vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Post&" + date_filter,
+            #"vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Post&" + date_filter,
             "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
         }
 
