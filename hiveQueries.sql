@@ -13,7 +13,20 @@ STORED AS ORC;
 CREATE TABLE IF NOT EXISTS daily_audit_data (
 date_of_pull string,
 source_name string,
-count INT)
+count_downloaded INT)
+ROW FORMAT delimited
+fields terminated by ','
+lines terminated by '\n'
+STORED AS textfile;
+
+CREATE TABLE IF NOT EXISTS daily_audit_report (
+source_name string,
+count_downloaded INT,
+weekly_avg INT,
+last_date_of_pull STRING,
+average INT,
+median INT)
+PARTITIONED BY (date_of_pull STRING)
 ROW FORMAT delimited
 fields terminated by ','
 lines terminated by '\n'
@@ -22,14 +35,14 @@ STORED AS textfile;
 SET hive.exec.compress.intermediate=true;
 SET hive.exec.compress.output=true;
 
-INSERT INTO table daily_audit_data
+INSERT INTO TABLE daily_audit_data
 SELECT
-FROM_UNIXTIME(TIMESTAMP,"MM/dd/yyyy") AS date_of_pull,
+FROM_UNIXTIME(TIMESTAMP,"yyyy-MM-dd") AS date_of_pull,
 source_name,
-COUNT(*) AS count
+COUNT(*) AS count_downloaded
 FROM cdr
 GROUP BY
-FROM_UNIXTIME(TIMESTAMP,"MM/dd/yyyy"),source_name;
+FROM_UNIXTIME(TIMESTAMP,"yyyy-MM-dd"),source_name;
 
 # Create table for hackmagadden
 CREATE TABLE hackmageddon (raw_content STRING)
