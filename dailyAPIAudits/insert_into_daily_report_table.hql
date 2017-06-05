@@ -4,8 +4,6 @@ SET hive.exec.compress.output=false;
 SET hive.auto.convert.join=true;
 SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
-// set hive.exec.max.dynamic.partitions=1000;
-// set hive.exec.max.dynamic.partitions.pernode=1000;
 
 INSERT OVERWRITE TABLE daily_audit_report 
 PARTITION(date_of_pull)

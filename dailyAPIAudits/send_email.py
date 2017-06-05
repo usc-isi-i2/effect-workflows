@@ -3,7 +3,6 @@ import subprocess
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime as dt
-import numpy as np
 
 date_of_pull=dt.datetime.today().strftime("%Y-%m-%d")
 cat = subprocess.Popen(["hadoop", "fs", "-cat", "/user/hive/warehouse/daily_audit_report/date_of_pull="+date_of_pull+"/*"], stdout=subprocess.PIPE)
