@@ -110,28 +110,40 @@ def hdfs_data_done(hdfs_client, folder):
 
 
 def find(element, json):
-    x = reduce(lambda d, key: d.get(key, {}), element.split("."), json)
-    if any(x) is True:
-        return x
+    try:
+        x = reduce(lambda d, key: d.get(key, {}), element.split("."), json)
+        if x is not None:
+            if any(x) is True:
+                return x
+    except:
+        return None
     return None
 
 
 def remove_blank_lines(json_data, attribute_name):
-    raw_text = find(attribute_name, json_data)
-    if raw_text is not None:
-        if type(raw_text) is list:
-            clean_text = list()
-            for raw_text_item in raw_text:
-                clean_text.append(' \n '.join([i.strip() for i in raw_text_item.split('\n') if len(i.strip()) > 0]))
-        else:
-            clean_text = ' \n '.join([i.strip() for i in raw_text.split('\n') if len(i.strip()) > 0])
-        parts = attribute_name.split(".")
-        attribute_end_name = parts[len(parts)-1]
-        json_end = json_data
-        for i in range(0, len(parts)-1):
-            json_end = json_end[parts[i]]
-        json_end[attribute_end_name] = clean_text
-    return json_data
+    clean_data = {}
+    clean_data["data"] = json_data
+    clean_data["success"] = False
+
+    if json_data is not None:
+        raw_text = find(attribute_name, json_data)
+        if raw_text is not None:
+            if type(raw_text) is list:
+                clean_text = list()
+                for raw_text_item in raw_text:
+                    clean_text.append(' \n '.join([i.strip() for i in raw_text_item.split('\n') if len(i.strip()) > 0]))
+            else:
+                clean_text = ' \n '.join([i.strip() for i in raw_text.split('\n') if len(i.strip()) > 0])
+            parts = attribute_name.split(".")
+            attribute_end_name = parts[len(parts)-1]
+            json_end = json_data
+            for i in range(0, len(parts)-1):
+                json_end = json_end[parts[i]]
+            json_end[attribute_end_name] = clean_text
+
+            clean_data["data"] = json_data
+            clean_data["success"] = True
+    return clean_data
 
 if __name__ == "__main__":
     sc = SparkContext(appName="EFFECT-WORKFLOW")
@@ -245,8 +257,10 @@ if __name__ == "__main__":
                             attribute_name = "json_rep.tweetContent"
 
                         if content_type is not None:
-                            data = remove_blank_lines(data, attribute_name)
-                            return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
+                            clean_data = remove_blank_lines(data, attribute_name)
+                            if clean_data["success"] is True:
+                                data = clean_data["data"]
+                                return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
                         return data
 
                     cdr_extractions_rdd = cdr_extractions_cve_rdd.repartition(numPartitions*20)\
