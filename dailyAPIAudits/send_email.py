@@ -7,7 +7,7 @@ import datetime as dt
 date_of_pull=dt.datetime.today().strftime("%Y-%m-%d")
 cat = subprocess.Popen(["hadoop", "fs", "-cat", "/user/hive/warehouse/daily_audit_report/date_of_pull="+date_of_pull+"/*"], stdout=subprocess.PIPE)
 
-column_list = ["Source Name", "Number Downloaded", "Average Downloaded Last Week", "Last Date of Pull", "Average", "Median"]
+column_list = ["Source Name", "Number Downloaded", "Average Downloaded Last Week", "Last Date Data Received", "Average Downloaded", "Median of Data Downloaded"]
 col_header=""
 for col in column_list:
     col_header+="<th>"+col+"</th>"
@@ -36,10 +36,11 @@ ISI"""
 
 html = """
 <html><body><p>Hi,</p>
-<p>Summary of Effect Daily Audit Report:</p>
+<p><b>Summary of Effect Daily Audit Report:<b></p>
 <table border="1" cellpadding="5">
 {table}
 </table>
+<p>Please note that the Averages and Median Computations do not include days that we receive no results</p>
 <p>Regards,</p>
 <p>ISI</p>
 </body></html>
@@ -51,12 +52,12 @@ html=html.format(table=rowData)
 msg = MIMEMultipart(
     "alternative", None, [MIMEText(text), MIMEText(html,'html')])
 
-from_addr = 'osuba@isi.edu'
-to_addr = ['osuba@isi.edu']
+from_addr = 'oozie@isi.edu'
+to_addr = ['osuba@isi.edu','dipsy@isi.edu','bmackintosh@hyperiongray.com','knoblock@usc.edu','aagraw25@asu.edu','shak@asu.edu']
 
 msg['Subject'] = 'Effect Daily API Audit'
 msg['From'] = from_addr
-msg['To'] = str(to_addr)
+msg['To'] = ", ".join(to_addr)
 
 # Send the message via our own SMTP server, but don't include the
 # envelope header.
