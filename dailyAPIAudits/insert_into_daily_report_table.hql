@@ -6,7 +6,6 @@ SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
 set hive.exec.max.dynamic.partitions=1000;
 
-ADD FILE find_median.py;
 
 INSERT OVERWRITE TABLE daily_audit_report 
 PARTITION(date_of_pull)
@@ -21,28 +20,15 @@ CASE WHEN (g.count_downloaded IS NULL) THEN 0 ELSE g.count_downloaded END,
 CASE WHEN (h.count_downloaded IS NULL) THEN 0 ELSE h.count_downloaded END,
 CASE WHEN (i.count_downloaded IS NULL) THEN 0 ELSE i.count_downloaded END,
 CAST(a.average AS INT),
-CAST(a.median AS INT),
+0,
 FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd') as date_of_pull
 FROM
-(SELECT a.source_name,
-a.average,
-b.median FROM
-(select source_name,
-sum(count_downloaded)/datediff(from_unixtime(unix_timestamp(),'yyyy-MM-dd'),b.min_date) as average
-from daily_audit_data a join 
-(select min(date_of_pull) as min_date, source_name from daily_audit_data group by source_name) b
+(SELECT source_name,
+sum(count_downloaded)/datediff(from_unixtime(unix_timestamp(),'yyyy-MM-dd'),b.min_date) AS average
+from daily_audit_data a JOIN 
+(select min(date_of_pull) AS min_date, source_name from daily_audit_data group by source_name) b
 on a.source_name=b.source_name 
-group by a.source_name,b.min_date) a
-join
-(select transform(a.source_name,count_downloaded,
-datediff(from_unixtime(unix_timestamp(),'yyyy-MM-dd'),b.min_date)) using 'python find_median.py'
-as source_name,median
-from daily_audit_data a
-join 
-(select min(date_of_pull) as min_date, 
-source_name from daily_audit_data group by source_name) b 
-on a.source_name=b.source_name) b
-on a.source_name=b.source_name) a
+GROUP BY a.source_name,b.min_date) a
 FULL OUTER JOIN
 (SELECT
 source_name,

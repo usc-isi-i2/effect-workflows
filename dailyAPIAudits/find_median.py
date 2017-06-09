@@ -1,11 +1,9 @@
 import sys
 import logging
-from itertools import groupby
-from operator import itemgetter
 import numpy as np
 from collections import defaultdict
 import datetime as dt
-import scipy.stats as stats
+
 SEP = '\t'
 NULL = '\\N'
 

@@ -16,7 +16,7 @@ day_minus_6 = (dt.date.today() - dt.timedelta(6)).strftime("%Y-%m-%d")
 cat = subprocess.Popen(["hadoop", "fs", "-cat", "/user/hive/warehouse/daily_audit_report/date_of_pull="+date_of_pull+"/*"], stdout=subprocess.PIPE)
 
 column_list = ["Source Name", "Last Day of Pull",date_of_pull, 
-day_minus_1,day_minus_2,day_minus_3,day_minus_4,day_minus_5,day_minus_6,"Average Downloaded", "Median Downloaded"]
+day_minus_1,day_minus_2,day_minus_3,day_minus_4,day_minus_5,day_minus_6,"Average Downloaded"]
 
 col_header=""
 for col in column_list:
@@ -36,8 +36,7 @@ for line in cat.stdout:
         rowDict+="<td align='center'>"+row[6]+"</td>"
         rowDict+="<td align='center'>"+row[7]+"</td>"
         rowDict+="<td align='center'>"+row[8]+"</td>"
-        rowDict+="<td align='center'>"+row[9]+"</td>"
-        rowDict+="<td align='center'>"+row[10]+"</td></tr>"
+        rowDict+="<td align='center'>"+row[9]+"</td></tr>"
         rowData+=rowDict
 text = """
 Hi,
