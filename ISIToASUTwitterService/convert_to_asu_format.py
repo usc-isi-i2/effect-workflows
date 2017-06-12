@@ -139,8 +139,8 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
     	    try:
                 jsonObject=json.loads(line)
     	    except Exception as e:
-    		    print(str(e)+": "+inputFile.name+": "+line)
-    		    continue
+    	        print(str(e)+": "+inputFile.name+": "+line)
+    	        continue
             data.append(jsonObject)
     return getConvertedData(data)
 
