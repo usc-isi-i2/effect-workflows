@@ -46,13 +46,11 @@ def getTwitterData():
     toDate = request.args.get('to') if request.args.get('to') else datetime.datetime.today().strftime("%Y-%m-%d")
     hashTag = request.args.get('hashTag')
     results = []
-    results = convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id,hashTag)
-    count=len(results)
+    count,results = convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id,hashTag)
     results=results[start:start+limit] if start+limit < count else results[start:count]
     return Response(json.dumps(GetTwitterData(count,results),default=jsonDefault,indent=1), mimetype='application/json')
 
 def getFile(inputDirectory,inputFile):
-    corrupted=False
     fileName = os.path.splitext(os.path.basename(inputFile))[0]
     if fileName.endswith("tar"):
         tar = tarfile.open(inputFile)
@@ -62,40 +60,36 @@ def getFile(inputDirectory,inputFile):
             fileName=fileName.split(".")[0]
         except Exception as e:
             print(fileName+": "+str(e))
-            try:
-                tar = tarfile.open(inputFile, "r:gz")
-                tar.extractall(inputDirectory)
-            except Exception as ex:
-                print(fileName+": "+str(ex))
-                fileName=fileName.split(".")[0]
-                f=open(inputDirectory+"/"+fileName+".json")
-                corrupted=True
+            return None,fileName
     else:
         f=open(inputFile)
-    return f,fileName,corrupted
+    return f,fileName
 
 def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag):
-
+    totalCount=0
     results=[]
     dataFiles = glob.glob(inputDirectory+"/*")
     dataFiles.sort()
     # if parameter 'from' is not provided
     if fromDate is not None:
         for inputFile in dataFiles:
-            corrupted=False
-            f,fileName,corrupted=getFile(inputDirectory,inputFile)
-            if parse(fileName) >= parse(fromDate) and parse(fileName) <= parse(toDate):
-                results.extend(getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f))
-                if corrupted:
-                    os.remove(inputDirectory+"/"+fileName+".json")
+            f,fileName=getFile(inputDirectory,inputFile)
+            if f is not None: 
+                count=0
+                res=[]
+                if parse(fileName) >= parse(fromDate) and parse(fileName) <= parse(toDate):
+                    count,res=getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f)
+                    results.extend(res)
+                    totalCount+=count
     else:
         for inputFile in dataFiles:
-            f,fileName,corrupted=getFile(inputDirectory,inputFile)
-            if parse(fileName) <= parse(toDate):
-                results.extend(getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f))
-                if corrupted:
-                    os.remove(inputDirectory+"/"+fileName+".json")
-    return results
+            f,fileName=getFile(inputDirectory,inputFile)
+            if f is not None: 
+                if parse(fileName) <= parse(toDate):
+                    count,res=getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f)
+                    results.extend(res)
+                    totalCount+=count
+    return totalCount,results
 
 def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, inputFile):
     count = 0
@@ -132,17 +126,22 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
                                 appendBool=True
                                 break;
                 if appendBool:
-                    data.append(jsonObject)
+                    count+=1
                     appendBool=False
+                    if len(data)<=start+limit:
+                        data.append(jsonObject)
+                    
     else:
         for line in inputFile:
     	    try:
                 jsonObject=json.loads(line)
+                count+=1
     	    except Exception as e:
     	        print(str(e)+": "+inputFile.name+": "+line)
     	        continue
-            data.append(jsonObject)
-    return getConvertedData(data)
+            if len(data)<=start+limit:
+                data.append(jsonObject)
+    return count,getConvertedData(data)
 
 def getConvertedData(data):
     convertedData=[]
