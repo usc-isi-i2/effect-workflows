@@ -1,11 +1,15 @@
 SET hive.exec.compress.intermediate=true;
 SET hive.exec.compress.output=true;
+SET hive.exec.dynamic.partition=true;
+SET hive.exec.dynamic.partition.mode=nonstrict;
+SET hive.exec.max.dynamic.partitions=1000;
 
-INSERT INTO TABLE daily_audit_data
+INSERT OVERWRITE TABLE daily_audit_data
+PARTITION(date_of_pull)
 SELECT 
-FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd') as date_of_pull,
 source_name,
-count(source_name) 
+COUNT(source_name) AS count_downloaded,
+FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd') as date_of_pull
 FROM 
 cdr 
 WHERE FROM_UNIXTIME(timestamp,'yyyy-MM-dd')=FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd')

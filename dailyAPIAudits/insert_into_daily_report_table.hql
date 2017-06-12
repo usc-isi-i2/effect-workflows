@@ -4,7 +4,7 @@ SET hive.exec.compress.output=false;
 SET hive.auto.convert.join=true;
 SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
-set hive.exec.max.dynamic.partitions=1000;
+SET hive.exec.max.dynamic.partitions=1000;
 
 
 INSERT OVERWRITE TABLE daily_audit_report 
