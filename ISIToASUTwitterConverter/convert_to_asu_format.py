@@ -39,8 +39,8 @@ def getTwitterData():
     start = int(request.args.get('start')) if request.args.get('start') else 0
     retweet_count = request.args.get('retweet')
     userName = request.args.get('userName')
-    tweet_id = request.args.get('tweet_id') if request.args.get('tweet_id') else None
-    conversation_id = request.args.get('conversation_id') if request.args.get('conversation_id') else None
+    tweet_id = request.args.get('tweetId') if request.args.get('tweetId') else None
+    conversation_id = request.args.get('conversationId') if request.args.get('conversationId') else None
     fromDate = request.args.get('from')
     # if parameter 'to' is not provided, take today's date
     toDate = request.args.get('to') if request.args.get('to') else datetime.datetime.today().strftime("%Y-%m-%d")
