@@ -61,12 +61,12 @@ def getFile(inputDirectory,inputFile):
             f=tar.extractfile(tar.getmembers()[0])
             fileName=fileName.split(".")[0]
         except Exception as e:
-            print(e)
+            print(fileName+": "+str(e))
             try:
                 tar = tarfile.open(inputFile, "r:gz")
                 tar.extractall(inputDirectory)
             except Exception as ex:
-                print(ex)
+                print(fileName+": "+str(ex))
                 fileName=fileName.split(".")[0]
                 f=open(inputDirectory+"/"+fileName+".json")
                 corrupted=True
@@ -91,14 +91,10 @@ def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, 
     else:
         for inputFile in dataFiles:
             f,fileName,corrupted=getFile(inputDirectory,inputFile)
-            # fileName = os.path.splitext(os.path.basename(inputFile))[0]
-            # if fileName.endswith("tar.gz"):
-            #     tar = tarfile.open(fileName)
-            #     f=tar.extractfile(member)
-            # else:
-            #     f=open(inputFile)
             if parse(fileName) <= parse(toDate):
-                result.extend(getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f))
+                results.extend(getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f))
+                if corrupted:
+                    os.remove(inputDirectory+"/"+fileName+".json")
     return results
 
 def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, inputFile):
@@ -110,11 +106,11 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
     #filter coditions
     if retweet_count or userName or tweet_id or conversation_id or hashTag:
         for line in inputFile:
-	    try:
+            try:
                 jsonObject=json.loads(line)
-	    except Exception as e:
-		print(e)
-		continue
+            except Exception as e:
+                print(str(e)+": "+inputFile.name+": "+line)
+                continue
             if 'id' in jsonObject:
                 if retweet_count is not None:
                     if jsonObject['retweet_count']==retweet_count:
@@ -140,11 +136,11 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
                     appendBool=False
     else:
         for line in inputFile:
-	    try:
+    	    try:
                 jsonObject=json.loads(line)
-	    except Exception as e:
-		print(e)
-		continue
+    	    except Exception as e:
+    		    print(str(e)+": "+inputFile.name+": "+line)
+    		    continue
             data.append(jsonObject)
     return getConvertedData(data)
 
