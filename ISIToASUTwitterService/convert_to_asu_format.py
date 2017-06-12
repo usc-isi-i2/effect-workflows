@@ -51,6 +51,29 @@ def getTwitterData():
     results=results[start:start+limit] if start+limit < count else results[start:count]
     return Response(json.dumps(GetTwitterData(count,results),default=jsonDefault,indent=1), mimetype='application/json')
 
+def getFile(inputDirectory,inputFile):
+    corrupted=False
+    fileName = os.path.splitext(os.path.basename(inputFile))[0]
+    if fileName.endswith("tar"):
+        tar = tarfile.open(inputFile)
+        try:
+            members=tar.getmembers()
+            f=tar.extractfile(tar.getmembers()[0])
+            fileName=fileName.split(".")[0]
+        except Exception as e:
+            print(e)
+            try:
+                tar = tarfile.open(inputFile, "r:gz")
+                tar.extractall(inputDirectory)
+            except Exception as ex:
+                print(ex)
+                fileName=fileName.split(".")[0]
+                f=open(inputDirectory+"/"+fileName+".json")
+                corrupted=True
+    else:
+        f=open(inputFile)
+    return f,fileName,corrupted
+
 def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag):
 
     results=[]
@@ -59,24 +82,21 @@ def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, 
     # if parameter 'from' is not provided
     if fromDate is not None:
         for inputFile in dataFiles:
-            fileName = os.path.splitext(os.path.basename(inputFile))[0]
-	    print(fileName)
-            if fileName.endswith("tar"):
-                tar = tarfile.open(inputFile)
-                f=tar.extractfile(tar.getmembers()[0])
-		fileName=fileName.split(".")[0]
-            else:
-                f=open(inputFile)
+            corrupted=False
+            f,fileName,corrupted=getFile(inputDirectory,inputFile)
             if parse(fileName) >= parse(fromDate) and parse(fileName) <= parse(toDate):
                 results.extend(getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f))
+                if corrupted:
+                    os.remove(inputDirectory+"/"+fileName+".json")
     else:
         for inputFile in dataFiles:
-            fileName = os.path.splitext(os.path.basename(inputFile))[0]
-            if fileName.endswith("tar.gz"):
-                tar = tarfile.open(fileName)
-                f=tar.extractfile(member)
-            else:
-                f=open(inputFile)
+            f,fileName,corrupted=getFile(inputDirectory,inputFile)
+            # fileName = os.path.splitext(os.path.basename(inputFile))[0]
+            # if fileName.endswith("tar.gz"):
+            #     tar = tarfile.open(fileName)
+            #     f=tar.extractfile(member)
+            # else:
+            #     f=open(inputFile)
             if parse(fileName) <= parse(toDate):
                 result.extend(getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f))
     return results
@@ -90,7 +110,11 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
     #filter coditions
     if retweet_count or userName or tweet_id or conversation_id or hashTag:
         for line in inputFile:
-            jsonObject=json.loads(line)
+	    try:
+                jsonObject=json.loads(line)
+	    except Exception as e:
+		print(e)
+		continue
             if 'id' in jsonObject:
                 if retweet_count is not None:
                     if jsonObject['retweet_count']==retweet_count:
@@ -116,7 +140,11 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
                     appendBool=False
     else:
         for line in inputFile:
-            jsonObject=json.loads(line)
+	    try:
+                jsonObject=json.loads(line)
+	    except Exception as e:
+		print(e)
+		continue
             data.append(jsonObject)
     return getConvertedData(data)
 
