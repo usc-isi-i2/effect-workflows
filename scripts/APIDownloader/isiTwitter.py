@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     print ("Got arguments:", args)
-
-    headers = {"userId" :"usc","apiKey": args.password, "Connection" : "close"}
+    #
+    # headers = {"userId" :"usc","apiKey": args.password, "Connection" : "close"}
 
     def write_output_to_file(file_name, result):
         out_file = open(file_name, 'w')
@@ -43,12 +43,7 @@ if __name__ == "__main__":
     def get_all_urls():
         date_filter = "from=" + args.date + "&to=" + args.date
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
-            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
-            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
-            "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
-            #"vulnerability-posts": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Post&" + date_filter,
-            #"vulnerability-items": "https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?order=scrapedDate&indicator=Item&" + date_filter,
+            "twitter": "http://luxo.isi.edu:5000/getTwitterData?" + date_filter
         }
 
     apiDownloader = APIDownloader(sc, sqlContext)
@@ -62,7 +57,7 @@ if __name__ == "__main__":
         while done is False:
             paging_url = urls[api_name] + "&start=" + str(start) + "&limit=" + str(max_limit)
             num_results = 0
-            res = apiDownloader.download_api(paging_url, None, None, headers)
+            res = apiDownloader.download_api(paging_url, None, None, None)
             if (res is not None) and 'results' in res:
                 num_results = len(res['results'])
                 print api_name, ": num results:", num_results
