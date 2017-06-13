@@ -173,7 +173,8 @@ if __name__ == "__main__":
     outputFilename = args.output.strip()
     outputFileType = args.outputtype.strip()
     hiveQuery = args.query.strip()
-    #hiveQuery = "select * from CDR where source_name='hg-blogs' and raw_content like '%CVE-%'"
+
+    # hiveQuery = "select * from CDR where source_name='asu-hacking-items'"
     # hiveQuery = "select * from CDR where source_name='asu-twitter'"
     numPartitions = int(args.partitions)
 
@@ -226,8 +227,23 @@ if __name__ == "__main__":
                         .set_output_field('extractions.cve') \
                         .set_extractor(cve_regex_extractor)
 
-                    cdr_extractions_cve_rdd = cdr_data.mapValues(
-                        lambda x: cve_regex_extractor_processor.extract(x)).persist(StorageLevel.MEMORY_AND_DISK)
+                    msid_regex = re.compile('(ms[0-9]{2}-[0-9]{3})', re.IGNORECASE)
+                    msid_regex_extractor = RegexExtractor() \
+                        .set_regex(msid_regex) \
+                        .set_metadata({'extractor': 'msid-regex'}) \
+                        .set_include_context(True) \
+                        .set_renamed_input_fields('text')
+
+                    msid_regex_extractor_processor = ExtractorProcessor() \
+                        .set_name('msid_from_extracted_text-regex') \
+                        .set_input_fields('raw_content') \
+                        .set_output_field('extractions.msid') \
+                        .set_extractor(msid_regex_extractor)
+
+                    cdr_extractions_isi_rdd = cdr_data\
+                            .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
+                            .mapValues(lambda x: msid_regex_extractor_processor.extract(x))\
+                            .persist(StorageLevel.MEMORY_AND_DISK)
 
                     from bbn.parameters import Parameters
                     params = Parameters('ner.params')
@@ -263,7 +279,7 @@ if __name__ == "__main__":
                                 return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
                         return data
 
-                    cdr_extractions_rdd = cdr_extractions_cve_rdd.repartition(numPartitions*20)\
+                    cdr_extractions_rdd = cdr_extractions_isi_rdd.repartition(numPartitions*20)\
                             .mapValues(lambda x : apply_bbn_extractor(x))\
                             .repartition(numPartitions)\
                             .persist(StorageLevel.MEMORY_AND_DISK)
@@ -277,6 +293,7 @@ if __name__ == "__main__":
                 cdr_extractions_rdd.setName("cdr_extractions")
 
                 # Run karma model as per the source of the data
+                reduced_rdd = None
                 reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
                                                                       base_uri,
                                                                       numPartitions, numFramerPartitions)\

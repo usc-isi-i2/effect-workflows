@@ -67,12 +67,11 @@ msg = MIMEMultipart(
     "alternative", None, [MIMEText(text), MIMEText(html,'html')])
 
 from_addr = 'osuba@isi.edu'
-to_addr = ['osuba@isi.edu']
+to_addr = ['osuba@isi.edu','dipsy@isi.edu']
 
 msg['Subject'] = 'Effect Daily API Audit'
 msg['From'] = from_addr
-msg['To'] = str(to_addr)
-
+msg['To'] = ", ".join(to_addr)
 # Send the message via our own SMTP server, but don't include the
 # envelope header.
 s = smtplib.SMTP('smtp.isi.edu')
