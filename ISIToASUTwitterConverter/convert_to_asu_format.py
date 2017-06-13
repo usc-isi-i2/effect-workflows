@@ -6,7 +6,7 @@ import os
 import tarfile
 import datetime
 
-inputDirectory = "/Users/osuba/Documents/Studies/ISI/EFFECT/onzali/effect-twitter-data-conversion/data" #"/nfs/topaz/annas/bin/cause-effect/twitter/streamdata"
+inputDirectory = "/nfs/topaz/annas/bin/cause-effect/twitter/streamdata"
 
 app = Flask(__name__)
 
