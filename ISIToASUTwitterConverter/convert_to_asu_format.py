@@ -6,7 +6,7 @@ import os
 import tarfile
 import datetime
 
-inputDirectory = "/nfs/topaz/annas/bin/cause-effect/twitter/streamdata"
+inputDirectory = "/Users/osuba/Documents/Studies/ISI/EFFECT/onzali/effect-twitter-data-conversion/data" #"/nfs/topaz/annas/bin/cause-effect/twitter/streamdata"
 
 app = Flask(__name__)
 
@@ -35,16 +35,17 @@ def jsonDefault(object):
 
 @app.route('/getTwitterData', methods=['GET'])
 def getTwitterData():
-    limit = int(request.args.get('limit')) if request.args.get('limit') else 10
-    start = int(request.args.get('start')) if request.args.get('start') else 0
-    retweet_count = request.args.get('retweet')
-    userName = request.args.get('userName')
-    tweet_id = request.args.get('tweetId') if request.args.get('tweetId') else None
-    conversation_id = request.args.get('conversationId') if request.args.get('conversationId') else None
-    fromDate = request.args.get('from')
+    args=request.args
+    limit = int(args.get('limit')) if args.get('limit') else 10
+    start = int(args.get('start')) if args.get('start') else 0
+    retweet_count = args.get('retweet')
+    userName = args.get('userName')
+    tweet_id = args.get('tweetId') if args.get('tweetId') else None
+    conversation_id = args.get('conversationId') if args.get('conversationId') else None
+    fromDate = args.get('from')
     # if parameter 'to' is not provided, take today's date
-    toDate = request.args.get('to') if request.args.get('to') else datetime.datetime.today().strftime("%Y-%m-%d")
-    hashTag = request.args.get('hashTag')
+    toDate = args.get('to') if args.get('to') else datetime.datetime.today().strftime("%Y-%m-%d")
+    hashTag = args.get('hashTag')
     results = []
     count,results = convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id,hashTag)
     results=results[start:start+limit] if start+limit < count else results[start:count]
@@ -68,7 +69,10 @@ def getFile(inputDirectory,inputFile):
 def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag):
     totalCount=0
     results=[]
-    dataFiles = glob.glob(inputDirectory+"/*")
+    types = ('*.json', '*.tar.gz')
+    dataFiles = []
+    for files in types:
+        dataFiles.extend(glob.glob(inputDirectory+"/"+files))
     dataFiles.sort()
     # if parameter 'from' is not provided
     if fromDate is not None:
@@ -116,7 +120,10 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
                     if jsonObject['id_str']==tweet_id:
                         appendBool=True
                 if conversation_id is not None:
-                    if jsonObject['in_reply_to_status_id_str']==conversation_id:
+                    conversationId=jsonObject['in_reply_to_status_id_str']
+                    if jsonObject['in_reply_to_status_id_str'] is None:
+                        conversationId=jsonObject['id_str']
+                    if conversationId==conversation_id:
                         appendBool=True
                 if hashTag is not None:
                     hashTags=jsonObject['entities']['hashtags']
