@@ -38,10 +38,15 @@ if __name__ == "__main__":
             out_file.write(line + "\n")
 
     def get_all_urls():
-        date_filter = "from=" + args.date + "&to=" + args.date
-        return {
-            "twitter": "http://luxo.isi.edu:5000/getTwitterData?" + date_filter
-        }
+        if(args.date == "1970-01-01"):
+            return {
+                "twitter": "http://luxo.isi.edu:5000/getTwitterData"
+            }
+        else:
+            date_filter = "from=" + args.date + "&to=" + args.date
+            return {
+                "twitter": "http://luxo.isi.edu:5000/getTwitterData?" + date_filter
+            }
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
@@ -69,4 +74,4 @@ if __name__ == "__main__":
             if (total_count == count) or (num_results == 0):
                 done = True
             else:
-                start = start + count
+                start = start + num_results
