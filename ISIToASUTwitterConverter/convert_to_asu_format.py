@@ -48,7 +48,6 @@ def getTwitterData():
     hashTag = args.get('hashTag')
     results = []
     count,results = convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id,hashTag)
-    results=results[start:start+limit] if start+limit < count else results[start:count]
     return Response(json.dumps(GetTwitterData(count,results),default=jsonDefault,indent=1), mimetype='application/json')
 
 def getFile(inputDirectory,inputFile):
@@ -68,36 +67,44 @@ def getFile(inputDirectory,inputFile):
 
 def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag):
     totalCount=0
+    startCount=0
     results=[]
     types = ('*.json', '*.tar.gz')
     dataFiles = []
     for files in types:
         dataFiles.extend(glob.glob(inputDirectory+"/"+files))
     dataFiles.sort()
+    
+    prevFileName=""
     # if parameter 'from' is not provided
     if fromDate is not None:
         for inputFile in dataFiles:
             f,fileName=getFile(inputDirectory,inputFile)
+            if prevFileName==fileName:
+                continue
+            prevFileName=fileName
             if f is not None: 
                 count=0
                 res=[]
                 if parse(fileName) >= parse(fromDate) and parse(fileName) <= parse(toDate):
-                    count,res=getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f)
+                    startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f)
                     results.extend(res)
                     totalCount+=count
     else:
         for inputFile in dataFiles:
             f,fileName=getFile(inputDirectory,inputFile)
+            if prevFileName==fileName:
+                continue
+            prevFileName=fileName
             if f is not None: 
                 if parse(fileName) <= parse(toDate):
-                    count,res=getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f)
+                    startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f)
                     results.extend(res)
                     totalCount+=count
     return totalCount,results
 
-def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, inputFile):
+def getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, inputFile):
     count = 0
-    startRecord=0
     appendBool = False
     data = []
 
@@ -133,22 +140,24 @@ def getResults(start, limit, fromDate, toDate, retweet_count, userName, tweet_id
                                 appendBool=True
                                 break;
                 if appendBool:
+                    startCount+=1
                     count+=1
                     appendBool=False
-                    if len(data)<=start+limit:
+                    if startCount>start and len(data)<limit:
                         data.append(jsonObject)
                     
     else:
         for line in inputFile:
     	    try:
                 jsonObject=json.loads(line)
+                startCount+=1
                 count+=1
     	    except Exception as e:
     	        print(str(e)+": "+inputFile.name+": "+line)
     	        continue
-            if len(data)<=start+limit:
+            if startCount>start and len(data)<limit:
                 data.append(jsonObject)
-    return count,getConvertedData(data)
+    return startCount,count,getConvertedData(data)
 
 def getConvertedData(data):
     convertedData=[]

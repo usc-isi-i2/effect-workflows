@@ -12,11 +12,10 @@ from pyspark.sql import HiveContext
 '''
 spark-submit --deploy-mode client  \
 --files /etc/hive/conf/hive-site.xml \
---py-files /home/hadoop/effect-workflows/lib/python-lib.zip darknetAPIToJl.py \
+--py-files /home/hadoop/effect-workflows/lib/python-lib.zip isiTwitter.py \
 --date 1970-01-01 \
---team asu \
---outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/hive/19700101
---password <APIKEY>
+--team isi \
+--outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/isiTwitter/20170225
 '''
 
 if __name__ == "__main__":
@@ -27,13 +26,11 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--outputFolder", type=str, help="Output foldername", required=True)
     parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
     parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
-    parser.add_argument("-p", "--password", type=str, help="api key", required=True)
+    parser.add_argument("-p", "--password", type=str, help="api key", required=False)
 
     args = parser.parse_args()
     print ("Got arguments:", args)
-    #
-    # headers = {"userId" :"usc","apiKey": args.password, "Connection" : "close"}
-
+    
     def write_output_to_file(file_name, result):
         out_file = open(file_name, 'w')
         for line in result:
@@ -54,12 +51,14 @@ if __name__ == "__main__":
         done = False
         start = 0
         max_limit = 5000
+        count = 0
         while done is False:
             paging_url = urls[api_name] + "&start=" + str(start) + "&limit=" + str(max_limit)
-            num_results = 0
             res = apiDownloader.download_api(paging_url, None, None, None)
+            total_count = res['count']
             if (res is not None) and 'results' in res:
-                num_results = len(res['results'])
+                num_results=len(res['results'])
+                count+=num_results
                 print api_name, ": num results:", num_results
                 if num_results > 0:
                     print res['results'][0]
@@ -67,7 +66,7 @@ if __name__ == "__main__":
                     apiDownloader.load_into_cdr(res['results'], source, args.team, source)
                     rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
 
-            if (num_results < max_limit) or (num_results == 0):
+            if (total_count == count) or (num_results == 0):
                 done = True
             else:
-                start = start + num_results
+                start = start + count

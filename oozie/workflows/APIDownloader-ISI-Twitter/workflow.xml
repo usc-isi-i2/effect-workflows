@@ -1,0 +1,22 @@
+<workflow-app name="APIDownloader-ISI-Twitter" xmlns="uri:oozie:workflow:0.5">
+    <start to="shell-5480"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="shell-5480">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>/user/effect/workflow/run_isiTwitterAPI.sh</exec>
+              <argument>${date}</argument>
+              <argument>${output_folder}</argument>
+            <file>/user/effect/workflow/run_isiTwitterAPI.sh#run_isiTwitterAPI.sh</file>
+            <file>/user/effect/workflow/isiTwitter.py#isiTwitter.py</file>
+            <file>/user/effect/workflow/lib/python-lib.zip#python-lib.zip</file>
+              <capture-output/>
+        </shell>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
