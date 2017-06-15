@@ -1,5 +1,5 @@
 import json
-
+from datetime import date,timedelta
 import requests
 from argparse import ArgumentParser
 from requests.auth import HTTPBasicAuth
@@ -28,6 +28,10 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
     parser.add_argument("-p", "--password", type=str, help="api key", required=False)
 
+    start_date=date(2017,2,25) 
+    end_date=date.today() 
+    days_diff=int((end_date - start_date).days)
+    
     args = parser.parse_args()
     print ("Got arguments:", args)
     
@@ -39,26 +43,28 @@ if __name__ == "__main__":
 
     def get_all_urls():
         if(args.date == "1970-01-01"):
-            return {
-                "twitter": "http://luxo.isi.edu:5000/getTwitterData"
-            }
+            urls=[]
+            for n in range(days_diff):
+                url_date=(start_date + timedelta(n)).strftime("%Y-%m-%d")
+                date_filter = "from=" + url_date + "&to=" + url_date
+                urls.append(("http://luxo.isi.edu:5000/getTwitterData?" + date_filter,url_date))
+            return urls
         else:
             date_filter = "from=" + args.date + "&to=" + args.date
-            return {
-                "twitter": "http://luxo.isi.edu:5000/getTwitterData?" + date_filter
-            }
+            return [("http://luxo.isi.edu:5000/getTwitterData?" + date_filter,args.date)]
 
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
-
-    for api_name in urls:
+    api_name="twitter"
+    
+    for url,url_date in urls:
         source = args.team + "-" + api_name
         done = False
         start = 0
         max_limit = 5000
         count = 0
         while done is False:
-            paging_url = urls[api_name] + "&start=" + str(start) + "&limit=" + str(max_limit)
+            paging_url = url + "&start=" + str(start) + "&limit=" + str(max_limit)
             res = apiDownloader.download_api(paging_url, None, None, None)
             total_count = res['count']
             if (res is not None) and 'results' in res:
@@ -69,7 +75,10 @@ if __name__ == "__main__":
                     print res['results'][0]
                     rdd = sc.parallelize(res['results'])
                     apiDownloader.load_into_cdr(res['results'], source, args.team, source)
-                    rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
+                    if(args.date == "1970-01-01"):
+                        rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(url_date + "/" + source + "/" + str(start))
+                    else:
+                        rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
 
             if (total_count == count) or (num_results == 0):
                 done = True
