@@ -36,10 +36,28 @@ if __name__ == "__main__":
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
-    results = apiDownloader.download_api(url_abusech, "isi", args.password)
-    if results is not None:
-        print "Downloaded ", len(results), " new abusech data rows. Adding them to CDR"
-        if len(results) > 0:
-            rdd = sc.parallelize(results)
-            rdd.map(lambda x: ("hg-abusech", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-abusech")
-            apiDownloader.load_into_cdr(results, "hg_abusech", args.team, "hg-abusech")
+    page_num = 0
+    total_pages = 1
+    batch_size = 100
+
+    while page_num < total_pages:
+        url_query = url_abusech + "/pages/" + str(page_num) + "?limit=" + str(batch_size)
+        results_json = apiDownloader.download_api(url_query, "isi", args.password)
+
+        if results_json is not None and "results" in results_json:
+            results = results_json["results"]
+            num_results = len(results)
+            total_pages = results_json["total_pages"]
+            print "Downloaded ", num_results, " new abusech data rows. Adding them to CDR. Page:", (page_num+1), " of ", total_pages
+            if num_results > 0:
+                apiDownloader.load_into_cdr(results, "hg_abusech", args.team, "hg-abusech")
+                print "Done loading into CDR"
+                print "Taking backup on S3"
+
+                rdd = sc.parallelize(results)
+                rdd.map(lambda x: ("hg-abusech", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-abusech/" + str(page_num))
+                print "Done taking backing on S3"
+        else:
+            print "No data found:", results_json
+        page_num += 1
+

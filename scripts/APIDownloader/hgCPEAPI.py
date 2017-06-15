@@ -30,16 +30,33 @@ if __name__ == "__main__":
 
     #url_cpe = "https://effect.hyperiongray.com/api/cpe/"
     if(args.date == "1970-01-01T00:00:00Z"):
-        url_cpe = "https://effect.hyperiongray.com/api/cpe/" #To get everything
+        url_cpe = "https://effect.hyperiongray.com/api/cpe" #To get everything
     else:
         url_cpe = "https://effect.hyperiongray.com/api/cpe/updates/" + str(args.date)
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
-    results = apiDownloader.download_api(url_cpe, "isi", args.password)
-    if results is not None:
-        print "Downloaded ", len(results), " new CPE data rows. Adding them to CDR"
-        if len(results) > 0:
-            rdd = sc.parallelize(results)
-            rdd.map(lambda x: ("hg-cpe", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-cpe")
-            apiDownloader.load_into_cdr(results, "hg_cpe", args.team, "hg-cpe")
+    page_num = 0
+    total_pages = 1
+    batch_size = 100
+
+    while page_num < total_pages:
+        url_query = url_cpe + "/pages/" + str(page_num) + "?limit=" + str(batch_size)
+        results_json = apiDownloader.download_api(url_query, "isi", args.password)
+
+        if results_json is not None and "results" in results_json:
+            results = results_json["results"]
+            num_results = len(results)
+            total_pages = results_json["total_pages"]
+            print "Downloaded ", num_results, " new cpe data rows. Adding them to CDR. Page:", (page_num+1), " of ", total_pages
+            if num_results > 0:
+                apiDownloader.load_into_cdr(results, "hg_cpe", args.team, "hg-cpe")
+                print "Done loading into CDR"
+                print "Taking backup on S3"
+
+                rdd = sc.parallelize(results)
+                rdd.map(lambda x: ("hg-cpe", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-cpe/" + str(page_num))
+                print "Done taking backing on S3"
+        else:
+            print "No data found:", results_json
+        page_num += 1

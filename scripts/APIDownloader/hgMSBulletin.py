@@ -33,10 +33,27 @@ if __name__ == "__main__":
     else:
         url = "https://effect.hyperiongray.com/api/ms-bulletin/updates/" + str(args.date)
 
-    results = apiDownloader.download_api(url, "isi", args.password)
-    if results is not None:
-        print "Downloaded ", len(results), " new ms bulletin data rows. Adding them to CDR"
-        if len(results) > 0:
-            rdd = sc.parallelize(results)
-            rdd.map(lambda x: ("hg-msbulletin", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-msbulletin")
-            apiDownloader.load_into_cdr(results, "hg_msbulletin", args.team, "hg-msbulletin")
+    page_num = 0
+    total_pages = 1
+    batch_size = 100
+
+    while page_num < total_pages:
+        url_query = url + "/pages/" + str(page_num) + "?limit=" + str(batch_size)
+        results_json = apiDownloader.download_api(url_query, "isi", args.password)
+
+        if results_json is not None and "results" in results_json:
+            results = results_json["results"]
+            num_results = len(results)
+            total_pages = results_json["total_pages"]
+            print "Downloaded ", num_results, " new msbulletin data rows. Adding them to CDR. Page:", (page_num+1), " of ", total_pages
+            if num_results > 0:
+                apiDownloader.load_into_cdr(results, "hg_msbulletin", args.team, "hg-msbulletin")
+                print "Done loading into CDR"
+                print "Taking backup on S3"
+
+                rdd = sc.parallelize(results)
+                rdd.map(lambda x: ("hg-msbulletin", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-msbulletin/" + str(page_num))
+                print "Done taking backing on S3"
+        else:
+            print "No data found:", results_json
+        page_num += 1

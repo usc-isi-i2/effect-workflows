@@ -37,21 +37,27 @@ if __name__ == "__main__":
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
-    results = apiDownloader.download_api(url_conference, "isi", args.password)
-    if results is not None:
-        num_results = len(results)
-        print "Downloaded ", len(results), " new conference data rows. Adding them to CDR"
-        if num_results > 0:
-            apiDownloader.load_into_cdr(results, "hg_conference", args.team, "hg-conference")
-            batch_size = 5000
-            start = 0
-            while (start < num_results):
-                end = start + batch_size
-                if(end > num_results):
-                    end = num_results
-                if(end > start):
-                    rdd = sc.parallelize(results[start:end])
-                    #rdd = sc.parallelize(results)
-                    rdd.map(lambda x: ("hg-conference", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-conference/" + str(start))
-                start = start+batch_size
-            print "Done taking backing on S3"
+    page_num = 0
+    total_pages = 1
+    batch_size = 100
+
+    while page_num < total_pages:
+        url_query = url_conference + "/pages/" + str(page_num) + "?limit=" + str(batch_size)
+        results_json = apiDownloader.download_api(url_query, "isi", args.password)
+
+        if results_json is not None and "results" in results_json:
+            results = results_json["results"]
+            num_results = len(results)
+            total_pages = results_json["total_pages"]
+            print "Downloaded ", num_results, " new conference data rows. Adding them to CDR. Page:", (page_num+1), " of ", total_pages
+            if num_results > 0:
+                apiDownloader.load_into_cdr(results, "hg_conference", args.team, "hg-conference")
+                print "Done loading into CDR"
+                print "Taking backup on S3"
+
+                rdd = sc.parallelize(results)
+                rdd.map(lambda x: ("hg-conference", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-conference/" + str(page_num))
+                print "Done taking backing on S3"
+        else:
+            print "No data found:", results_json
+        page_num += 1

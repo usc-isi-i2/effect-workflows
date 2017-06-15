@@ -18,6 +18,7 @@ spark-submit --deploy-mode client  \
 --outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/hive/19700101
 --password <APIKEY>
 '''
+import sys, traceback
 
 if __name__ == "__main__":
 
@@ -54,25 +55,36 @@ if __name__ == "__main__":
     apiDownloader = APIDownloader(sc, sqlContext)
     urls = get_all_urls()
 
+    exception_occured = False
+    error = ""
     for api_name in urls:
-        source = args.team + "-" + api_name
-        done = False
-        start = 0
-        max_limit = 5000
-        while done is False:
-            paging_url = urls[api_name] + "&start=" + str(start) + "&limit=" + str(max_limit)
-            num_results = 0
-            res = apiDownloader.download_api(paging_url, None, None, headers)
-            if (res is not None) and 'results' in res:
-                num_results = len(res['results'])
-                print api_name, ": num results:", num_results
-                if num_results > 0:
-                    print res['results'][0]
-                    rdd = sc.parallelize(res['results'])
-                    apiDownloader.load_into_cdr(res['results'], source, args.team, source)
-                    rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
+        try:
+            source = args.team + "-" + api_name
+            done = False
+            start = 0
+            max_limit = 5000
+            while done is False:
+                paging_url = urls[api_name] + "&start=" + str(start) + "&limit=" + str(max_limit)
+                num_results = 0
+                res = apiDownloader.download_api(paging_url, None, None, headers)
+                if (res is not None) and 'results' in res:
+                    num_results = len(res['results'])
+                    print api_name, ": num results:", num_results
+                    if num_results > 0:
+                        print res['results'][0]
+                        rdd = sc.parallelize(res['results'])
+                        apiDownloader.load_into_cdr(res['results'], source, args.team, source)
+                        rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
 
-            if (num_results < max_limit) or (num_results == 0):
-                done = True
-            else:
-                start = start + num_results
+                if (num_results < max_limit) or (num_results == 0):
+                    done = True
+                else:
+                    start = start + num_results
+        except:
+            error = error + "\nError running " + source + ":" + str(sys.exc_info()[0])
+            error += traceback.format_exc()
+
+
+    if len(error) > 0:
+        print "Error:", error
+        raise Exception(error)
