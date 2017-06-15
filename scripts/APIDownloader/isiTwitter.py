@@ -76,7 +76,7 @@ if __name__ == "__main__":
                     rdd = sc.parallelize(res['results'])
                     apiDownloader.load_into_cdr(res['results'], source, args.team, source)
                     if(args.date == "1970-01-01"):
-                        rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + url_date + "/" + str(start))
+                        rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(url_date + "/" + source + "/" + str(start))
                     else:
                         rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
 
