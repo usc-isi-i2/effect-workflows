@@ -29,6 +29,9 @@ spark-submit --deploy-mode client  \
 context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/development/versions/3.0/karma/karma-context.json"
 base_uri = "http://effect.isi.edu/data/"
 save_intermediate_files = False
+alias_models = {
+    "asu-twitter": ["isi-twitter"]
+}
 
 class EffectWorkflow(Workflow):
     def __init__(self, spark_context, sql_context, hdfs_client):
@@ -50,7 +53,11 @@ class EffectWorkflow(Workflow):
         for model in models:
             if model["url"] != "":
                 if not hdfs_data_done(self.hdfsClient, outputFilename + '/models-out/' + model["name"]):
-                    model_rdd = rdd.filter(lambda x: x[1]["source_name"] == model["name"])
+                    alias_source_names = []
+                    if model["name"] in alias_models:
+                        alias_source_names = alias_models[model["name"]]
+                    alias_source_names.append(model["name"])
+                    model_rdd = rdd.filter(lambda x: x[1]["source_name"] in alias_source_names)
                     if model["name"] == 'hg-taxii':
                         model_rdd = model_rdd.partitionBy(partitions * 4)
                     if not model_rdd.isEmpty():
@@ -160,7 +167,7 @@ if __name__ == "__main__":
     parser.add_argument("-k", "--karma", help="Run Karma", default=False, required=False, action="store_true")
     parser.add_argument("-f", "--framer", help="Run the framer", default=False, required=False, action="store_true")
     parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
-
+    parser.add_argument("-b", "--skipBBNExtractor", help="Skip BBN Extractor", required=False, action="store_true")
     args = parser.parse_args()
     print ("Got arguments:", args)
 
@@ -245,44 +252,47 @@ if __name__ == "__main__":
                             .mapValues(lambda x: msid_regex_extractor_processor.extract(x))\
                             .persist(StorageLevel.MEMORY_AND_DISK)
 
-                    from bbn.parameters import Parameters
-                    params = Parameters('ner.params')
-                    params.print_params()
+                    if args.skipBBNExtractor is True:
+                        cdr_extractions_rdd = cdr_extractions_isi_rdd
+                    else:
+                        from bbn.parameters import Parameters
+                        params = Parameters('ner.params')
+                        params.print_params()
 
-                    zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
-                    zip_ref.extractall()
-                    zip_ref.close()
+                        zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
+                        zip_ref.extractall()
+                        zip_ref.close()
 
 
-                    from bbn.ner_feature import NerFeature
+                        from bbn.ner_feature import NerFeature
 
-                    ner_fea = NerFeature(params)
+                        ner_fea = NerFeature(params)
 
-                    from bbn import decoder
-                    from bbn.decoder import Decoder
+                        from bbn import decoder
+                        from bbn.decoder import Decoder
 
-                    def apply_bbn_extractor(data):
-                        content_type = None
-                        attribute_name = None
+                        def apply_bbn_extractor(data):
+                            content_type = None
+                            attribute_name = None
 
-                        if data["source_name"] == 'hg-blogs':
-                            content_type = "Blog"
-                            attribute_name = "json_rep.text"
-                        elif data["source_name"] == 'asu-twitter':
-                            content_type = "SocialMediaPosting"
-                            attribute_name = "json_rep.tweetContent"
+                            if data["source_name"] == 'hg-blogs':
+                                content_type = "Blog"
+                                attribute_name = "json_rep.text"
+                            elif data["source_name"] == 'asu-twitter':
+                                content_type = "SocialMediaPosting"
+                                attribute_name = "json_rep.tweetContent"
 
-                        if content_type is not None:
-                            clean_data = remove_blank_lines(data, attribute_name)
-                            if clean_data["success"] is True:
-                                data = clean_data["data"]
-                                return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
-                        return data
+                            if content_type is not None:
+                                clean_data = remove_blank_lines(data, attribute_name)
+                                if clean_data["success"] is True:
+                                    data = clean_data["data"]
+                                    return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
+                            return data
 
-                    cdr_extractions_rdd = cdr_extractions_isi_rdd.repartition(numPartitions*20)\
-                            .mapValues(lambda x : apply_bbn_extractor(x))\
-                            .repartition(numPartitions)\
-                            .persist(StorageLevel.MEMORY_AND_DISK)
+                        cdr_extractions_rdd = cdr_extractions_isi_rdd.repartition(numPartitions*20)\
+                                .mapValues(lambda x : apply_bbn_extractor(x))\
+                                .repartition(numPartitions)\
+                                .persist(StorageLevel.MEMORY_AND_DISK)
 
                     if save_intermediate_files is True:
                         fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions', outputFileType, "json")
