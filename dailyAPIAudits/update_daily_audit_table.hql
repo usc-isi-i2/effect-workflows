@@ -9,8 +9,9 @@ PARTITION(date_of_pull)
 SELECT 
 source_name,
 COUNT(source_name) AS count_downloaded,
-FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd') as date_of_pull
+FROM_UNIXTIME(timestamp,'yyyy-MM-dd') as date_of_pull
 FROM 
 cdr 
 WHERE FROM_UNIXTIME(timestamp,'yyyy-MM-dd')=FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd')
-GROUP BY source_name;
+OR FROM_UNIXTIME(timestamp,'yyyy-MM-dd')=DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(),'yyyy-MM-dd'),1)
+GROUP BY source_name,FROM_UNIXTIME(timestamp,'yyyy-MM-dd');
