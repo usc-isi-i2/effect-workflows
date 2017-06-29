@@ -52,6 +52,7 @@ echo "Copying all files to hdfs..."
 hdfs dfs -mkdir /user/effect
 hdfs dfs -mkdir /user/effect/workflow
 hdfs dfs -mkdir /user/effect/workflow/lib
+hdfs dfs -mkdir /user/effect/workflow/lib/bbn
 hdfs dfs -mkdir /user/effect/data
 hdfs dfs -mkdir /user/effect/data/hive-backup
 hdfs dfs -mkdir /user/effect/data/karma-out
@@ -67,5 +68,7 @@ hdfs dfs -put -f effectWorkflow.py /user/effect/workflow/
 hdfs dfs -put -f effectWorkflow-es.py /user/effect/workflow/
 hdfs dfs -put -f ransomware-workflow.py /user/effect/workflow/
 hdfs dfs -put -f sparkRunCommands/*.sh /user/effect/workflow/
+hdfs dfs -put -f $BBNBASE/ner/ner.params /user/effect/workflow/lib/bbn/
+hdfs dfs -put -f $BBNBASE/ner/resources.zip /user/effect/workflow/lib/bbn/
 
 echo "DONE"

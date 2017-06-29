@@ -214,11 +214,14 @@ if __name__ == "__main__":
                 if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/cdr_extractions"):
                     if len(hiveQuery) > 0:
                         cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
-                            .partitionBy(numPartitions) \
+                            .repartition(numPartitions*20) \
                             .persist(StorageLevel.MEMORY_AND_DISK)
                     else:
                         cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-                            .partitionBy(numPartitions)
+                            .repartition(numPartitions*20) \
+                            .persist(StorageLevel.MEMORY_AND_DISK)
+                    #cdr_data.filter(lambda x: x[1]["source_name"] == "hg-blogs").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/blogs-input")
+                    #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
 
                     # Add all extractors that work on the CDR data
                     cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
@@ -289,7 +292,7 @@ if __name__ == "__main__":
                                     return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
                             return data
 
-                        cdr_extractions_rdd = cdr_extractions_isi_rdd.repartition(numPartitions*20)\
+                        cdr_extractions_rdd = cdr_extractions_isi_rdd\
                                 .mapValues(lambda x : apply_bbn_extractor(x))\
                                 .repartition(numPartitions)\
                                 .persist(StorageLevel.MEMORY_AND_DISK)

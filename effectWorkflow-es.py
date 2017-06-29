@@ -69,6 +69,21 @@ if __name__ == '__main__':
             "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
             "es.input.json": "true"
             }
+        elif doc_type == 'socialmedia':
+           es_write_conf = {
+            "es.nodes" : args.host,
+            "es.port" : args.port,
+            "es.nodes.discover" : "false",
+            'es.nodes.wan.only': "true",
+            "es.resource" : args.index + '/' + doc_type, # use domain as `doc_type`
+            "es.http.timeout": "60s",
+            "es.http.retries": "20",
+            "es.batch.write.retry.count": "20", # maximum number of retries set
+            "es.batch.write.retry.wait": "600s", # on failure, time to wait prior to retrying
+            "es.batch.size.entries": "500000", # number of docs per batch
+            "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
+            "es.input.json": "true"
+            }
         else:
             es_write_conf = {
             "es.nodes" : args.host,

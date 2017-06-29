@@ -12,12 +12,14 @@ export DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python
   --conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./effect-env.zip/effect-env/bin/python \
   --conf spark.executorEnv.PYSPARK_PYTHON=./effect-env.zip/effect-env/bin/python \
   --conf spark.executorEnv.DEFAULT_PYTHON=./effect-env.zip/effect-env/bin/python \
+  --conf "spark.yarn.executor.memoryOverhead=6141" \
   --master yarn \
    --deploy-mode client \
       --executor-memory 25g --num-executors 20 --executor-cores 5 \
      --jars "karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar" \
       --conf "spark.driver.extraClassPath=karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar" \
      --archives effect-env.zip,karma.zip \
+    --files resources.zip,ner.params \
      effectWorkflow.py \
      --hdfsManager "http://cloudmgr03.isi.edu:50070" \
      $@
