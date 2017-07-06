@@ -5,9 +5,10 @@ import json
 import os
 import tarfile
 import datetime
+import ast
 
 streamInputDirectory = "/nfs/topaz/annas/bin/cause-effect/twitter/streamdata"
-userInputDirectory =  "/nfs/topaz/annas/bin/cause-effect/twitter/userdata"
+userInputDirectory = "/nfs/topaz/annas/bin/cause-effect/twitter/userdata"
 
 app = Flask(__name__)
 
@@ -47,8 +48,9 @@ def getTwitterData():
     # if parameter 'to' is not provided, take today's date
     toDate = args.get('to') if args.get('to') else datetime.datetime.today().strftime("%Y-%m-%d")
     hashTag = args.get('hashTag')
+    userData = ast.literal_eval(args.get('userData')) if args.get('userData') else False
     results = []
-    count,results = convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id,hashTag)
+    count,results = convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id,hashTag,userData)
     return Response(json.dumps(GetTwitterData(count,results),default=jsonDefault,indent=1), mimetype='application/json')
 
 def getFile(inputDirectory,inputFile):
@@ -66,7 +68,7 @@ def getFile(inputDirectory,inputFile):
         f=open(inputFile)
     return f,fileName
 
-def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag):
+def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, userData):
     totalCount=0
     startCount=0
     results=[]
@@ -77,38 +79,38 @@ def convertToASUFormat(start, limit, fromDate, toDate, retweet_count, userName, 
         streamDataFiles.extend(glob.glob(streamInputDirectory+"/"+files))
         userDataFiles.extend(glob.glob(userInputDirectory+"/"+files))
     streamDataFiles.sort()
-    
     prevFileName=""
-    # if parameter 'from' is not provided
-    if fromDate is not None:
-        for inputFile in streamDataFiles:
-            f,fileName=getFile(streamInputDirectory,inputFile)
-            if prevFileName==fileName:
-                continue
-            prevFileName=fileName
-            if f is not None: 
-                count=0
-                res=[]
-                if parse(fileName) >= parse(fromDate) and parse(fileName) <= parse(toDate):
-                    startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f, False, None)
-                    results.extend(res)
-                    totalCount+=count
-    else:
-        for inputFile in streamDataFiles:
-            f,fileName=getFile(streamInputDirectory,inputFile)
-            if prevFileName==fileName:
-                continue
-            prevFileName=fileName
-            if f is not None: 
-                if parse(fileName) <= parse(toDate):
-                    startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f, False, None)
-                    results.extend(res)
-                    totalCount+=count
+    if not userData:
+        # if parameter 'from' is not provided
+        if fromDate is not None:
+            for inputFile in streamDataFiles:
+                f,fileName=getFile(streamInputDirectory,inputFile)
+                if prevFileName==fileName:
+                    continue
+                prevFileName=fileName
+                if f is not None: 
+                    count=0
+                    res=[]
+                    if parse(fileName) >= parse(fromDate) and parse(fileName) <= parse(toDate):
+                        startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f, False, None)
+                        results.extend(res)
+                        totalCount+=count
+        else:
+            for inputFile in streamDataFiles:
+                f,fileName=getFile(streamInputDirectory,inputFile)
+                if prevFileName==fileName:
+                    continue
+                prevFileName=fileName
+                if f is not None: 
+                    if parse(fileName) <= parse(toDate):
+                        startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f, False, None)
+                        results.extend(res)
+                        totalCount+=count
     for inputFile in userDataFiles:
         f=open(inputFile)
         startCount,count,res=getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, f, True, results)
         results.extend(res)
-        totalCount+=count        
+        totalCount+=count 
     return totalCount,results
 
 def getResults(startCount, start, limit, fromDate, toDate, retweet_count, userName, tweet_id, conversation_id, hashTag, inputFile, userData, results):
@@ -160,7 +162,7 @@ def getResults(startCount, start, limit, fromDate, toDate, retweet_count, userNa
                     count+=1
                     appendBool=False
                     if userData:
-                        if startCount>start and len(results)<limit:
+                        if startCount>start and len(results)+len(data)<limit:
                             data.append(jsonObject)     
                     elif startCount>start and len(data)<limit:
                         data.append(jsonObject)
@@ -178,7 +180,7 @@ def getResults(startCount, start, limit, fromDate, toDate, retweet_count, userNa
     	        print(str(e)+": "+inputFile.name+": "+line)
     	        continue
             if userData:
-                if startCount>start and len(results)<limit:
+                if startCount>start and len(results)+len(data)<limit:
                     data.append(jsonObject)        
             elif startCount>start and len(data)<limit:
                 data.append(jsonObject)

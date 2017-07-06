@@ -7,3 +7,4 @@ spark-submit \
    --outputFolder /user/effect/data/hive-backup/$2 \
     --team "isi" \
     --date $1
+    --userData False

@@ -16,6 +16,7 @@ spark-submit --deploy-mode client  \
 --date 1970-01-01 \
 --team isi \
 --outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/isiTwitter/20170225
+--userData False
 '''
 
 if __name__ == "__main__":
@@ -27,6 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
     parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
     parser.add_argument("-p", "--password", type=str, help="api key", required=False)
+    parser.add_argument("-u", "--userData", type=bool, help="Only Expert Timelines", required=True)
 
     start_date = date(2017, 2, 25)
     end_date = date.today()
@@ -46,11 +48,11 @@ if __name__ == "__main__":
             urls = []
             for n in range(days_diff):
                 url_date = (start_date + timedelta(n)).strftime("%Y-%m-%d")
-                date_filter = "from=" + url_date + "&to=" + url_date
+                date_filter = "from=" + url_date + "&to=" + url_date + "&userData=" + userData
                 urls.append(("http://luxo.isi.edu:5000/getTwitterData?" + date_filter, url_date))
             return urls
         else:
-            date_filter = "from=" + args.date + "&to=" + args.date
+            date_filter = "from=" + args.date + "&to=" + args.date + "&userData=" + userData
             return [("http://luxo.isi.edu:5000/getTwitterData?" + date_filter, args.date)]
 
     apiDownloader = APIDownloader(sc, sqlContext)
