@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--team", type=str, help="Team Name", required=True)
     parser.add_argument("-d", "--date", type=str, help="Greater than equal date", required=True)
     parser.add_argument("-p", "--password", type=str, help="api key", required=False)
-    parser.add_argument("-u", "--userData", type=bool, help="Only Expert Timelines", required=True)
+    parser.add_argument("-u", "--userTimelinesOnly",  help="Only Expert Timelines", required=False, action="store_true")
 
     start_date = date(2017, 2, 25)
     end_date = date.today()
@@ -48,11 +48,11 @@ if __name__ == "__main__":
             urls = []
             for n in range(days_diff):
                 url_date = (start_date + timedelta(n)).strftime("%Y-%m-%d")
-                date_filter = "from=" + url_date + "&to=" + url_date + "&userData=" + userData
+                date_filter = "from=" + url_date + "&to=" + url_date + "&userData=" + str(args.userTimelinesOnly)
                 urls.append(("http://luxo.isi.edu:5000/getTwitterData?" + date_filter, url_date))
             return urls
         else:
-            date_filter = "from=" + args.date + "&to=" + args.date + "&userData=" + userData
+            date_filter = "from=" + args.date + "&to=" + args.date + "&userData=" + str(args.userTimelinesOnly)
             return [("http://luxo.isi.edu:5000/getTwitterData?" + date_filter, args.date)]
 
     apiDownloader = APIDownloader(sc, sqlContext)
