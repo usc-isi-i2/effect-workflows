@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime as dt
 
-exclude_sources=["hackmageddon"]
+exclude_sources=["hackmageddon","hg-taxii","hg-msbulletin"]
 date_of_pull=dt.datetime.today().strftime("%Y-%m-%d")
 day_minus_1 = (dt.date.today() - dt.timedelta(1)).strftime("%Y-%m-%d")
 day_minus_2 = (dt.date.today() - dt.timedelta(2)).strftime("%Y-%m-%d")
