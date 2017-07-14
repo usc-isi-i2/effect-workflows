@@ -3,6 +3,7 @@ from pyspark.sql import HiveContext
 import json
 import zipfile
 import sys
+from dateUtil import DateUtil
 from digSparkUtil.fileUtil import FileUtil
 from cdrLoader import CDRLoader
 from py4j.java_gateway import java_import
@@ -33,6 +34,10 @@ alias_models = {
     "asu-twitter": ["isi-twitter"]
 }
 
+source_extraction_fields = {
+    "hg-blogs": ["json_rep.text"]
+}
+
 class EffectWorkflow(Workflow):
     def __init__(self, spark_context, sql_context, hdfs_client):
         self.sc = spark_context
@@ -42,17 +47,25 @@ class EffectWorkflow(Workflow):
     def load_cdr_from_hive_query(self, query):
         cdr_data = self.sqlContext.sql(query)
         cdrLoader = CDRLoader()
+        print "Running HIVE:", query
         return cdr_data.map(lambda x: cdrLoader.load_from_hive_row(x))
 
     def load_cdr_from_hive_table(self, table):
         return self.load_cdr_from_hive_query("FROM " + table + " SELECT *")
 
-    def apply_karma_model_per_msg_type(self, rdd, models, context_url, base_uri, partitions, outpartitions):
+    def apply_karma_model_per_msg_type(self, rdd, models, context_url, base_uri, partitions, outpartitions, outputFilename, isIncremental, since):
         result_rdds = list()
 
         for model in models:
             if model["url"] != "":
-                if not hdfs_data_done(self.hdfsClient, outputFilename + '/models-out/' + model["name"]):
+                model_out_folder = outputFilename + '/models-out'
+                if isIncremental is True:
+                    if len(since) > 0:
+                        model_out_folder = outputFilename  + '/models-out/' + since
+                    else:
+                        model_out_folder = outputFilename  + '/models-out/initial'
+
+                if not hdfs_data_done(self.hdfsClient, model_out_folder + "/" + model["name"]):
                     alias_source_names = []
                     if model["name"] in alias_models:
                         alias_source_names = alias_models[model["name"]]
@@ -73,20 +86,21 @@ class EffectWorkflow(Workflow):
                                                    })
                         if not karma_rdd.isEmpty():
                             if save_intermediate_files is True:
-                                fileUtil.save_file(karma_rdd, outputFilename + '/models-out/' + model["name"], "sequence",
+                                fileUtil.save_file(karma_rdd, model_out_folder + "/" + model["name"], "sequence",
                                                "json")
                             result_rdds.append(karma_rdd)
                 else:
-                    print "Loaded " + outputFilename + '/models-out/' + model["name"] + " from HDFS"
-                    karma_rdd = self.sc.sequenceFile(outputFilename + '/models-out/' + model["name"]).mapValues(
+                    print "Loaded " + model_out_folder + "/" + model["name"] + " from HDFS"
+                    karma_rdd = self.sc.sequenceFile(model_out_folder + "/" + model["name"]).mapValues(
                         lambda x: json.loads(x))
                     result_rdds.append(karma_rdd)
 
                 print "Done applying model ", model["name"]
 
-        if save_intermediate_files is True and not hdfs_data_done(self.hdfsClient, outputFilename + '/models-out/all'):
+        if save_intermediate_files is True and not hdfs_data_done(self.hdfsClient,  model_out_folder + '/all'):
             all_done = self.sc.parallelize([{'a': 'Class', 'done': 'true'}]).map(lambda x: ("done", x))
-            fileUtil.save_file(all_done, outputFilename + '/models-out/all', "text", "json")
+            fileUtil.save_file(all_done, model_out_folder + '/all', "text", "json")
+
         num_rdds = len(result_rdds)
         if num_rdds > 0:
             if num_rdds == 1:
@@ -164,10 +178,15 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--outputtype", help="Output file type - text or sequence", required=False,
                         default="sequence")
     parser.add_argument("-q", "--query", help="HIVE query to get data", default="", required=False)
+
     parser.add_argument("-k", "--karma", help="Run Karma", default=False, required=False, action="store_true")
     parser.add_argument("-f", "--framer", help="Run the framer", default=False, required=False, action="store_true")
     parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
     parser.add_argument("-b", "--skipBBNExtractor", help="Skip BBN Extractor", required=False, action="store_true")
+
+    parser.add_argument("-z", "--incremental", help="Incremental Run", required=False, action="store_true")
+    parser.add_argument("-s", "--since", help="Get data since a timestamp - format: %Y-%m-%dT%H:%M:%S%Z", default="", required=False)
+
     args = parser.parse_args()
     print ("Got arguments:", args)
 
@@ -180,7 +199,15 @@ if __name__ == "__main__":
     outputFilename = args.output.strip()
     outputFileType = args.outputtype.strip()
     hiveQuery = args.query.strip()
+    isIncremental = args.incremental
 
+    since = args.since.strip()
+    if since == "initial":
+        since = ""
+    if len(since) > 0:
+        timestamp = DateUtil.unix_timestamp(since, "%Y-%m-%dT%H:%M:%S%Z")/1000
+        hiveQuery = "SELECT * from " + inputTable + " WHERE timestamp > " + str(timestamp)
+        since = since[0:10]
     # hiveQuery = "select * from CDR where source_name='asu-hacking-items'"
     # hiveQuery = "select * from CDR where source_name='asu-twitter'"
     numPartitions = int(args.partitions)
@@ -193,14 +220,24 @@ if __name__ == "__main__":
             hdfsRelativeFilname = hdfsRelativeFilname[idx:]
 
     if not args.karma:
-        reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(
-            StorageLevel.MEMORY_AND_DISK)
+        reduced_rdd_start = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x))
+        reduced_rdd  = workflow.reduce_rdds_with_settings({"karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date"},
+                                                  numPartitions, reduced_rdd_start)\
+                                .persist(StorageLevel.MEMORY_AND_DISK)
     else:
-        reduced_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/reduced_rdd")
+        if args.incremental is True:
+            if len(since) > 0:
+                reduced_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/reduced_rdd/" + since)
+            else:
+                reduced_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/reduced_rdd/initial")
+        else:
+            reduced_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/reduced_rdd")
 
         if reduced_rdd_done is True:
-            reduced_rdd = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x)).persist(
-                StorageLevel.MEMORY_AND_DISK)
+            reduced_rdd_start = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x))
+            reduced_rdd  = workflow.reduce_rdds_with_settings({"karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date"},
+                                                  numPartitions, reduced_rdd_start)\
+                                .persist(StorageLevel.MEMORY_AND_DISK)
         else:
             # These are models without provenance, if neeed.
             # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
@@ -210,112 +247,145 @@ if __name__ == "__main__":
 
             print "Got models:", json.dumps(models)
 
-            if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/models-out/all"):
-                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/cdr_extractions"):
-                    if len(hiveQuery) > 0:
-                        cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
-                            .repartition(numPartitions*20) \
-                            .persist(StorageLevel.MEMORY_AND_DISK)
-                    else:
-                        cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-                            .repartition(numPartitions*20) \
-                            .persist(StorageLevel.MEMORY_AND_DISK)
-                    #cdr_data.filter(lambda x: x[1]["source_name"] == "hg-blogs").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/blogs-input")
-                    #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
 
-                    # Add all extractors that work on the CDR data
-                    cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
-                    cve_regex_extractor = RegexExtractor() \
-                        .set_regex(cve_regex) \
-                        .set_metadata({'extractor': 'cve-regex'}) \
-                        .set_include_context(True) \
-                        .set_renamed_input_fields('text')
+            if len(hiveQuery) > 0:
+                cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
+                    .repartition(numPartitions*20) \
+                    .persist(StorageLevel.MEMORY_AND_DISK)
+            else:
+                cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+                    .repartition(numPartitions*20) \
+                    .persist(StorageLevel.MEMORY_AND_DISK)
+            #cdr_data.filter(lambda x: x[1]["source_name"] == "hg-blogs").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/blogs-input")
+            #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
 
-                    cve_regex_extractor_processor = ExtractorProcessor() \
-                        .set_name('cve_from_extracted_text-regex') \
-                        .set_input_fields('raw_content') \
-                        .set_output_field('extractions.cve') \
-                        .set_extractor(cve_regex_extractor)
+            # Add all extractors that work on the CDR data
+            cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
+            cve_regex_extractor = RegexExtractor() \
+                .set_regex(cve_regex) \
+                .set_metadata({'extractor': 'cve-regex'}) \
+                .set_include_context(True) \
+                .set_renamed_input_fields('text')
 
-                    msid_regex = re.compile('(ms[0-9]{2}-[0-9]{3})', re.IGNORECASE)
-                    msid_regex_extractor = RegexExtractor() \
-                        .set_regex(msid_regex) \
-                        .set_metadata({'extractor': 'msid-regex'}) \
-                        .set_include_context(True) \
-                        .set_renamed_input_fields('text')
+            cve_regex_extractor_processor = ExtractorProcessor() \
+                .set_name('cve_from_extracted_text-regex') \
+                .set_input_fields('raw_content') \
+                .set_output_field('extractions.cve') \
+                .set_extractor(cve_regex_extractor)
 
-                    msid_regex_extractor_processor = ExtractorProcessor() \
-                        .set_name('msid_from_extracted_text-regex') \
-                        .set_input_fields('raw_content') \
-                        .set_output_field('extractions.msid') \
-                        .set_extractor(msid_regex_extractor)
+            msid_regex = re.compile('(ms[0-9]{2}-[0-9]{3})', re.IGNORECASE)
+            msid_regex_extractor = RegexExtractor() \
+                .set_regex(msid_regex) \
+                .set_metadata({'extractor': 'msid-regex'}) \
+                .set_include_context(True) \
+                .set_renamed_input_fields('text')
 
-                    cdr_extractions_isi_rdd = cdr_data\
-                            .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
-                            .mapValues(lambda x: msid_regex_extractor_processor.extract(x))\
-                            .persist(StorageLevel.MEMORY_AND_DISK)
+            msid_regex_extractor_processor = ExtractorProcessor() \
+                .set_name('msid_from_extracted_text-regex') \
+                .set_input_fields('raw_content') \
+                .set_output_field('extractions.msid') \
+                .set_extractor(msid_regex_extractor)
 
-                    if args.skipBBNExtractor is True:
-                        cdr_extractions_rdd = cdr_extractions_isi_rdd
-                    else:
-                        from bbn.parameters import Parameters
-                        params = Parameters('ner.params')
-                        params.print_params()
+            all_rdds = []
+            extraction_source_names = []
+            for source in source_extraction_fields:
+                extraction_source_names.append(source)
+                extraction_fields = source_extraction_fields[source]
+                rdd_source = cdr_data.filter(lambda x: x[1]["source_name"] == source)
 
-                        zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
-                        zip_ref.extractall()
-                        zip_ref.close()
+                cve_process_source = ExtractorProcessor() \
+                                    .set_name('cve_from_extracted_text-regex') \
+                                    .set_input_fields(extraction_fields) \
+                                    .set_output_field('extractions.cve') \
+                                    .set_extractor(cve_regex_extractor)
+                msid_process_source = ExtractorProcessor() \
+                                    .set_name('msid_from_extracted_text-regex') \
+                                    .set_input_fields(extraction_fields) \
+                                    .set_output_field('extractions.msid') \
+                                    .set_extractor(msid_regex_extractor)
+
+                cdr_extractions_isi_rdd_source = rdd_source \
+                    .mapValues(lambda x: cve_process_source.extract(x))\
+                    .mapValues(lambda x: msid_process_source.extract(x))
+                all_rdds.append(cdr_extractions_isi_rdd_source)
+
+            cdr_data_other = cdr_data.filter(lambda x: x[1]["source_name"] not in extraction_source_names)
+
+            cdr_extractions_isi_rdd = cdr_data_other\
+                    .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
+                    .mapValues(lambda x: msid_regex_extractor_processor.extract(x))
+
+            for rdd_source in all_rdds:
+                cdr_extractions_isi_rdd = cdr_extractions_isi_rdd.union(rdd_source)
+
+            cdr_extractions_isi_rdd.persist(StorageLevel.MEMORY_AND_DISK)
+
+            if args.skipBBNExtractor is True:
+                cdr_extractions_rdd = cdr_extractions_isi_rdd
+            else:
+                from bbn.parameters import Parameters
+                params = Parameters('ner.params')
+                params.print_params()
+
+                zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
+                zip_ref.extractall()
+                zip_ref.close()
 
 
-                        from bbn.ner_feature import NerFeature
+                from bbn.ner_feature import NerFeature
 
-                        ner_fea = NerFeature(params)
+                ner_fea = NerFeature(params)
 
-                        from bbn import decoder
-                        from bbn.decoder import Decoder
+                from bbn import decoder
+                from bbn.decoder import Decoder
 
-                        def apply_bbn_extractor(data):
-                            content_type = None
-                            attribute_name = None
+                def apply_bbn_extractor(data):
+                    content_type = None
+                    attribute_name = None
 
-                            if data["source_name"] == 'hg-blogs':
-                                content_type = "Blog"
-                                attribute_name = "json_rep.text"
-                            elif data["source_name"] == 'asu-twitter':
-                                content_type = "SocialMediaPosting"
-                                attribute_name = "json_rep.tweetContent"
+                    if data["source_name"] == 'hg-blogs':
+                        content_type = "Blog"
+                        attribute_name = "json_rep.text"
+                    elif data["source_name"] == 'asu-twitter' or data["source_name"] == 'isi-twitter':
+                        content_type = "SocialMediaPosting"
+                        attribute_name = "json_rep.tweetContent"
 
-                            if content_type is not None:
-                                clean_data = remove_blank_lines(data, attribute_name)
-                                if clean_data["success"] is True:
-                                    data = clean_data["data"]
-                                    return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
-                            return data
+                    if content_type is not None:
+                        clean_data = remove_blank_lines(data, attribute_name)
+                        if clean_data["success"] is True:
+                            data = clean_data["data"]
+                            return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
+                    return data
 
-                        cdr_extractions_rdd = cdr_extractions_isi_rdd\
-                                .mapValues(lambda x : apply_bbn_extractor(x))\
-                                .repartition(numPartitions)\
-                                .persist(StorageLevel.MEMORY_AND_DISK)
+                cdr_extractions_rdd = cdr_extractions_isi_rdd\
+                        .mapValues(lambda x : apply_bbn_extractor(x))\
+                        .repartition(numPartitions)\
+                        .persist(StorageLevel.MEMORY_AND_DISK)
 
-                    if save_intermediate_files is True:
-                        fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions', outputFileType, "json")
-                    #cdr_extractions_rdd.mapValues(lambda x: json.dumps(x)).map(lambda x: x[1]).saveAsTextFile(outputFilename + "/cdr_extractions_txt")
-                else:
-                    cdr_extractions_rdd = sc.sequenceFile(outputFilename + "/cdr_extractions").mapValues(
-                        lambda x: json.loads(x)).partitionBy(numPartitions).persist(StorageLevel.MEMORY_AND_DISK)
                 cdr_extractions_rdd.setName("cdr_extractions")
 
                 # Run karma model as per the source of the data
                 reduced_rdd = None
                 reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
                                                                       base_uri,
-                                                                      numPartitions, numFramerPartitions)\
+                                                                      numPartitions, numFramerPartitions,
+                                                                      outputFilename, isIncremental, since)\
                                         .persist(StorageLevel.MEMORY_AND_DISK)
+
+            if args.incremental is True:
+                if len(since) > 0:
+                    fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd/' + since, outputFileType, "json")
+                else:
+                    fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd/initial', outputFileType, "json")
+                reduced_rdd_start = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x))
+                reduced_rdd  = workflow.reduce_rdds_with_settings({"karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date"},
+                                                  numPartitions, reduced_rdd_start)\
+                                .persist(StorageLevel.MEMORY_AND_DISK)
             else:
-                reduced_rdd = workflow.apply_karma_model_per_msg_type(None, models, context_url, base_uri,
-                                                                      numPartitions, numFramerPartitions)\
-                                        .persist(StorageLevel.MEMORY_AND_DISK)
-            fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
+                fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
+
+            # Load the entire reduced_rdd for framer
+
 
     # Frame the results
     if reduced_rdd is not None:
@@ -327,11 +397,17 @@ if __name__ == "__main__":
             gitFrameLoader.load_context(context_url)
             types = gitFrameLoader.get_types_in_all_frames()
 
+            frames_folder = "/frames/"
+            if args.incremental is True:
+                if len(since) > 0:
+                    frames_folder = frames_folder + since + "/"
+                else:
+                    frames_folder = frames_folder + "initial/"
             frames = []
             # If there is a restart and the frames are already done, dont restart them
             for frame in all_frames:
                 name = frame["name"]
-                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/frames/" + name):
+                if not hdfs_data_done(hdfs_client, hdfsRelativeFilname + frames_folder + name):
                     frames.append(frame)
 
             type_to_rdd_json = workflow.apply_partition_on_types(reduced_rdd, types)
@@ -349,7 +425,7 @@ if __name__ == "__main__":
                 framer_output_one_frame = framer_output[frame_name]  #.coalesce(numFramerPartitions)
                 print "Save frame:", frame_name
                 if not framer_output_one_frame.isEmpty():
-                    fileUtil.save_file(framer_output_one_frame, outputFilename + '/frames/' + frame_name, outputFileType,
+                    fileUtil.save_file(framer_output_one_frame, outputFilename + frames_folder + frame_name, outputFileType,
                                        "json")
 
             reduced_rdd.unpersist()

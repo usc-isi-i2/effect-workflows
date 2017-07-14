@@ -31,6 +31,9 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--partitions", help="Number of partitions", required=False, default=20)
     parser.add_argument("-i", "--input", help="Input Folder", required=True)
     parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
+    parser.add_argument("-z", "--incremental", help="Incremental Run", required=False, action="store_true")
+    parser.add_argument("-s", "--since", help="Get data since a timestamp - format: %Y-%m-%dT%H:%M:%S%Z", default="", required=False)
+
     args = parser.parse_args()
 
 
@@ -43,16 +46,32 @@ if __name__ == '__main__':
         if idx != -1:
             hdfsRelativeFilname = hdfsRelativeFilname[idx:]
 
+    create_index = True
+    inputFolder = args.input
+    partitions = int(args.partitions)
+    since = args.since.strip()
+    if since == "initial":
+        since = ""
+    if args.incremental is True:
+        if len(since) > 0:
+            since = since[0:10]
+            inputFolder = inputFolder + "/" + since
+        else:
+            inputFolder = inputFolder + "/initial"
+
     if args.doctype is None:
-        document_types = hdfs_client.list(args.input, False)
+        document_types = hdfs_client.list(inputFolder, False)
     else:
         document_types = args.doctype.split(",")
 
-    create_index = True
+    print "Got doc_types:", document_types
 
     for doc_type in document_types:
         doc_type = doc_type.strip()
-        input_rdd = sc.sequenceFile(args.input + "/" + doc_type) #.partitionBy(args.partitions)
+        doc_type_folder = inputFolder + "/" + doc_type
+        print "Add doc type:", doc_type, doc_type_folder
+        
+        input_rdd = sc.sequenceFile(doc_type_folder).repartition(partitions)
 
         if doc_type == 'topic' or doc_type == 'post':
            es_write_conf = {
