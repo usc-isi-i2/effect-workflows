@@ -64,7 +64,7 @@ def get_series_event_type(df, event_type=None):
         min_index = ts_malware.index.min()
         if type(min_index) == datetime.date:
             date_range = pd.date_range(min_index, ts_malware.index.max())
-            ts_malware = ts_malware.reindex(date_range, fill_value=0)
+            #ts_malware = ts_malware.reindex(date_range, fill_value=0)
             ts_malware.name = 'count'
             ts_malware.index.name = 'date'
     return ts_malware
