@@ -377,10 +377,12 @@ if __name__ == "__main__":
                     fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd/' + since, outputFileType, "json")
                 else:
                     fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd/initial', outputFileType, "json")
-                reduced_rdd_start = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x))
-                reduced_rdd  = workflow.reduce_rdds_with_settings({"karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date"},
-                                                  numPartitions, reduced_rdd_start)\
-                                .persist(StorageLevel.MEMORY_AND_DISK)
+                if args.framer:
+                    #If we also need to frame, we need to load entire set for framing
+                    reduced_rdd_start = sc.sequenceFile(outputFilename + "/reduced_rdd").mapValues(lambda x: json.loads(x))
+                    reduced_rdd  = workflow.reduce_rdds_with_settings({"karma.provenance.properties": "source,publisher,dateRecorded:date,observedDate:date"},
+                                                      numPartitions, reduced_rdd_start)\
+                                    .persist(StorageLevel.MEMORY_AND_DISK)
             else:
                 fileUtil.save_file(reduced_rdd, outputFilename + '/reduced_rdd', outputFileType, "json")
 

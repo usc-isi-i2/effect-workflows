@@ -1,0 +1,737 @@
+[
+{
+  "pk": 5, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c", 
+    "extra": "", 
+    "type": "oozie-workflow2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-06-12T12:58:58.148", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "7d807447-9290-42e7-a40a-5596ecdb6e23", 
+        1, 
+        true
+      ], 
+      [
+        "c9ae7550-b62f-44de-b8d2-490af681f470", 
+        1, 
+        true
+      ], 
+      [
+        "7596a283-9a5e-44c8-8489-802a0a77d5d4", 
+        1, 
+        true
+      ], 
+      [
+        "2decc4dc-bc56-4cd9-ad8d-8efb0ff8f397", 
+        1, 
+        true
+      ], 
+      [
+        "5856894b-bcee-4d8f-a940-62997232c9f8", 
+        1, 
+        true
+      ], 
+      [
+        "3f862dd0-541f-4de4-864b-6b08964110d1", 
+        1, 
+        true
+      ], 
+      [
+        "7d2978df-2c10-404e-9afb-8de17f62a82d", 
+        1, 
+        true
+      ], 
+      [
+        "2946a431-42aa-46d9-808c-75f576c9ceb1", 
+        1, 
+        true
+      ], 
+      [
+        "1ae3aa70-3733-4525-b8f1-845c8bc9632a", 
+        1, 
+        true
+      ], 
+      [
+        "7782a519-c8d9-40ff-ad4e-b60f21afc7fb", 
+        1, 
+        true
+      ], 
+      [
+        "e2a12fa8-e589-42bc-a71c-e39b594f1cac", 
+        1, 
+        true
+      ], 
+      [
+        "7dc696b3-1d87-4b78-8fd7-37fdc2031001", 
+        1, 
+        true
+      ], 
+      [
+        "ead907a6-6316-4f51-afc8-49e859831ea2", 
+        1, 
+        true
+      ], 
+      [
+        "f20e3635-dbad-48de-aa1c-af3668584127", 
+        1, 
+        true
+      ], 
+      [
+        "3e6fc79a-06d7-4bc7-997c-7d274329da9f", 
+        1, 
+        true
+      ], 
+      [
+        "e7ebff25-2093-4bbe-8a73-803052de443d", 
+        1, 
+        true
+      ], 
+      [
+        "362b8af7-1780-4ec0-a043-23e66ecdc6e5", 
+        1, 
+        true
+      ], 
+      [
+        "0ef37923-8411-4e89-a255-3d6dafcf957b", 
+        1, 
+        true
+      ], 
+      [
+        "3f49ff1c-bc21-42db-8d37-1e04d1ba5031", 
+        1, 
+        true
+      ], 
+      [
+        "cdbd2c4f-3431-485d-83d9-10b967f32e0e", 
+        1, 
+        true
+      ], 
+      [
+        "8b5c74f2-4aee-43e6-9a1d-71d14c9f6465", 
+        1, 
+        true
+      ], 
+      [
+        "d17a8e77-fa50-4184-af8c-f073aa5d50d6", 
+        1, 
+        true
+      ]
+    ], 
+    "data": "{\"layout\": [{\"oozieRows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"size\": 12}], \"id\": \"a8fa2077-8c0c-b7c0-df8d-c12598b77e6b\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"size\": 12}], \"id\": \"38f0d7ef-79a0-3984-3a16-d77f6c01769c\", \"columns\": []}], \"rows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"daf39c53-7b00-54e2-bae2-41f49a64cd95\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"size\": 12}], \"id\": \"a8fa2077-8c0c-b7c0-df8d-c12598b77e6b\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"size\": 12}], \"id\": \"38f0d7ef-79a0-3984-3a16-d77f6c01769c\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"6e8cde4f-1555-9d94-5dd2-96f22909d953\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"ceaeeb43-5fe7-6c71-91d8-4f562a373f1c\", \"columns\": []}], \"oozieEndRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"6e8cde4f-1555-9d94-5dd2-96f22909d953\", \"columns\": []}, \"oozieKillRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"ceaeeb43-5fe7-6c71-91d8-4f562a373f1c\", \"columns\": []}, \"enableOozieDropOnAfter\": true, \"oozieStartRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"daf39c53-7b00-54e2-bae2-41f49a64cd95\", \"columns\": []}, \"klass\": \"card card-home card-column span12\", \"enableOozieDropOnBefore\": true, \"drops\": [\"temp\"], \"id\": \"ec3ca0a7-4902-debf-f861-5dcbfab3381d\", \"size\": 12}], \"workflow\": {\"properties\": {\"job_xml\": \"\", \"description\": \"\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}], \"sla_enabled\": false, \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1493239304.43\", \"schema_version\": \"uri:oozie:workflow:0.5\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"show_arrows\": true, \"wf1_id\": null, \"properties\": []}, \"name\": \"APIDownloader-ASU-Darknet\", \"hasKillNode\": true, \"versions\": [\"uri:oozie:workflow:0.4\", \"uri:oozie:workflow:0.4.5\", \"uri:oozie:workflow:0.5\"], \"isDirty\": true, \"movedNode\": null, \"linkMapping\": {\"54800427-3698-6650-dad9-4fcdae3bbaac\": [\"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"], \"17c9c895-5a16-7443-bb81-f34b30b21548\": [], \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": [], \"3f107997-04cc-8733-60a9-a4bb62cebffc\": [\"54800427-3698-6650-dad9-4fcdae3bbaac\"], \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\": []}, \"nodeIds\": [\"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\"], \"nodes\": [{\"name\": \"Start\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"54800427-3698-6650-dad9-4fcdae3bbaac\"}], \"actionParametersFetched\": false, \"properties\": {}, \"associatedDocumentUuid\": null, \"type\": \"start-widget\", \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"actionParameters\": []}, {\"name\": \"End\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"attachment\": \"\", \"content_type\": \"text/plain\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"end-widget\", \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"actionParameters\": []}, {\"name\": \"Kill\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"actionParameters\": []}, {\"name\": \"shell-5480\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"}, {\"error\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_darknetAPI.sh\"}, {\"value\": \"/user/effect/workflow/darknetAPIToJl.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"/user/effect/workflow/run_darknetAPI.sh\", \"arguments\": [{\"value\": \"${date}\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"actionParameters\": []}, {\"name\": \"kill-7e42\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"cc\": \"\", \"retry_interval\": [], \"retry_max\": [], \"to\": \"dipsykapoor@gmail.com\", \"enableMail\": true, \"credentials\": [], \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"subject\": \"ISI Cluster: ASU API Download Failed\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"actionParameters\": []}], \"id\": 5, \"nodeNamesMapping\": {\"54800427-3698-6650-dad9-4fcdae3bbaac\": \"shell-5480\", \"17c9c895-5a16-7443-bb81-f34b30b21548\": \"Kill\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": \"End\", \"3f107997-04cc-8733-60a9-a4bb62cebffc\": \"Start\", \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\": \"kill-7e42\"}, \"uuid\": \"a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c\"}}", 
+    "name": "APIDownloader-ASU-Darknet"
+  }
+},
+{
+  "pk": 31, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "5ac78762-b8ac-0aa7-7fa1-6d1ba7e4efd4", 
+    "extra": "", 
+    "type": "oozie-coordinator2", 
+    "description": "Daily download of ASU data", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-05-04T13:23:12.368", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c", 
+        1, 
+        false
+      ]
+    ], 
+    "data": "{\"end_date\": {\"name\": \"end_date\", \"value\": \"2027-05-04T13:14\"}, \"variables\": [{\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"06b0e0dd-f656-104a-e2f8-56177d3b600d\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, 'DAY'), \\\"yyyy-MM-dd\\\")}\", \"start\": \"2017-04-27T09:14\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"date\", \"is_advanced_end_instance\": false}, {\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"eea972b1-da71-f127-b7cd-94fbb9839c9c\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), 0, 'DAY'), \\\"yyyy-MM-dd\\\")}\", \"start\": \"2017-04-27T09:14\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"output_folder\", \"is_advanced_end_instance\": false}], \"isDirty\": true, \"showAdvancedFrequencyUI\": true, \"isManaged\": false, \"variablesUI\": [\"parameter\", \"input_path\", \"output_path\"], \"workflowParameters\": [{\"name\": \"date\", \"value\": \"\"}, {\"name\": \"output_folder\", \"value\": \"\"}], \"properties\": {\"job_xml\": \"\", \"timeout\": null, \"document\": null, \"end\": \"${end_date}\", \"description\": \"Daily download of ASU data\", \"frequency_number\": 1, \"workflow\": \"a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c\", \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1493309646.65\", \"cron_frequency\": \"0 13 * * *\", \"frequency_unit\": \"days\", \"schema_version\": \"uri:oozie:coordinator:0.2\", \"cron_advanced\": false, \"start\": \"${start_date}\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}, {\"name\": \"start_date\", \"value\": \"2017-05-05T13:00\"}, {\"name\": \"end_date\", \"value\": \"2027-05-04T13:14\"}], \"concurrency\": 0, \"timezone\": \"America/Los_Angeles\", \"credentials\": [], \"throttle\": 0, \"execution\": \"FIFO\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"uuid\": \"5ac78762-b8ac-0aa7-7fa1-6d1ba7e4efd4\", \"name\": \"Coordinator-ASU\", \"id\": 31, \"start_date\": {\"name\": \"start_date\", \"value\": \"2017-05-05T13:00\"}}", 
+    "name": "Coordinator-ASU"
+  }
+},
+{
+  "pk": 32, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "84c2f949-8555-45f8-8706-b2932e2ae798", 
+    "extra": "", 
+    "type": "oozie-workflow2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-06-13T10:52:15.403", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "662f0684-8c93-47cb-84a2-88303c3987dc", 
+        1, 
+        true
+      ], 
+      [
+        "ea988e43-ebe4-4747-9dc9-a66014adbcb7", 
+        1, 
+        true
+      ], 
+      [
+        "09ec84a9-bd79-43f7-be65-86cb2970fb87", 
+        1, 
+        true
+      ], 
+      [
+        "1cba14ff-dfd9-415f-b5b9-26cd5d4378d7", 
+        1, 
+        true
+      ], 
+      [
+        "8d893153-00c8-40e0-8477-fb01c3f3c347", 
+        1, 
+        true
+      ], 
+      [
+        "be5803e1-6815-4572-a74a-33e73e1ad22f", 
+        1, 
+        true
+      ], 
+      [
+        "9ddc811a-4c50-47d1-ae7f-45cb3fd9fa6c", 
+        1, 
+        true
+      ]
+    ], 
+    "data": "{\"layout\": [{\"oozieRows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"size\": 12}], \"id\": \"353fe9af-9d76-43f7-db9b-196832d4d4f5\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"1cd2bff6-e246-518a-1918-a89d61edbe47\", \"size\": 12}], \"id\": \"cdf6deed-c31c-6d3d-881b-328d535b6d73\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\", \"size\": 12}], \"id\": \"164ec48a-35cc-f8cd-5617-6deecbaa2f90\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\", \"size\": 12}], \"id\": \"c543705d-8899-2c8a-bec9-b98f79001c00\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"425f59a9-291e-3974-c223-737a6e82a80c\", \"size\": 12}], \"id\": \"a39be5ab-ba06-1159-37fe-b2a394620995\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\", \"size\": 12}], \"id\": \"5e16017c-5196-c5a4-cc86-0e4f81729a44\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"411639c0-12f4-d62b-ab97-10334d37153b\", \"size\": 12}], \"id\": \"aa8f7268-1094-a049-f169-b83c9588c645\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Email\", \"widgetType\": \"email-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"8da0a381-f452-04f6-4c94-33c713b6c3f8\", \"size\": 12}], \"id\": \"8351dc4e-b726-cf19-02ad-503350df6e11\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"575150f1-855f-3166-45d2-f9d006eb30b4\", \"size\": 12}], \"id\": \"56e18ccd-3347-b7ca-a6c3-463376929ff0\", \"columns\": []}], \"rows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"e19e9c8c-2d85-d573-6302-3e39d5771830\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"size\": 12}], \"id\": \"353fe9af-9d76-43f7-db9b-196832d4d4f5\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"1cd2bff6-e246-518a-1918-a89d61edbe47\", \"size\": 12}], \"id\": \"cdf6deed-c31c-6d3d-881b-328d535b6d73\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\", \"size\": 12}], \"id\": \"164ec48a-35cc-f8cd-5617-6deecbaa2f90\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\", \"size\": 12}], \"id\": \"c543705d-8899-2c8a-bec9-b98f79001c00\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"425f59a9-291e-3974-c223-737a6e82a80c\", \"size\": 12}], \"id\": \"a39be5ab-ba06-1159-37fe-b2a394620995\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\", \"size\": 12}], \"id\": \"5e16017c-5196-c5a4-cc86-0e4f81729a44\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"411639c0-12f4-d62b-ab97-10334d37153b\", \"size\": 12}], \"id\": \"aa8f7268-1094-a049-f169-b83c9588c645\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Email\", \"widgetType\": \"email-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"8da0a381-f452-04f6-4c94-33c713b6c3f8\", \"size\": 12}], \"id\": \"8351dc4e-b726-cf19-02ad-503350df6e11\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": true, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"575150f1-855f-3166-45d2-f9d006eb30b4\", \"size\": 12}], \"id\": \"56e18ccd-3347-b7ca-a6c3-463376929ff0\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"73e7f9e3-73b7-028a-25c5-db6d1aaf7b9e\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"08dae897-bec0-9cd7-6af2-9c3423a1b121\", \"columns\": []}], \"oozieEndRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"73e7f9e3-73b7-028a-25c5-db6d1aaf7b9e\", \"columns\": []}, \"oozieKillRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"08dae897-bec0-9cd7-6af2-9c3423a1b121\", \"columns\": []}, \"enableOozieDropOnAfter\": true, \"oozieStartRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"e19e9c8c-2d85-d573-6302-3e39d5771830\", \"columns\": []}, \"klass\": \"card card-home card-column span12\", \"enableOozieDropOnBefore\": true, \"drops\": [\"temp\"], \"id\": \"aa011c1c-16a1-557b-10e0-3a545d928dd6\", \"size\": 12}], \"workflow\": {\"properties\": {\"job_xml\": \"\", \"description\": \"\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}], \"sla_enabled\": false, \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1493310378.98\", \"schema_version\": \"uri:oozie:workflow:0.5\", \"properties\": [], \"show_arrows\": true, \"wf1_id\": null, \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"name\": \"APIDownloader-HG\", \"hasKillNode\": true, \"versions\": [\"uri:oozie:workflow:0.4\", \"uri:oozie:workflow:0.4.5\", \"uri:oozie:workflow:0.5\"], \"isDirty\": false, \"movedNode\": null, \"linkMapping\": {\"54800427-3698-6650-dad9-4fcdae3bbaac\": [\"1cd2bff6-e246-518a-1918-a89d61edbe47\"], \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\": [\"425f59a9-291e-3974-c223-737a6e82a80c\"], \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\": [\"8c4799af-a72c-42fa-fa23-7325b0f6ed87\"], \"1cd2bff6-e246-518a-1918-a89d61edbe47\": [\"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\"], \"425f59a9-291e-3974-c223-737a6e82a80c\": [\"5bb4acc3-81f0-fc57-f8f5-5283580f9997\"], \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\": [\"411639c0-12f4-d62b-ab97-10334d37153b\"], \"575150f1-855f-3166-45d2-f9d006eb30b4\": [], \"8da0a381-f452-04f6-4c94-33c713b6c3f8\": [\"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"], \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": [], \"3f107997-04cc-8733-60a9-a4bb62cebffc\": [\"54800427-3698-6650-dad9-4fcdae3bbaac\"], \"17c9c895-5a16-7443-bb81-f34b30b21548\": [], \"411639c0-12f4-d62b-ab97-10334d37153b\": [\"8da0a381-f452-04f6-4c94-33c713b6c3f8\"]}, \"nodeIds\": [\"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"1cd2bff6-e246-518a-1918-a89d61edbe47\", \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\", \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\", \"425f59a9-291e-3974-c223-737a6e82a80c\", \"411639c0-12f4-d62b-ab97-10334d37153b\", \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\", \"575150f1-855f-3166-45d2-f9d006eb30b4\", \"8da0a381-f452-04f6-4c94-33c713b6c3f8\"], \"nodes\": [{\"name\": \"Start\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"54800427-3698-6650-dad9-4fcdae3bbaac\"}], \"actionParametersFetched\": false, \"properties\": {}, \"associatedDocumentUuid\": null, \"type\": \"start-widget\", \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"actionParameters\": []}, {\"name\": \"End\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"attachment\": \"\", \"content_type\": \"text/plain\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"end-widget\", \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"actionParameters\": []}, {\"name\": \"Kill\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"actionParameters\": []}, {\"name\": \"shell-5480\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"1cd2bff6-e246-518a-1918-a89d61edbe47\"}, {\"error\": \"1cd2bff6-e246-518a-1918-a89d61edbe47\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_hgZDIAPI.sh\"}, {\"value\": \"/user/effect/workflow/hgZDIAPI.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run_hgZDIAPI.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00+00:00\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"actionParameters\": []}, {\"name\": \"shell-1cd2\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\"}, {\"error\": \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run-hgBlogsAPI.sh\"}, {\"value\": \"/user/effect/workflow/hgblogsAPI.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run-hgBlogsAPI.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00Z\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"1cd2bff6-e246-518a-1918-a89d61edbe47\", \"actionParameters\": []}, {\"name\": \"shell-fa2a\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\"}, {\"error\": \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run-hgAbuseCh.sh\"}, {\"value\": \"/user/effect/workflow/hgAbuseCh.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run-hgAbuseCh.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00Z\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\", \"actionParameters\": []}, {\"name\": \"shell-8c47\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"425f59a9-291e-3974-c223-737a6e82a80c\"}, {\"error\": \"425f59a9-291e-3974-c223-737a6e82a80c\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_hgTaxii.sh\"}, {\"value\": \"/user/effect/workflow/hgTaxii.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run_hgTaxii.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00Z\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\", \"actionParameters\": []}, {\"name\": \"shell-425f\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\"}, {\"error\": \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run-hgCPEAPI.sh\"}, {\"value\": \"/user/effect/workflow/hgCPEAPI.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run-hgCPEAPI.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00Z\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"425f59a9-291e-3974-c223-737a6e82a80c\", \"actionParameters\": []}, {\"name\": \"shell-4116\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"8da0a381-f452-04f6-4c94-33c713b6c3f8\"}, {\"error\": \"575150f1-855f-3166-45d2-f9d006eb30b4\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_hgConference.sh\"}, {\"value\": \"/user/effect/workflow/hgConference.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run_hgConference.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00Z\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"411639c0-12f4-d62b-ab97-10334d37153b\", \"actionParameters\": []}, {\"name\": \"shell-5bb4\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"411639c0-12f4-d62b-ab97-10334d37153b\"}, {\"error\": \"411639c0-12f4-d62b-ab97-10334d37153b\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run-hgCVEAPI.sh\"}, {\"value\": \"/user/effect/workflow/hgCVEAPI.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"./run-hgCVEAPI.sh\", \"arguments\": [{\"value\": \"${date}T00:00:00Z\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\", \"actionParameters\": []}, {\"name\": \"kill-5751\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"cc\": \"\", \"retry_interval\": [], \"retry_max\": [], \"to\": \"dipsykapoor@gmail.com\", \"enableMail\": true, \"credentials\": [], \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"subject\": \"ISI Cluster: HG API Download Failed\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"575150f1-855f-3166-45d2-f9d006eb30b4\", \"actionParameters\": []}, {\"name\": \"email-8da0\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"}, {\"error\": \"575150f1-855f-3166-45d2-f9d006eb30b4\"}], \"actionParametersFetched\": false, \"properties\": {\"body\": \"Status: [${wf:errorMessage(wf:lastErrorNode())}]\", \"cc\": \"\", \"retry_interval\": [], \"retry_max\": [], \"bcc\": \"\", \"to\": \"dipsykapoor@gmail.com\", \"attachment\": \"\", \"content_type\": \"text/plain\", \"credentials\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"subject\": \"ISI Cluster: HG Workflow Status\"}, \"associatedDocumentUuid\": null, \"type\": \"email-widget\", \"id\": \"8da0a381-f452-04f6-4c94-33c713b6c3f8\", \"actionParameters\": []}], \"id\": 32, \"nodeNamesMapping\": {\"54800427-3698-6650-dad9-4fcdae3bbaac\": \"shell-5480\", \"8c4799af-a72c-42fa-fa23-7325b0f6ed87\": \"shell-8c47\", \"fa2a94ac-23c7-7e51-cc22-f2d038341f4f\": \"shell-fa2a\", \"1cd2bff6-e246-518a-1918-a89d61edbe47\": \"shell-1cd2\", \"425f59a9-291e-3974-c223-737a6e82a80c\": \"shell-425f\", \"5bb4acc3-81f0-fc57-f8f5-5283580f9997\": \"shell-5bb4\", \"575150f1-855f-3166-45d2-f9d006eb30b4\": \"kill-5751\", \"8da0a381-f452-04f6-4c94-33c713b6c3f8\": \"email-8da0\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": \"End\", \"3f107997-04cc-8733-60a9-a4bb62cebffc\": \"Start\", \"17c9c895-5a16-7443-bb81-f34b30b21548\": \"Kill\", \"411639c0-12f4-d62b-ab97-10334d37153b\": \"shell-4116\"}, \"uuid\": \"a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c\"}}", 
+    "name": "APIDownloader-HG"
+  }
+},
+{
+  "pk": 35, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "3b9e9864-e933-db8e-552e-a70db4ece438", 
+    "extra": "", 
+    "type": "oozie-coordinator2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-05-04T13:24:37.355", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "84c2f949-8555-45f8-8706-b2932e2ae798", 
+        1, 
+        false
+      ]
+    ], 
+    "data": "{\"end_date\": {\"name\": \"end_date\", \"value\": \"2027-05-04T19:45\"}, \"variables\": [{\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"fb5471a4-6f10-9f21-d83d-fa1d41058462\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, \\\"DAY\\\"), \\\"yyyy-MM-dd\\\")}\", \"start\": \"2017-04-27T09:53\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"date\", \"is_advanced_end_instance\": false}, {\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"0d0a6109-2c0d-2f2b-7ad8-1b90c7cfb883\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), 0, \\\"DAY\\\"), \\\"yyyy-MM-dd\\\")}\", \"start\": \"2017-04-27T09:53\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"output_folder\", \"is_advanced_end_instance\": false}], \"isDirty\": true, \"showAdvancedFrequencyUI\": true, \"isManaged\": false, \"variablesUI\": [\"parameter\", \"input_path\", \"output_path\"], \"workflowParameters\": [{\"name\": \"date\", \"value\": \"\"}, {\"name\": \"output_folder\", \"value\": \"\"}], \"properties\": {\"job_xml\": \"\", \"timeout\": null, \"document\": null, \"end\": \"${end_date}\", \"description\": \"\", \"frequency_number\": 1, \"workflow\": \"84c2f949-8555-45f8-8706-b2932e2ae798\", \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1493312011.12\", \"cron_frequency\": \"10 13 * * *\", \"frequency_unit\": \"days\", \"schema_version\": \"uri:oozie:coordinator:0.2\", \"cron_advanced\": false, \"start\": \"${start_date}\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}, {\"name\": \"start_date\", \"value\": \"2017-05-05T13:10\"}, {\"name\": \"end_date\", \"value\": \"2027-05-04T19:45\"}], \"concurrency\": 0, \"timezone\": \"America/Los_Angeles\", \"credentials\": [], \"throttle\": 0, \"execution\": \"FIFO\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"uuid\": \"3b9e9864-e933-db8e-552e-a70db4ece438\", \"name\": \"Coordinator-HG\", \"id\": 35, \"start_date\": {\"name\": \"start_date\", \"value\": \"2017-05-05T13:10\"}}", 
+    "name": "Coordinator-HG"
+  }
+},
+{
+  "pk": 44, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "bfc8a943-2b44-42b9-868b-2a82d12ee19b", 
+    "extra": "", 
+    "type": "oozie-workflow2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-07-14T10:03:21.717", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "3d6cd2a5-3327-475f-9c35-89101c8baa7d", 
+        1, 
+        true
+      ], 
+      [
+        "67427368-9dc6-4d88-8a83-aad031db7083", 
+        1, 
+        true
+      ], 
+      [
+        "d4c3896a-0e4b-438e-a767-dc2987c41128", 
+        1, 
+        true
+      ], 
+      [
+        "312cfe03-c1dd-4a7f-a18e-6941acd842e8", 
+        1, 
+        true
+      ], 
+      [
+        "0477c0a5-ad58-4433-9d01-683734c24b2b", 
+        1, 
+        true
+      ], 
+      [
+        "51ab832c-1300-4b0c-a375-c1a386f4f9c0", 
+        1, 
+        true
+      ], 
+      [
+        "7c11ad21-73ba-4542-a95a-682fa8d610be", 
+        1, 
+        true
+      ], 
+      [
+        "42d10516-3f15-4ec2-b5d5-bfb2d11fbc5f", 
+        1, 
+        true
+      ], 
+      [
+        "f01c3924-5f0b-4f2e-928b-e752ce1dd446", 
+        1, 
+        true
+      ], 
+      [
+        "063af8b4-8530-4dad-885b-74bfadbc4dc4", 
+        1, 
+        true
+      ], 
+      [
+        "d798f085-bc85-4755-b02e-d6489c52a5e1", 
+        1, 
+        true
+      ], 
+      [
+        "deef3147-e718-44ed-9ce7-a24aa41e613c", 
+        1, 
+        true
+      ], 
+      [
+        "3b465055-f2a2-4947-a505-258447600b48", 
+        1, 
+        true
+      ], 
+      [
+        "30167c7e-d9f5-4cfc-8303-0304edadbea6", 
+        1, 
+        true
+      ], 
+      [
+        "d91487fc-a8be-473f-a213-7afe113915f6", 
+        1, 
+        true
+      ], 
+      [
+        "34d9eb3d-a2d8-45ec-b817-52b9bac91f7d", 
+        1, 
+        true
+      ], 
+      [
+        "4f17c4db-4611-4aa7-9d48-229d252345f9", 
+        1, 
+        true
+      ], 
+      [
+        "3f0188ee-2bf7-4ce7-8a49-9366548e44e9", 
+        1, 
+        true
+      ], 
+      [
+        "65e31db2-0e96-47e7-92bd-1ad646abb312", 
+        1, 
+        true
+      ], 
+      [
+        "ec48ae77-2a48-4984-943f-bb0c463b264d", 
+        1, 
+        true
+      ], 
+      [
+        "e0a640ad-0e0f-4a36-9357-9211c48ab796", 
+        1, 
+        true
+      ], 
+      [
+        "3b81a6bc-c9c6-4ebb-88ac-6e88c577c66e", 
+        1, 
+        true
+      ], 
+      [
+        "dacf3cb7-275d-42d0-85b3-bdd0f0dbbd47", 
+        1, 
+        true
+      ], 
+      [
+        "16dd346e-37b0-4eb8-9032-69b702a4b837", 
+        1, 
+        true
+      ], 
+      [
+        "f7655994-683b-4955-9fa1-299e1c41d07a", 
+        1, 
+        true
+      ]
+    ], 
+    "data": "{\"layout\": [{\"oozieRows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"size\": 12}], \"id\": \"e546e1fa-b422-3bf0-3f9b-20f4b94e201e\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\", \"size\": 12}], \"id\": \"2b7d3d12-78b2-092d-841a-8cb62e12af53\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"b73197a2-cd7a-4b15-34e0-f292cabed81d\", \"size\": 12}], \"id\": \"750f19f8-e867-e537-e46e-bcb37823105b\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"2c9a6e05-0873-4f53-2f42-c764401fcb51\", \"size\": 12}], \"id\": \"056ed48b-e21f-4dff-4f1a-605899588f2f\", \"columns\": []}], \"rows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"94ed7715-3346-dbb6-a34c-d24c47c3b187\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"size\": 12}], \"id\": \"e546e1fa-b422-3bf0-3f9b-20f4b94e201e\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\", \"size\": 12}], \"id\": \"2b7d3d12-78b2-092d-841a-8cb62e12af53\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"b73197a2-cd7a-4b15-34e0-f292cabed81d\", \"size\": 12}], \"id\": \"750f19f8-e867-e537-e46e-bcb37823105b\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"2c9a6e05-0873-4f53-2f42-c764401fcb51\", \"size\": 12}], \"id\": \"056ed48b-e21f-4dff-4f1a-605899588f2f\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"b68cacb1-8f21-528a-2fbb-300ccca1289a\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"065eb399-d1a1-0f3b-e740-bbfba81d6fd6\", \"columns\": []}], \"oozieEndRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"b68cacb1-8f21-528a-2fbb-300ccca1289a\", \"columns\": []}, \"oozieKillRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"065eb399-d1a1-0f3b-e740-bbfba81d6fd6\", \"columns\": []}, \"enableOozieDropOnAfter\": true, \"oozieStartRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"94ed7715-3346-dbb6-a34c-d24c47c3b187\", \"columns\": []}, \"klass\": \"card card-home card-column span12\", \"enableOozieDropOnBefore\": true, \"drops\": [\"temp\"], \"id\": \"7e213d47-ff4d-bee2-5b12-9d4aea4142aa\", \"size\": 12}], \"workflow\": {\"properties\": {\"job_xml\": \"\", \"description\": \"\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}], \"sla_enabled\": false, \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1493408420.19\", \"schema_version\": \"uri:oozie:workflow:0.5\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"show_arrows\": true, \"wf1_id\": null, \"properties\": []}, \"name\": \"KarmaPublishES\", \"hasKillNode\": true, \"versions\": [\"uri:oozie:workflow:0.4\", \"uri:oozie:workflow:0.4.5\", \"uri:oozie:workflow:0.5\"], \"isDirty\": true, \"movedNode\": null, \"linkMapping\": {\"54800427-3698-6650-dad9-4fcdae3bbaac\": [\"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\"], \"17c9c895-5a16-7443-bb81-f34b30b21548\": [], \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\": [\"b73197a2-cd7a-4b15-34e0-f292cabed81d\"], \"2c9a6e05-0873-4f53-2f42-c764401fcb51\": [], \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": [], \"b73197a2-cd7a-4b15-34e0-f292cabed81d\": [\"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"], \"3f107997-04cc-8733-60a9-a4bb62cebffc\": [\"54800427-3698-6650-dad9-4fcdae3bbaac\"]}, \"nodeIds\": [\"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\", \"b73197a2-cd7a-4b15-34e0-f292cabed81d\", \"2c9a6e05-0873-4f53-2f42-c764401fcb51\"], \"nodes\": [{\"name\": \"Start\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"54800427-3698-6650-dad9-4fcdae3bbaac\"}], \"actionParametersFetched\": false, \"properties\": {}, \"associatedDocumentUuid\": null, \"type\": \"start-widget\", \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"actionParameters\": []}, {\"name\": \"End\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"attachment\": \"\", \"content_type\": \"text/plain\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"end-widget\", \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"actionParameters\": []}, {\"name\": \"Kill\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"actionParameters\": []}, {\"name\": \"shell-5480\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\"}, {\"error\": \"2c9a6e05-0873-4f53-2f42-c764401fcb51\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_effectWorkflow.sh\"}, {\"value\": \"/user/effect/workflow/effectWorkflow.py\"}, {\"value\": \"/user/effect/workflow/lib/effect-env.zip\"}, {\"value\": \"/user/effect/workflow/lib/karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar\"}, {\"value\": \"/user/effect/workflow/lib/karma.zip\"}, {\"value\": \"/user/effect/workflow/lib/pyspark\"}, {\"value\": \"/user/effect/workflow/lib/bbn/resources.zip\"}, {\"value\": \"/user/effect/workflow/lib/bbn/ner.params\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [{\"name\": \"mapred.input.dir.recursive\", \"value\": \"true\"}], \"capture_output\": true, \"shell_command\": \"./run_effectWorkflow.sh\", \"arguments\": [{\"value\": \"--inputTable\"}, {\"value\": \"cdr\"}, {\"value\": \"--output\"}, {\"value\": \"/user/effect/data/karma-out/incremental\"}, {\"value\": \"--partitions\"}, {\"value\": \"120\"}, {\"value\": \"--karma\"}, {\"value\": \"--incremental\"}, {\"value\": \"--since\"}, {\"value\": \"${INCREMENTAL_DATE}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": [{\"name\": \"/user/effect/workflow/lib/effect-env.zip#effect-env\"}]}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"54800427-3698-6650-dad9-4fcdae3bbaac\", \"actionParameters\": []}, {\"name\": \"shell-1af9\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"b73197a2-cd7a-4b15-34e0-f292cabed81d\"}, {\"error\": \"2c9a6e05-0873-4f53-2f42-c764401fcb51\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_effectWorkflow.sh\"}, {\"value\": \"/user/effect/workflow/effectWorkflow.py\"}, {\"value\": \"/user/effect/workflow/lib/effect-env.zip\"}, {\"value\": \"/user/effect/workflow/lib/karma-spark-0.0.1-SNAPSHOT-1.6.0-cdh5.10.1-hive.jar\"}, {\"value\": \"/user/effect/workflow/lib/karma.zip\"}, {\"value\": \"/user/effect/workflow/lib/pyspark\"}, {\"value\": \"/user/effect/workflow/lib/bbn/resources.zip\"}, {\"value\": \"/user/effect/workflow/lib/bbn/ner.params\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [{\"name\": \"mapred.input.dir.recursive\", \"value\": \"true\"}], \"capture_output\": true, \"shell_command\": \"./run_effectWorkflow.sh\", \"arguments\": [{\"value\": \"--inputTable\"}, {\"value\": \"cdr\"}, {\"value\": \"--output\"}, {\"value\": \"/user/effect/data/karma-out/incremental\"}, {\"value\": \"--partitions\"}, {\"value\": \"120\"}, {\"value\": \"--framer\"}, {\"value\": \"--incremental\"}, {\"value\": \"--since\"}, {\"value\": \"${INCREMENTAL_DATE}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"archives\": [{\"name\": \"/user/effect/workflow/lib/effect-env.zip#effect-env\"}]}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\", \"actionParameters\": []}, {\"name\": \"shell-b731\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"}, {\"error\": \"2c9a6e05-0873-4f53-2f42-c764401fcb51\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_effectWorkflow-es.sh\"}, {\"value\": \"/user/effect/workflow/effectWorkflow-es.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}, {\"value\": \"/user/effect/workflow/lib/elasticsearch-hadoop-2.4.0.jar\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [{\"name\": \"mapred.input.dir.recursive\", \"value\": \"true\"}], \"capture_output\": true, \"shell_command\": \"./run_effectWorkflow-es.sh\", \"arguments\": [{\"value\": \"--input\"}, {\"value\": \"/user/effect/data/karma-out/incremental/frames\"}, {\"value\": \"--index\"}, {\"value\": \"effect-${es_index}\"}, {\"value\": \"--incremental\"}, {\"value\": \"--since\"}, {\"value\": \"${INCREMENTAL_DATE}\"}, {\"value\": \"--partitions\"}, {\"value\": \"90\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"b73197a2-cd7a-4b15-34e0-f292cabed81d\", \"actionParameters\": []}, {\"name\": \"kill-2c9a\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"ISI Cluster: Karma Publish ES Job Failed\", \"cc\": \"\", \"retry_interval\": [], \"retry_max\": [], \"to\": \"dipsykapoor@gmail.com\", \"enableMail\": true, \"credentials\": [], \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"subject\": \"ISI Cluster: Karma Publish ES Job Failed\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"2c9a6e05-0873-4f53-2f42-c764401fcb51\", \"actionParameters\": []}], \"id\": 44, \"nodeNamesMapping\": {\"54800427-3698-6650-dad9-4fcdae3bbaac\": \"shell-5480\", \"17c9c895-5a16-7443-bb81-f34b30b21548\": \"Kill\", \"1af9ae4b-3f6b-7a25-3db0-7b5bc02ec8e0\": \"shell-1af9\", \"2c9a6e05-0873-4f53-2f42-c764401fcb51\": \"kill-2c9a\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": \"End\", \"b73197a2-cd7a-4b15-34e0-f292cabed81d\": \"shell-b731\", \"3f107997-04cc-8733-60a9-a4bb62cebffc\": \"Start\"}, \"uuid\": \"a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c\"}}", 
+    "name": "KarmaPublishES"
+  }
+},
+{
+  "pk": 45, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "3f7f30d9-1394-a814-1788-42f30f8d527f", 
+    "extra": "", 
+    "type": "oozie-coordinator2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-07-14T09:57:33.445", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "bfc8a943-2b44-42b9-868b-2a82d12ee19b", 
+        1, 
+        false
+      ]
+    ], 
+    "data": "{\"end_date\": {\"name\": \"end_date\", \"value\": \"2027-05-05T13:43\"}, \"variables\": [{\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"efe8e08b-941c-bd7d-a614-af0913bf6706\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), 0, \\\"DAY\\\"), \\\"yyyyMMdd\\\")}\", \"start\": \"2017-04-28T12:44\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"es_index\", \"is_advanced_end_instance\": false}, {\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"ba0c302a-a66a-ee26-55e1-4a53cdd7ba6a\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, \\\"DAY\\\"), \\\"yyyy-MM-dd\\\")}T16:00:00+00:00\", \"start\": \"2017-04-28T12:44\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"INCREMENTAL_DATE\", \"is_advanced_end_instance\": false}], \"isDirty\": false, \"showAdvancedFrequencyUI\": true, \"isManaged\": false, \"variablesUI\": [\"parameter\", \"input_path\", \"output_path\"], \"workflowParameters\": [{\"name\": \"INCREMENTAL_DATE\", \"value\": \"\"}, {\"name\": \"es_index\", \"value\": \"\"}], \"id\": 45, \"name\": \"Coordinator-Karma\", \"uuid\": \"3f7f30d9-1394-a814-1788-42f30f8d527f\", \"properties\": {\"job_xml\": \"\", \"timeout\": null, \"document\": null, \"end\": \"${end_date}\", \"description\": \"\", \"frequency_number\": 1, \"workflow\": \"bfc8a943-2b44-42b9-868b-2a82d12ee19b\", \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1493408629.93\", \"cron_frequency\": \"20 13 * * *\", \"frequency_unit\": \"days\", \"schema_version\": \"uri:oozie:coordinator:0.2\", \"cron_advanced\": false, \"start\": \"${start_date}\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}, {\"name\": \"start_date\", \"value\": \"2017-07-13T13:20\"}, {\"name\": \"end_date\", \"value\": \"2027-05-05T13:43\"}], \"concurrency\": 0, \"timezone\": \"America/Los_Angeles\", \"credentials\": [], \"throttle\": 0, \"execution\": \"FIFO\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"start_date\": {\"name\": \"start_date\", \"value\": \"2017-07-13T13:20\"}}", 
+    "name": "Coordinator-Karma"
+  }
+},
+{
+  "pk": 96, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "3f32caf4-2f54-3960-853f-6c279d72218e", 
+    "extra": "", 
+    "type": "oozie-workflow2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-06-26T23:35:51.933", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "e83a9a5e-270a-4de0-bfd8-763b13f63bb6", 
+        1, 
+        true
+      ], 
+      [
+        "4f58fb96-6a5d-4bcc-841e-27c8f6291e63", 
+        1, 
+        true
+      ], 
+      [
+        "f66d8f2b-eeb4-428c-bcb7-3a7f975e0cfb", 
+        1, 
+        true
+      ], 
+      [
+        "d25d9bba-4348-46c3-b611-e49706039b7b", 
+        1, 
+        true
+      ], 
+      [
+        "ac1bfd47-a188-4712-bf9c-bf3d0f30c1e9", 
+        1, 
+        true
+      ], 
+      [
+        "ed2bdfea-a6e0-4cb9-bebc-86a341da0eb4", 
+        1, 
+        true
+      ], 
+      [
+        "0d044126-bf62-41f6-877a-e27bd4b1f50d", 
+        1, 
+        true
+      ], 
+      [
+        "11d877cc-744c-4f18-9b25-feeda7605b00", 
+        1, 
+        true
+      ], 
+      [
+        "8dd4d4b4-bdfb-4157-986d-634c62cab260", 
+        1, 
+        true
+      ], 
+      [
+        "f33d9668-88bf-4633-9e56-ba3c394e98e4", 
+        1, 
+        true
+      ], 
+      [
+        "38a628f3-5e6c-4d39-a6df-73c81b56e183", 
+        1, 
+        true
+      ], 
+      [
+        "9a84000d-5e9e-4ffd-a633-54ede2fb573a", 
+        1, 
+        true
+      ], 
+      [
+        "a82d35b3-9d8e-4899-87b7-b0b82a697534", 
+        1, 
+        true
+      ], 
+      [
+        "b65bd8fd-422f-4543-ae1b-ac72ed30d1d5", 
+        1, 
+        true
+      ], 
+      [
+        "b2e648c4-ee3b-42aa-9d92-ed5f51198a07", 
+        1, 
+        true
+      ], 
+      [
+        "8dcbb147-7e8c-4360-bc17-b41833009e3c", 
+        1, 
+        true
+      ], 
+      [
+        "bf9e9d60-c467-4410-9767-b9053c42b33f", 
+        1, 
+        true
+      ], 
+      [
+        "967d5adc-0ab9-4473-8104-cf26d259323e", 
+        1, 
+        true
+      ], 
+      [
+        "dd7d22d3-fc7b-4781-bb71-5f67ae72e1b8", 
+        1, 
+        true
+      ], 
+      [
+        "2cffb594-cc91-420b-bd7f-9d27c52b974a", 
+        1, 
+        true
+      ], 
+      [
+        "5d175af5-07a3-487d-ac2f-5200b008cecf", 
+        1, 
+        true
+      ]
+    ], 
+    "data": "{\"layout\": [{\"oozieRows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Hive Script\", \"widgetType\": \"hive-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"b7a58e91-33e7-57d1-d167-2bffc1411f07\", \"size\": 12}], \"id\": \"1d86b05b-de4c-b0fd-8b10-04d05fb69194\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Hive Script\", \"widgetType\": \"hive-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\", \"size\": 12}], \"id\": \"08775b02-8877-939a-d73e-b55632f6a502\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"2a278985-c23b-fbd4-3a52-b1896697a1fe\", \"size\": 12}], \"id\": \"4437070c-1a39-5f43-dd08-84bf3372d827\", \"columns\": []}], \"rows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"ced47268-ed61-446c-597f-427d9b4038b1\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Hive Script\", \"widgetType\": \"hive-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"b7a58e91-33e7-57d1-d167-2bffc1411f07\", \"size\": 12}], \"id\": \"1d86b05b-de4c-b0fd-8b10-04d05fb69194\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Hive Script\", \"widgetType\": \"hive-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\", \"size\": 12}], \"id\": \"08775b02-8877-939a-d73e-b55632f6a502\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"2a278985-c23b-fbd4-3a52-b1896697a1fe\", \"size\": 12}], \"id\": \"4437070c-1a39-5f43-dd08-84bf3372d827\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"c9306f02-d732-5e26-5277-f01c614cc918\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"1c7ad800-fa53-1311-02d6-c408b295c9ac\", \"columns\": []}], \"oozieEndRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"c9306f02-d732-5e26-5277-f01c614cc918\", \"columns\": []}, \"oozieKillRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"1c7ad800-fa53-1311-02d6-c408b295c9ac\", \"columns\": []}, \"enableOozieDropOnAfter\": true, \"oozieStartRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"ced47268-ed61-446c-597f-427d9b4038b1\", \"columns\": []}, \"klass\": \"card card-home card-column span12\", \"enableOozieDropOnBefore\": true, \"drops\": [\"temp\"], \"id\": \"d4f2cd53-96d3-9af1-0647-bb02dfebf616\", \"size\": 12}], \"workflow\": {\"properties\": {\"job_xml\": \"\", \"description\": \"\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}], \"sla_enabled\": false, \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1495737162.65\", \"schema_version\": \"uri:oozie:workflow:0.5\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"show_arrows\": true, \"wf1_id\": null, \"properties\": []}, \"name\": \"API-Daily-Counts-Tracking\", \"hasKillNode\": true, \"versions\": [\"uri:oozie:workflow:0.4\", \"uri:oozie:workflow:0.4.5\", \"uri:oozie:workflow:0.5\"], \"isDirty\": false, \"movedNode\": null, \"linkMapping\": {\"2a278985-c23b-fbd4-3a52-b1896697a1fe\": [\"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"], \"17c9c895-5a16-7443-bb81-f34b30b21548\": [], \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\": [\"2a278985-c23b-fbd4-3a52-b1896697a1fe\"], \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": [], \"3f107997-04cc-8733-60a9-a4bb62cebffc\": [\"b7a58e91-33e7-57d1-d167-2bffc1411f07\"], \"b7a58e91-33e7-57d1-d167-2bffc1411f07\": [\"a4ae2995-48f0-53b7-90bd-26005e75b6f6\"]}, \"nodeIds\": [\"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"2a278985-c23b-fbd4-3a52-b1896697a1fe\", \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\", \"b7a58e91-33e7-57d1-d167-2bffc1411f07\"], \"nodes\": [{\"name\": \"Start\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"b7a58e91-33e7-57d1-d167-2bffc1411f07\"}], \"actionParametersFetched\": false, \"properties\": {}, \"associatedDocumentUuid\": null, \"type\": \"start-widget\", \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"actionParameters\": []}, {\"name\": \"End\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"attachment\": \"\", \"content_type\": \"text/plain\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"end-widget\", \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"actionParameters\": []}, {\"name\": \"Kill\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"actionParameters\": []}, {\"name\": \"shell-2a27\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"}, {\"error\": \"17c9c895-5a16-7443-bb81-f34b30b21548\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/hive-scripts/send_email.sh\"}, {\"value\": \"/user/effect/workflow/hive-scripts/send_email.py\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"/user/effect/workflow/hive-scripts/send_email.sh\", \"arguments\": [], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"2a278985-c23b-fbd4-3a52-b1896697a1fe\", \"actionParameters\": []}, {\"name\": \"hive-a4ae\", \"actionParametersUI\": [], \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"2a278985-c23b-fbd4-3a52-b1896697a1fe\"}, {\"error\": \"17c9c895-5a16-7443-bb81-f34b30b21548\"}], \"actionParametersFetched\": false, \"id\": \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\", \"associatedDocumentUuid\": null, \"type\": \"hive-widget\", \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/hive-scripts/find_median.py#find_median.py\"}], \"parameters\": [], \"retry_max\": [], \"retry_interval\": [], \"job_properties\": [], \"hive_xml\": \"/user/effect/workflow/hive-scripts/hive-site.xml\", \"archives\": [], \"prepares\": [], \"credentials\": [\"hcat\"], \"script_path\": \"/user/effect/workflow/hive-scripts/insert_into_daily_report_table.hql\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}]}, \"actionParameters\": []}, {\"name\": \"hive-b7a5\", \"actionParametersUI\": [], \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\"}, {\"error\": \"17c9c895-5a16-7443-bb81-f34b30b21548\"}], \"actionParametersFetched\": false, \"id\": \"b7a58e91-33e7-57d1-d167-2bffc1411f07\", \"associatedDocumentUuid\": null, \"type\": \"hive-widget\", \"properties\": {\"files\": [], \"parameters\": [], \"retry_max\": [], \"retry_interval\": [], \"job_properties\": [], \"hive_xml\": \"/user/effect/workflow/hive-scripts/hive-site.xml\", \"archives\": [], \"prepares\": [], \"credentials\": [\"hcat\"], \"script_path\": \"/user/effect/workflow/hive-scripts/update_daily_audit_table.hql\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}]}, \"actionParameters\": []}], \"id\": 96, \"nodeNamesMapping\": {\"2a278985-c23b-fbd4-3a52-b1896697a1fe\": \"shell-2a27\", \"17c9c895-5a16-7443-bb81-f34b30b21548\": \"Kill\", \"a4ae2995-48f0-53b7-90bd-26005e75b6f6\": \"hive-a4ae\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": \"End\", \"3f107997-04cc-8733-60a9-a4bb62cebffc\": \"Start\", \"b7a58e91-33e7-57d1-d167-2bffc1411f07\": \"hive-b7a5\"}, \"uuid\": \"3f32caf4-2f54-3960-853f-6c279d72218e\"}}", 
+    "name": "API-Daily-Counts-Tracking"
+  }
+},
+{
+  "pk": 118, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "87e6c331-2404-19d2-2d90-e34c6b5d7ea7", 
+    "extra": "", 
+    "type": "oozie-coordinator2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-06-10T16:53:47.171", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "3f32caf4-2f54-3960-853f-6c279d72218e", 
+        1, 
+        false
+      ]
+    ], 
+    "data": "{\"end_date\": {\"name\": \"end_date\", \"value\": \"2021-06-02T12:58\"}, \"variables\": [], \"isDirty\": true, \"showAdvancedFrequencyUI\": true, \"isManaged\": false, \"variablesUI\": [\"parameter\", \"input_path\", \"output_path\"], \"workflowParameters\": [], \"properties\": {\"job_xml\": \"\", \"timeout\": null, \"document\": null, \"end\": \"${end_date}\", \"description\": \"\", \"frequency_number\": 1, \"workflow\": \"3f32caf4-2f54-3960-853f-6c279d72218e\", \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1495828705.0\", \"cron_frequency\": \"0 22 * * *\", \"frequency_unit\": \"days\", \"schema_version\": \"uri:oozie:coordinator:0.2\", \"cron_advanced\": false, \"start\": \"${start_date}\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}, {\"name\": \"start_date\", \"value\": \"2017-05-26T12:58\"}, {\"name\": \"end_date\", \"value\": \"2021-06-02T12:58\"}], \"concurrency\": 0, \"timezone\": \"America/Los_Angeles\", \"credentials\": [], \"throttle\": 0, \"execution\": \"FIFO\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"uuid\": \"87e6c331-2404-19d2-2d90-e34c6b5d7ea7\", \"name\": \"API-Audit-Coordinator\", \"id\": 118, \"start_date\": {\"name\": \"start_date\", \"value\": \"2017-05-26T12:58\"}}", 
+    "name": "API-Audit-Coordinator"
+  }
+},
+{
+  "pk": 286, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "9cd1d49b-24f6-4bb3-bb8d-fecff06afef4", 
+    "extra": "", 
+    "type": "oozie-workflow2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-06-13T16:07:38.008", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "d66e27ff-421a-485d-947d-f8636a7051ca", 
+        1, 
+        true
+      ], 
+      [
+        "2174443c-3d98-40b0-ba56-6bfcaf3daf58", 
+        1, 
+        true
+      ], 
+      [
+        "f892e798-1ba0-453c-acda-3d11970fb730", 
+        1, 
+        true
+      ], 
+      [
+        "43fbf29c-019d-42e4-bbec-7236587878fb", 
+        1, 
+        true
+      ], 
+      [
+        "6804d2fa-a0b3-4fe8-8a76-03eb7080e328", 
+        1, 
+        true
+      ], 
+      [
+        "dde034ce-0ce4-41ca-840d-56386f8eeb5a", 
+        1, 
+        true
+      ], 
+      [
+        "84726ac0-843b-4c80-a5c4-04cfc42ac9bd", 
+        1, 
+        true
+      ], 
+      [
+        "12b07356-1f23-4c10-8299-d5eac492ceb6", 
+        1, 
+        true
+      ], 
+      [
+        "5e44c757-936a-474c-b1dc-3dc2cd2b0ab3", 
+        1, 
+        true
+      ], 
+      [
+        "9e8c15c3-2b91-4108-a91c-e342b8967bfd", 
+        1, 
+        true
+      ], 
+      [
+        "635de37c-00c1-4cc8-9fca-646bb60c3ff2", 
+        1, 
+        true
+      ], 
+      [
+        "ab5798aa-3364-4c94-b8b5-e1f972424433", 
+        1, 
+        true
+      ], 
+      [
+        "7a8701d9-8179-4841-8135-024a43d81b54", 
+        1, 
+        true
+      ]
+    ], 
+    "data": "{\"layout\": [{\"oozieRows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\", \"size\": 12}], \"id\": \"57fc28b3-c9ba-cb3f-ae11-d465c43fc43b\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"size\": 12}], \"id\": \"6a07a431-452a-50a5-4e51-ebbd615b9a62\", \"columns\": []}], \"rows\": [{\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"b484e1bf-497a-4657-6af8-baa9653aa434\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Shell\", \"widgetType\": \"shell-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\", \"size\": 12}], \"id\": \"57fc28b3-c9ba-cb3f-ae11-d465c43fc43b\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"size\": 12}], \"id\": \"6a07a431-452a-50a5-4e51-ebbd615b9a62\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"6ca4fddc-6746-8c39-f529-85d7a1969a8c\", \"columns\": []}, {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"6e825ab6-2637-84b9-2a67-2e5299737cb9\", \"columns\": []}], \"oozieEndRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"End\", \"widgetType\": \"end-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"size\": 12}], \"id\": \"6ca4fddc-6746-8c39-f529-85d7a1969a8c\", \"columns\": []}, \"oozieKillRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Kill\", \"widgetType\": \"kill-widget\", \"oozieMovable\": true, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"size\": 12}], \"id\": \"6e825ab6-2637-84b9-2a67-2e5299737cb9\", \"columns\": []}, \"enableOozieDropOnAfter\": true, \"oozieStartRow\": {\"enableOozieDropOnBefore\": true, \"enableOozieDropOnSide\": true, \"enableOozieDrop\": false, \"widgets\": [{\"status\": \"\", \"logsURL\": \"\", \"name\": \"Start\", \"widgetType\": \"start-widget\", \"oozieMovable\": false, \"ooziePropertiesExpanded\": false, \"externalIdUrl\": \"\", \"properties\": {}, \"isLoading\": true, \"offset\": 0, \"actionURL\": \"\", \"progress\": 0, \"klass\": \"card card-widget span12\", \"oozieExpanded\": false, \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"size\": 12}], \"id\": \"b484e1bf-497a-4657-6af8-baa9653aa434\", \"columns\": []}, \"klass\": \"card card-home card-column span12\", \"enableOozieDropOnBefore\": true, \"drops\": [\"temp\"], \"id\": \"7abf9d0a-cb29-da2f-8948-6d9c7fd77e11\", \"size\": 12}], \"workflow\": {\"properties\": {\"job_xml\": \"\", \"description\": \"\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}], \"sla_enabled\": false, \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1497389774.21\", \"schema_version\": \"uri:oozie:workflow:0.5\", \"properties\": [], \"show_arrows\": true, \"wf1_id\": null, \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"name\": \"APIDownloader-ISI-Twitter\", \"hasKillNode\": true, \"versions\": [\"uri:oozie:workflow:0.4\", \"uri:oozie:workflow:0.4.5\", \"uri:oozie:workflow:0.5\"], \"isDirty\": false, \"movedNode\": null, \"linkMapping\": {\"17c9c895-5a16-7443-bb81-f34b30b21548\": [], \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": [], \"3f107997-04cc-8733-60a9-a4bb62cebffc\": [\"9eab0d23-acb5-cca5-be1d-959354b6a7c5\"], \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\": [\"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"], \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\": []}, \"nodeIds\": [\"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\"], \"nodes\": [{\"name\": \"Start\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\"}], \"actionParametersFetched\": false, \"properties\": {}, \"associatedDocumentUuid\": null, \"type\": \"start-widget\", \"id\": \"3f107997-04cc-8733-60a9-a4bb62cebffc\", \"actionParameters\": []}, {\"name\": \"End\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"attachment\": \"\", \"content_type\": \"text/plain\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"end-widget\", \"id\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\", \"actionParameters\": []}, {\"name\": \"Kill\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"\", \"cc\": \"\", \"to\": \"\", \"enableMail\": false, \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"subject\": \"\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"17c9c895-5a16-7443-bb81-f34b30b21548\", \"actionParameters\": []}, {\"name\": \"kill-7e42\", \"associatedDocumentLoading\": true, \"children\": [], \"actionParametersFetched\": false, \"properties\": {\"body\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"cc\": \"\", \"retry_interval\": [], \"retry_max\": [], \"to\": \"dipsykapoor@gmail.com\", \"enableMail\": true, \"credentials\": [], \"message\": \"Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]\", \"sla\": [{\"value\": false, \"key\": \"enabled\"}, {\"value\": \"${nominal_time}\", \"key\": \"nominal-time\"}, {\"value\": \"\", \"key\": \"should-start\"}, {\"value\": \"${30 * MINUTES}\", \"key\": \"should-end\"}, {\"value\": \"\", \"key\": \"max-duration\"}, {\"value\": \"\", \"key\": \"alert-events\"}, {\"value\": \"\", \"key\": \"alert-contact\"}, {\"value\": \"\", \"key\": \"notification-msg\"}, {\"value\": \"\", \"key\": \"upstream-apps\"}], \"subject\": \"ISI Cluster: ASU API Download Failed\"}, \"associatedDocumentUuid\": null, \"type\": \"kill-widget\", \"id\": \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\", \"actionParameters\": []}, {\"name\": \"shell-9eab\", \"associatedDocumentLoading\": true, \"children\": [{\"to\": \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\"}, {\"error\": \"17c9c895-5a16-7443-bb81-f34b30b21548\"}], \"actionParametersFetched\": false, \"properties\": {\"files\": [{\"value\": \"/user/effect/workflow/run_isiTwitterAPI.sh\"}, {\"value\": \"/user/effect/workflow/isiTwitter.py\"}, {\"value\": \"/user/effect/workflow/lib/python-lib.zip\"}], \"job_xml\": \"\", \"retry_interval\": [], \"retry_max\": [], \"job_properties\": [], \"capture_output\": true, \"shell_command\": \"/user/effect/workflow/run_isiTwitterAPI.sh\", \"arguments\": [{\"value\": \"${date}\"}, {\"value\": \"${output_folder}\"}], \"prepares\": [], \"credentials\": [], \"env_var\": [], \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}], \"archives\": []}, \"associatedDocumentUuid\": null, \"type\": \"shell-widget\", \"id\": \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\", \"actionParameters\": []}], \"id\": 286, \"nodeNamesMapping\": {\"17c9c895-5a16-7443-bb81-f34b30b21548\": \"Kill\", \"33430f0f-ebfa-c3ec-f237-3e77efa03d0a\": \"End\", \"3f107997-04cc-8733-60a9-a4bb62cebffc\": \"Start\", \"9eab0d23-acb5-cca5-be1d-959354b6a7c5\": \"shell-9eab\", \"7e4292d4-fd1d-66a6-9dbb-753485cd9131\": \"kill-7e42\"}, \"uuid\": \"a1f6f0fc-5d0e-a283-5ffb-55125a5bc80c\"}}", 
+    "name": "APIDownloader-ISI-Twitter"
+  }
+},
+{
+  "pk": 321, 
+  "model": "desktop.document2", 
+  "fields": {
+    "search": null, 
+    "uuid": "7ab00022-ec74-2af1-9a9e-2c6e7bbf7a45", 
+    "extra": "", 
+    "type": "oozie-coordinator2", 
+    "description": "", 
+    "is_history": false, 
+    "parent_directory": [
+      "2eda0d1c-6329-4d0b-bb2e-ddf5036aaecb", 
+      1, 
+      false
+    ], 
+    "is_managed": false, 
+    "last_modified": "2017-06-18T17:10:51.781", 
+    "version": 1, 
+    "owner": [
+      "hdfs"
+    ], 
+    "dependencies": [
+      [
+        "9cd1d49b-24f6-4bb3-bb8d-fecff06afef4", 
+        1, 
+        false
+      ]
+    ], 
+    "data": "{\"end_date\": {\"name\": \"end_date\", \"value\": \"2027-06-25T17:07\"}, \"variables\": [{\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"cb9887f7-79df-d15b-6917-2b3af78d1e83\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, 'DAY'), \\\"yyyy-MM-dd\\\")}\", \"start\": \"2017-06-18T17:07\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"date\", \"is_advanced_end_instance\": false}, {\"shared_dataset_uuid\": \"\", \"is_advanced_start_instance\": false, \"show_advanced\": false, \"start_instance\": \"0\", \"timezone\": \"America/Dawson\", \"end_instance\": \"0\", \"same_timezone\": true, \"uuid\": \"88fe74b5-cd8c-41ef-f21c-c9de9fc357c4\", \"frequency_number\": 1, \"dataset_variable\": \"${coord:formatTime(coord:dateOffset(coord:nominalTime(),0 , 'DAY'), \\\"yyyy-MM-dd\\\")}\", \"start\": \"2017-06-18T17:07\", \"same_frequency\": true, \"advanced_start_instance\": \"${coord:current(0)}\", \"advanced_end_instance\": \"${coord:current(0)}\", \"instance_choice\": \"default\", \"dataset_type\": \"parameter\", \"use_done_flag\": false, \"done_flag\": \"_SUCCESS\", \"same_start\": true, \"frequency_unit\": \"days\", \"workflow_variable\": \"output_folder\", \"is_advanced_end_instance\": false}], \"isDirty\": true, \"showAdvancedFrequencyUI\": true, \"isManaged\": false, \"variablesUI\": [\"parameter\", \"input_path\", \"output_path\"], \"workflowParameters\": [{\"name\": \"date\", \"value\": \"\"}, {\"name\": \"output_folder\", \"value\": \"\"}], \"properties\": {\"job_xml\": \"\", \"timeout\": null, \"document\": null, \"end\": \"${end_date}\", \"description\": \"\", \"frequency_number\": 1, \"workflow\": \"9cd1d49b-24f6-4bb3-bb8d-fecff06afef4\", \"deployment_dir\": \"/user/hue/oozie/workspaces/hue-oozie-1497830857.56\", \"cron_frequency\": \"0 9 * * *\", \"frequency_unit\": \"days\", \"schema_version\": \"uri:oozie:coordinator:0.2\", \"cron_advanced\": false, \"start\": \"${start_date}\", \"parameters\": [{\"name\": \"oozie.use.system.libpath\", \"value\": true}, {\"name\": \"start_date\", \"value\": \"2017-06-19T08:00\"}, {\"name\": \"end_date\", \"value\": \"2027-06-25T17:07\"}], \"concurrency\": 0, \"timezone\": \"America/Los_Angeles\", \"credentials\": [], \"throttle\": 0, \"execution\": \"FIFO\", \"sla\": [{\"key\": \"enabled\", \"value\": false}, {\"key\": \"nominal-time\", \"value\": \"${nominal_time}\"}, {\"key\": \"should-start\", \"value\": \"\"}, {\"key\": \"should-end\", \"value\": \"${30 * MINUTES}\"}, {\"key\": \"max-duration\", \"value\": \"\"}, {\"key\": \"alert-events\", \"value\": \"\"}, {\"key\": \"alert-contact\", \"value\": \"\"}, {\"key\": \"notification-msg\", \"value\": \"\"}, {\"key\": \"upstream-apps\", \"value\": \"\"}]}, \"uuid\": \"7ab00022-ec74-2af1-9a9e-2c6e7bbf7a45\", \"name\": \"Coordinator-ISI-Twitter\", \"id\": 321, \"start_date\": {\"name\": \"start_date\", \"value\": \"2017-06-19T08:00\"}}", 
+    "name": "Coordinator-ISI-Twitter"
+  }
+}
+]

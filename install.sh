@@ -56,6 +56,7 @@ hdfs dfs -mkdir /user/effect/workflow/lib/bbn
 hdfs dfs -mkdir /user/effect/data
 hdfs dfs -mkdir /user/effect/data/hive-backup
 hdfs dfs -mkdir /user/effect/data/karma-out
+hdfs dfs -mkdir /user/effect/workflow/hive-scripts
 
 hdfs dfs -put -f python-lib.zip /user/effect/workflow/lib/
 hdfs dfs -put -f effect-env.zip /user/effect/workflow/lib/
@@ -68,7 +69,18 @@ hdfs dfs -put -f effectWorkflow.py /user/effect/workflow/
 hdfs dfs -put -f effectWorkflow-es.py /user/effect/workflow/
 hdfs dfs -put -f ransomware-workflow.py /user/effect/workflow/
 hdfs dfs -put -f sparkRunCommands/*.sh /user/effect/workflow/
+hdfs dfs -put -f dailyAPIAudits/*.py /user/effect/workflow/hive-scripts/
+hdfs dfs -put -f dailyAPIAudits/*.sh /user/effect/workflow/hive-scripts/
+hdfs dfs -put -f dailyAPIAudits/*.hql /user/effect/workflow/hive-scripts/
+
 hdfs dfs -put -f $BBNBASE/ner/ner.params /user/effect/workflow/lib/bbn/
 hdfs dfs -put -f $BBNBASE/ner/resources.zip /user/effect/workflow/lib/bbn/
+
+echo "Done copying files.."
+
+echo "Running One time SQL scripts..."
+hive -f dailyAPIAudits/oneTimeQueries/create_daily_audit_table.hql
+hive -f dailyAPIAudits/oneTimeQueries/create_daily_report_table.hql
+hive -f dailyAPIAudits/oneTimeQueries/daily_audit.hql
 
 echo "DONE"

@@ -1,0 +1,30 @@
+#At the source cluster node fromw hich data needs to be copied
+hdfs dfs -get /user/hive/warehouse/cdr
+zip -r cdr.zip cdr
+scp cdr.zip research@cldtestmgr01:/data1/temp/
+
+#At the target cluster node
+cd /data1/temp
+unzip cdr.zip
+hdfs dfs -put -f cdr /user/effect/data/
+
+#Create the CDR table in HIVE
+CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type STRING, url STRING, version STRING, team STRING, source_name STRING)
+COMMENT 'Used to store all CDR data'
+PARTITIONED BY (year INT, month INT)
+CLUSTERED BY(source_name) INTO 256 BUCKETS
+STORED AS ORC;
+
+LOAD DATA INPATH '/user/effect/data/cdr/year=2016/month=11' INTO TABLE cdr
+PARTITION (year=2016, month=11)
+LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=3' INTO TABLE cdr
+PARTITION (year=2017, month=3)
+LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=4' INTO TABLE cdr
+PARTITION (year=2017, month=4)
+LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=5' INTO TABLE cdr
+PARTITION (year=2017, month=5)
+LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=6' INTO TABLE cdr
+PARTITION (year=2017, month=6)
+LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=7' INTO TABLE cdr
+PARTITION (year=2017, month=7)
+
