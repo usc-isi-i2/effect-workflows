@@ -1,4 +1,5 @@
-#At the source cluster node fromw hich data needs to be copied
+#At the source cluster node from which data needs to be copied
+hdfs dfs -rm -f -R /user/hive/warehouse/cdr/.hive-staging_hive_*
 hdfs dfs -get /user/hive/warehouse/cdr
 zip -r cdr.zip cdr
 scp cdr.zip research@cldtestmgr01:/data1/temp/
@@ -16,15 +17,15 @@ CLUSTERED BY(source_name) INTO 256 BUCKETS
 STORED AS ORC;
 
 LOAD DATA INPATH '/user/effect/data/cdr/year=2016/month=11' INTO TABLE cdr
-PARTITION (year=2016, month=11)
+PARTITION (year=2016, month=11);
 LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=3' INTO TABLE cdr
-PARTITION (year=2017, month=3)
+PARTITION (year=2017, month=3);
 LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=4' INTO TABLE cdr
-PARTITION (year=2017, month=4)
+PARTITION (year=2017, month=4);
 LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=5' INTO TABLE cdr
-PARTITION (year=2017, month=5)
+PARTITION (year=2017, month=5);
 LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=6' INTO TABLE cdr
-PARTITION (year=2017, month=6)
+PARTITION (year=2017, month=6);
 LOAD DATA INPATH '/user/effect/data/cdr/year=2017/month=7' INTO TABLE cdr
-PARTITION (year=2017, month=7)
+PARTITION (year=2017, month=7);
 

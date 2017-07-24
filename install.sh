@@ -20,7 +20,7 @@ echo "Updating make.sh.."
 grep -v "WORKFLOWSBASE=" make.sh > make2.sh
 grep -v "BBNBASE=" make2.sh > make3.sh
 echo WORKFLOWSBASE=$WORKFLOWSBASE > make.sh
-echo BBNBASE=$BBNBASE > make.sh
+echo BBNBASE=$BBNBASE >> make.sh
 cat make3.sh >> make.sh
 rm make2.sh
 rm make3.sh
@@ -56,6 +56,7 @@ hdfs dfs -mkdir /user/effect/workflow/lib/bbn
 hdfs dfs -mkdir /user/effect/data
 hdfs dfs -mkdir /user/effect/data/hive-backup
 hdfs dfs -mkdir /user/effect/data/karma-out
+hdfs dfs -mkdir /user/effect/data/karma-out/incremental
 hdfs dfs -mkdir /user/effect/workflow/hive-scripts
 
 hdfs dfs -put -f python-lib.zip /user/effect/workflow/lib/
@@ -72,6 +73,7 @@ hdfs dfs -put -f sparkRunCommands/*.sh /user/effect/workflow/
 hdfs dfs -put -f dailyAPIAudits/*.py /user/effect/workflow/hive-scripts/
 hdfs dfs -put -f dailyAPIAudits/*.sh /user/effect/workflow/hive-scripts/
 hdfs dfs -put -f dailyAPIAudits/*.hql /user/effect/workflow/hive-scripts/
+hdfs dfs -put -f /etc/hive/conf.dist/hive-site.xml /user/effect/workflow/hive-scripts/
 
 hdfs dfs -put -f $BBNBASE/ner/ner.params /user/effect/workflow/lib/bbn/
 hdfs dfs -put -f $BBNBASE/ner/resources.zip /user/effect/workflow/lib/bbn/
