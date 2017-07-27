@@ -95,9 +95,12 @@ def get_curated_data(company_name, files):
     malemail_data = convert_time_series_in_json(company_name, "malicious-email", ts_malemail)
     result.extend(malemail_data)
 
-    ts_malurl = get_series_event_type(df, event_type='malicious-url')
-    malurl_data = convert_time_series_in_json(company_name, "malicious-url", ts_malurl)
-    result.extend(malurl_data)
+    if company_name == 'dexter':
+        ts_maldest = get_series_event_type(df, event_type='malicious-url')
+    else: 
+        ts_maldest = get_series_event_type(df, event_type='malicious-destination')
+    maldest_data = convert_time_series_in_json(company_name, "malicious-destination", ts_maldest)
+    result.extend(maldest_data)
 
     return result
 
