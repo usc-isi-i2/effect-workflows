@@ -41,18 +41,23 @@ if __name__ == "__main__":
     else:
         url = 'http://127.0.0.1:18000/ransomware_enrichment/api/v1/predicted_domains'
 
+    server.start()
     results = apiDownloader.download_api(url)
 
+    outputFolder = args.outputFolder + "/ruhr-cerber-domains"
     if results is not None:
         num_results = len(results)
         print "Downloaded ", num_results, " new domains from Ruhr Cerber API"
         if num_results > 0:
             apiDownloader.load_into_cdr(results, "ruhr_cerberdomains", args.team, "ruhr-cerber-domains")
             print "Done loading into CDR"
-            print "Taking backup on S3"
 
             rdd = sc.parallelize(results)
-            rdd.map(lambda x: ("ruhr-cerber-domains", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/ruhr-cerber-domains")
-            print "Done taking backing on S3"
+            print "Take a backup in folder:", outputFolder
+            rdd.map(lambda x: ("ruhr-cerber-domains", json.dumps(x))).saveAsSequenceFile(outputFolder)
+            print "Done taking backup"
     else:
         print "No data found:", results
+
+    server.stop()
+    exit(0)
