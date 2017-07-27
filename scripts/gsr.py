@@ -92,11 +92,11 @@ def get_curated_data(company_name, files):
     result.extend(epmal_data)
 
     ts_malemail = get_series_event_type(df, event_type='malicious-email')
-    malemail_data = convert_time_series_in_json(company_name, "malicious-email", ts_epmal)
+    malemail_data = convert_time_series_in_json(company_name, "malicious-email", ts_malemail)
     result.extend(malemail_data)
 
     ts_malurl = get_series_event_type(df, event_type='malicious-url')
-    malurl_data = convert_time_series_in_json(company_name, "malicious-url", ts_epmal)
+    malurl_data = convert_time_series_in_json(company_name, "malicious-url", ts_malurl)
     result.extend(malurl_data)
 
     return result
