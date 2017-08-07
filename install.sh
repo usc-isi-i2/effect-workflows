@@ -73,7 +73,7 @@ hdfs dfs -put -f sparkRunCommands/*.sh /user/effect/workflow/
 hdfs dfs -put -f dailyAPIAudits/*.py /user/effect/workflow/hive-scripts/
 hdfs dfs -put -f dailyAPIAudits/*.sh /user/effect/workflow/hive-scripts/
 hdfs dfs -put -f dailyAPIAudits/*.hql /user/effect/workflow/hive-scripts/
-hdfs dfs -put -f /etc/hive/conf.dist/hive-site.xml /user/effect/workflow/hive-scripts/
+hdfs dfs -put -f  /etc/hive/conf.cloudera.hive/hive-site.xml /user/effect/workflow/hive-scripts/
 
 hdfs dfs -put -f $BBNBASE/ner/ner.params /user/effect/workflow/lib/bbn/
 hdfs dfs -put -f $BBNBASE/ner/resources.zip /user/effect/workflow/lib/bbn/
