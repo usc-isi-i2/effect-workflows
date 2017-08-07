@@ -33,6 +33,7 @@ if __name__ == '__main__':
     parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
     parser.add_argument("-z", "--incremental", help="Incremental Run", required=False, action="store_true")
     parser.add_argument("-s", "--since", help="Get data since a timestamp - format: %Y-%m-%dT%H:%M:%S%Z", default="", required=False)
+    parser.add_argument("-r", "--branch", help="Branch to pull models and frames from", required=False, default="master")
 
     args = parser.parse_args()
 
@@ -123,7 +124,7 @@ if __name__ == '__main__':
 
         es_manager = ES(sc, conf, es_write_conf=es_write_conf)
         if create_index:
-            es_manager.create_index(args.index, "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/es/es-mappings.json")
+            es_manager.create_index(args.index, "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/" + args.branch + "/es/es-mappings.json")
             create_index = False
         es_manager.rdd2es(input_rdd)
 

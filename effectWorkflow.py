@@ -185,6 +185,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--skipBBNExtractor", help="Skip BBN Extractor", required=False, action="store_true")
 
     parser.add_argument("-z", "--incremental", help="Incremental Run", required=False, action="store_true")
+    parser.add_argument("-r", "--branch", help="Branch to pull models and frames from", required=False, default="master")
     parser.add_argument("-s", "--since", help="Get data since a timestamp - format: %Y-%m-%dT%H:%M:%S%Z", default="", required=False)
 
     args = parser.parse_args()
@@ -242,7 +243,7 @@ if __name__ == "__main__":
             # These are models without provenance, if neeed.
             # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
 
-            gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "master")
+            gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", args.branch)
             models = gitModelLoader.get_models_from_folder("models")
 
             print "Got models:", json.dumps(models)
@@ -394,7 +395,7 @@ if __name__ == "__main__":
         if args.framer:
             reduced_rdd.setName("karma_out_reduced")
 
-            gitFrameLoader = GitFrameLoader("usc-isi-i2", "effect-alignment", "master")
+            gitFrameLoader = GitFrameLoader("usc-isi-i2", "effect-alignment", args.branch)
             all_frames = gitFrameLoader.get_frames_from_folder("frames")
             gitFrameLoader.load_context(context_url)
             types = gitFrameLoader.get_types_in_all_frames()
