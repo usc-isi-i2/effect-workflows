@@ -31,7 +31,8 @@ context_url = "https://raw.githubusercontent.com/usc-isi-i2/dig-alignment/develo
 base_uri = "http://effect.isi.edu/data/"
 save_intermediate_files = False
 alias_models = {
-    "asu-twitter": ["isi-twitter"]
+    "asu-twitter": ["isi-twitter"],
+    "isi-company-cpe": ["isi-company-cpe-linkedin"]
 }
 
 source_extraction_fields = {
@@ -248,130 +249,155 @@ if __name__ == "__main__":
 
             print "Got models:", json.dumps(models)
 
-
-            if len(hiveQuery) > 0:
-                cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
-                    .repartition(numPartitions*20) \
-                    .persist(StorageLevel.MEMORY_AND_DISK)
+            extractions_rdd_done = False
+            if args.incremental is True:
+                if len(since) > 0:
+                    extractions_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/cdr_extractions/" + since)
+                else:
+                    extractions_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/cdr_extractions/initial")
             else:
-                cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-                    .repartition(numPartitions*20) \
-                    .persist(StorageLevel.MEMORY_AND_DISK)
-            #cdr_data.filter(lambda x: x[1]["source_name"] == "hg-blogs").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/blogs-input")
-            #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
+                extractions_rdd_done = hdfs_data_done(hdfs_client, hdfsRelativeFilname + "/cdr_extractions")
 
-            # Add all extractors that work on the CDR data
-            cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
-            cve_regex_extractor = RegexExtractor() \
-                .set_regex(cve_regex) \
-                .set_metadata({'extractor': 'cve-regex'}) \
-                .set_include_context(True) \
-                .set_renamed_input_fields('text')
-
-            cve_regex_extractor_processor = ExtractorProcessor() \
-                .set_name('cve_from_extracted_text-regex') \
-                .set_input_fields('raw_content') \
-                .set_output_field('extractions.cve') \
-                .set_extractor(cve_regex_extractor)
-
-            msid_regex = re.compile('(ms[0-9]{2}-[0-9]{3})', re.IGNORECASE)
-            msid_regex_extractor = RegexExtractor() \
-                .set_regex(msid_regex) \
-                .set_metadata({'extractor': 'msid-regex'}) \
-                .set_include_context(True) \
-                .set_renamed_input_fields('text')
-
-            msid_regex_extractor_processor = ExtractorProcessor() \
-                .set_name('msid_from_extracted_text-regex') \
-                .set_input_fields('raw_content') \
-                .set_output_field('extractions.msid') \
-                .set_extractor(msid_regex_extractor)
-
-            all_rdds = []
-            extraction_source_names = []
-            for source in source_extraction_fields:
-                extraction_source_names.append(source)
-                extraction_fields = source_extraction_fields[source]
-                rdd_source = cdr_data.filter(lambda x: x[1]["source_name"] == source)
-
-                cve_process_source = ExtractorProcessor() \
-                                    .set_name('cve_from_extracted_text-regex') \
-                                    .set_input_fields(extraction_fields) \
-                                    .set_output_field('extractions.cve') \
-                                    .set_extractor(cve_regex_extractor)
-                msid_process_source = ExtractorProcessor() \
-                                    .set_name('msid_from_extracted_text-regex') \
-                                    .set_input_fields(extraction_fields) \
-                                    .set_output_field('extractions.msid') \
-                                    .set_extractor(msid_regex_extractor)
-
-                cdr_extractions_isi_rdd_source = rdd_source \
-                    .mapValues(lambda x: cve_process_source.extract(x))\
-                    .mapValues(lambda x: msid_process_source.extract(x))
-                all_rdds.append(cdr_extractions_isi_rdd_source)
-
-            cdr_data_other = cdr_data.filter(lambda x: x[1]["source_name"] not in extraction_source_names)
-
-            cdr_extractions_isi_rdd = cdr_data_other\
-                    .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
-                    .mapValues(lambda x: msid_regex_extractor_processor.extract(x))
-
-            for rdd_source in all_rdds:
-                cdr_extractions_isi_rdd = cdr_extractions_isi_rdd.union(rdd_source)
-
-            cdr_extractions_isi_rdd.persist(StorageLevel.MEMORY_AND_DISK)
-
-            if args.skipBBNExtractor is True:
-                cdr_extractions_rdd = cdr_extractions_isi_rdd
-            else:
-                from bbn.parameters import Parameters
-                params = Parameters('ner.params')
-                params.print_params()
-
-                zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
-                zip_ref.extractall()
-                zip_ref.close()
-
-
-                from bbn.ner_feature import NerFeature
-
-                ner_fea = NerFeature(params)
-
-                from bbn import decoder
-                from bbn.decoder import Decoder
-
-                def apply_bbn_extractor(data):
-                    content_type = None
-                    attribute_name = None
-
-                    if data["source_name"] == 'hg-blogs':
-                        content_type = "Blog"
-                        attribute_name = "json_rep.text"
-                    elif data["source_name"] == 'asu-twitter' or data["source_name"] == 'isi-twitter':
-                        content_type = "SocialMediaPosting"
-                        attribute_name = "json_rep.tweetContent"
-
-                    if content_type is not None:
-                        clean_data = remove_blank_lines(data, attribute_name)
-                        if clean_data["success"] is True:
-                            data = clean_data["data"]
-                            return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
-                    return data
-
-                cdr_extractions_rdd = cdr_extractions_isi_rdd\
-                        .mapValues(lambda x : apply_bbn_extractor(x))\
-                        .repartition(numPartitions)\
+            if extractions_rdd_done is False:
+                if len(hiveQuery) > 0:
+                    cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
+                        .repartition(numPartitions*20) \
                         .persist(StorageLevel.MEMORY_AND_DISK)
+                else:
+                    cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
+                        .repartition(numPartitions*20) \
+                        .persist(StorageLevel.MEMORY_AND_DISK)
+                #cdr_data.filter(lambda x: x[1]["source_name"] == "hg-blogs").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/blogs-input")
+                #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
 
-                cdr_extractions_rdd.setName("cdr_extractions")
+                # Add all extractors that work on the CDR data
+                cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
+                cve_regex_extractor = RegexExtractor() \
+                    .set_regex(cve_regex) \
+                    .set_metadata({'extractor': 'cve-regex'}) \
+                    .set_include_context(True) \
+                    .set_renamed_input_fields('text')
 
-                # Run karma model as per the source of the data
-                reduced_rdd = None
-                reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
-                                                                      base_uri,
-                                                                      numPartitions, numFramerPartitions,
-                                                                      outputFilename, isIncremental, since)\
-                                        .persist(StorageLevel.MEMORY_AND_DISK)
+                cve_regex_extractor_processor = ExtractorProcessor() \
+                    .set_name('cve_from_extracted_text-regex') \
+                    .set_input_fields('raw_content') \
+                    .set_output_field('extractions.cve') \
+                    .set_extractor(cve_regex_extractor)
+
+                msid_regex = re.compile('(ms[0-9]{2}-[0-9]{3})', re.IGNORECASE)
+                msid_regex_extractor = RegexExtractor() \
+                    .set_regex(msid_regex) \
+                    .set_metadata({'extractor': 'msid-regex'}) \
+                    .set_include_context(True) \
+                    .set_renamed_input_fields('text')
+
+                msid_regex_extractor_processor = ExtractorProcessor() \
+                    .set_name('msid_from_extracted_text-regex') \
+                    .set_input_fields('raw_content') \
+                    .set_output_field('extractions.msid') \
+                    .set_extractor(msid_regex_extractor)
+
+                all_rdds = []
+                extraction_source_names = []
+                for source in source_extraction_fields:
+                    extraction_source_names.append(source)
+                    extraction_fields = source_extraction_fields[source]
+                    rdd_source = cdr_data.filter(lambda x: x[1]["source_name"] == source)
+
+                    cve_process_source = ExtractorProcessor() \
+                                        .set_name('cve_from_extracted_text-regex') \
+                                        .set_input_fields(extraction_fields) \
+                                        .set_output_field('extractions.cve') \
+                                        .set_extractor(cve_regex_extractor)
+                    msid_process_source = ExtractorProcessor() \
+                                        .set_name('msid_from_extracted_text-regex') \
+                                        .set_input_fields(extraction_fields) \
+                                        .set_output_field('extractions.msid') \
+                                        .set_extractor(msid_regex_extractor)
+
+                    cdr_extractions_isi_rdd_source = rdd_source \
+                        .mapValues(lambda x: cve_process_source.extract(x))\
+                        .mapValues(lambda x: msid_process_source.extract(x))
+                    all_rdds.append(cdr_extractions_isi_rdd_source)
+
+                cdr_data_other = cdr_data.filter(lambda x: x[1]["source_name"] not in extraction_source_names)
+
+                cdr_extractions_isi_rdd = cdr_data_other\
+                        .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
+                        .mapValues(lambda x: msid_regex_extractor_processor.extract(x))
+
+                for rdd_source in all_rdds:
+                    cdr_extractions_isi_rdd = cdr_extractions_isi_rdd.union(rdd_source)
+
+                cdr_extractions_isi_rdd.persist(StorageLevel.MEMORY_AND_DISK)
+
+                if args.skipBBNExtractor is True:
+                    cdr_extractions_rdd = cdr_extractions_isi_rdd
+                else:
+                    from bbn.parameters import Parameters
+                    params = Parameters('ner.params')
+                    params.print_params()
+
+                    zip_ref = zipfile.ZipFile(params.get_string('resources.zip'), 'r')
+                    zip_ref.extractall()
+                    zip_ref.close()
+
+
+                    from bbn.ner_feature import NerFeature
+
+                    ner_fea = NerFeature(params)
+
+                    from bbn import decoder
+                    from bbn.decoder import Decoder
+
+                    def apply_bbn_extractor(data):
+                        content_type = None
+                        attribute_name = None
+
+                        if data["source_name"] == 'hg-blogs':
+                            content_type = "Blog"
+                            attribute_name = "json_rep.text"
+                        elif data["source_name"] == 'asu-twitter' or data["source_name"] == 'isi-twitter':
+                            content_type = "SocialMediaPosting"
+                            attribute_name = "json_rep.tweetContent"
+
+                        if content_type is not None:
+                            clean_data = remove_blank_lines(data, attribute_name)
+                            if clean_data["success"] is True:
+                                data = clean_data["data"]
+                                return decoder.line_to_predictions(ner_fea, Decoder(params), data, attribute_name, content_type)
+                        return data
+
+                    cdr_extractions_rdd = cdr_extractions_isi_rdd\
+                            .mapValues(lambda x : apply_bbn_extractor(x))\
+                            .repartition(numPartitions)\
+                            .persist(StorageLevel.MEMORY_AND_DISK)
+
+                    cdr_extractions_rdd.setName("cdr_extractions")
+
+                if args.incremental is True:
+                    if len(since) > 0:
+                        fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions/' + since, outputFileType, "json")
+                    else:
+                        fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions/initial', outputFileType, "json")
+                else:
+                    fileUtil.save_file(cdr_extractions_rdd, outputFilename + '/cdr_extractions', outputFileType, "json")
+            else:
+                if args.incremental is True:
+                    if len(since) > 0:
+                        cdr_extractions_rdd = sc.sequenceFile(outputFilename + '/cdr_extractions/' + since).mapValues(lambda x: json.loads(x))
+                    else:
+                        cdr_extractions_rdd = sc.sequenceFile(outputFilename + '/cdr_extractions').mapValues(lambda x: json.loads(x)) #For initial, load everything
+                else:
+                    cdr_extractions_rdd = sc.sequenceFile(outputFilename + '/cdr_extractions').mapValues(lambda x: json.loads(x))
+
+            # Run karma model as per the source of the data
+            reduced_rdd = None
+            reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
+                                                                  base_uri,
+                                                                  numPartitions, numFramerPartitions,
+                                                                  outputFilename, isIncremental, since)\
+                                    .persist(StorageLevel.MEMORY_AND_DISK)
 
             if args.incremental is True:
                 if len(since) > 0:
