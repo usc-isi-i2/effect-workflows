@@ -68,7 +68,7 @@ CREATE table company_cpe(raw_content STRING)
 STORED AS TEXTFILE;
 LOAD DATA INPATH '/user/effect/data/company_cpe.jl' into TABLE company_cpe;
 FROM company_cpe h
-INSERT INTO TABLE cdr PARTITION(year='2017', month='08')
+INSERT INTO TABLE cdr PARTITION(year='2017', month='8')
 SELECT concat('isi-company-cpe-linkedin/', hex(hash(h.raw_content))), unix_timestamp(), h.raw_content, 'application/json', concat('http://effect.isi.edu/input/isi-company-cpe-linkedin/',hex(hash(h.raw_content))), "2.0", "isi", "isi-company-cpe-linkedin";
 
 #---------------------------------------------------------------
