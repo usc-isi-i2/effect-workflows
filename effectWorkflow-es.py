@@ -131,3 +131,4 @@ if __name__ == '__main__':
     # Create alias effect to point to this new index
     es_manager_main = ES(sc, conf, es_write_conf={"es.nodes":args.host, "es.port":args.port})
     es_manager_main.create_alias("effect", ["effect-malware", args.index])
+    es_manager_main.create_alias("effect-data-latest", [args.index])
