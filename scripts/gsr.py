@@ -111,6 +111,7 @@ def main(argv):
     es_username = argv[3]
     es_pwd = argv[4]
     es_index = argv[5]
+    out_folder = argv[6]
 
     filenames = [join(folder, f) for f in listdir(folder) if isfile(join(folder, f))]
     print filenames
@@ -121,8 +122,11 @@ def main(argv):
     print(es.info())
 
     es.indices.create(index=es_index, ignore=400)
+    f = open(out_folder + "/" + company_name + ".jl", "w")
     for entry in data:
         es.index(index=es_index, doc_type="event", body=entry)
+        f.write(json.dumps(entry))
+        f.write("\n")
         print "Added event:", entry
 
 if __name__ == "__main__":
