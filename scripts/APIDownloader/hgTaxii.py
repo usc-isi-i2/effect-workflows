@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
     feeds = {
         "abusech": "/api/abuse_ch",
-        "lehingh": "/api/lehigh_edu",
-        "phistank": "/api/phishtank"
+        "lehingh": "/api/lehigh_edu"
+        #"phistank": "/api/phishtank"
     }
     for feed_name in feeds:
         url = feeds[feed_name]
