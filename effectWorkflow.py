@@ -298,12 +298,11 @@ if __name__ == "__main__":
                     .set_output_field('extractions.msid') \
                     .set_extractor(msid_regex_extractor)
 
-                all_rdds = []
+                cdr_extractions_isi_rdd = sc.emptyRDD()
                 extraction_source_names = []
                 for source in source_extraction_fields:
                     extraction_source_names.append(source)
                     extraction_fields = source_extraction_fields[source]
-                    rdd_source = cdr_data.filter(lambda x: x[1]["source_name"] == source)
 
                     cve_process_source = ExtractorProcessor() \
                                         .set_name('cve_from_extracted_text-regex') \
@@ -316,21 +315,26 @@ if __name__ == "__main__":
                                         .set_output_field('extractions.msid') \
                                         .set_extractor(msid_regex_extractor)
 
-                    cdr_extractions_isi_rdd_source = rdd_source \
+                    cdr_extractions_isi_rdd_source = cdr_data.filter(lambda x: x[1]["source_name"] == source) \
                         .mapValues(lambda x: cve_process_source.extract(x))\
                         .mapValues(lambda x: msid_process_source.extract(x))
-                    all_rdds.append(cdr_extractions_isi_rdd_source)
+                    num_source = cdr_extractions_isi_rdd_source.count()
+                    print "Got", num_source, " items for ", source
+                    cdr_extractions_isi_rdd = cdr_extractions_isi_rdd.union(cdr_extractions_isi_rdd_source)
+                    union_count = cdr_extractions_isi_rdd.count()
+                    print "There are ", union_count, "total objects now"
 
                 cdr_data_other = cdr_data.filter(lambda x: x[1]["source_name"] not in extraction_source_names)
 
-                cdr_extractions_isi_rdd = cdr_data_other\
+                cdr_extractions_isi_rdd.union(cdr_data_other\
                         .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
-                        .mapValues(lambda x: msid_regex_extractor_processor.extract(x))
+                        .mapValues(lambda x: msid_regex_extractor_processor.extract(x)))
 
-                for rdd_source in all_rdds:
-                    cdr_extractions_isi_rdd = cdr_extractions_isi_rdd.union(rdd_source)
 
                 cdr_extractions_isi_rdd.persist(StorageLevel.MEMORY_AND_DISK)
+                cdr_extractions_isi_rdd.setName("cdr_extractions-isi")
+                count = cdr_extractions_isi_rdd.count()
+                print "There are ", count, "total objects now"
 
                 if args.skipBBNExtractor is True:
                     cdr_extractions_rdd = cdr_extractions_isi_rdd
