@@ -7,6 +7,7 @@ from datetime import datetime
 from pyspark import SparkContext, SparkConf, StorageLevel
 from digWorkflow.elastic_manager import ES
 from hdfs.client import Client
+import requests
 
 '''
 spark-submit --deploy-mode client  \
@@ -33,7 +34,6 @@ if __name__ == '__main__':
     parser.add_argument("-m", "--hdfsManager", help="HDFS manager", required=True)
     parser.add_argument("-z", "--incremental", help="Incremental Run", required=False, action="store_true")
     parser.add_argument("-s", "--since", help="Get data since a timestamp - format: %Y-%m-%dT%H:%M:%S%Z", default="", required=False)
-    parser.add_argument("-r", "--branch", help="Branch to pull models and frames from", required=False, default="master")
 
     args = parser.parse_args()
 
@@ -67,6 +67,31 @@ if __name__ == '__main__':
 
     print "Got doc_types:", document_types
 
+    def disable_index_refresh(es_write_conf, index):
+        node = es_write_conf["es.nodes"].split(",")[0].strip()
+        url = "http://" + node + ":" + es_write_conf["es.port"] + "/" + index + "/_settings"
+        command = {
+                    "index" : {
+                        "refresh_interval" : "-1"
+                    }
+               }
+        print "Post:", url + ", data=" + json.dumps(command)
+        ret = requests.post(url, data=json.dumps(command))
+
+    def enable_index_refresh(es_write_conf, index):
+        node = es_write_conf["es.nodes"].split(",")[0].strip()
+        url = "http://" + node + ":" + es_write_conf["es.port"] + "/" + index + "/_settings"
+        command = {
+                    "index" : {
+                        "refresh_interval" : "30"
+                    }
+               }
+        print "Post:", url + ", data=" + json.dumps(command)
+        ret = requests.post(url, data=json.dumps(command))
+
+
+
+
     for doc_type in document_types:
         doc_type = doc_type.strip()
         doc_type_folder = inputFolder + "/" + doc_type
@@ -85,7 +110,7 @@ if __name__ == '__main__':
             "es.http.retries": "20",
             "es.batch.write.retry.count": "20", # maximum number of retries set
             "es.batch.write.retry.wait": "600s", # on failure, time to wait prior to retrying
-            "es.batch.size.entries": "10000", # number of docs per batch
+            "es.batch.size.entries": "100000", # number of docs per batch
             "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
             "es.input.json": "true"
             }
@@ -100,7 +125,7 @@ if __name__ == '__main__':
             "es.http.retries": "20",
             "es.batch.write.retry.count": "20", # maximum number of retries set
             "es.batch.write.retry.wait": "600s", # on failure, time to wait prior to retrying
-            "es.batch.size.entries": "500000", # number of docs per batch
+            "es.batch.size.entries": "1600000", # number of docs per batch
             "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
             "es.input.json": "true"
             }
@@ -115,7 +140,7 @@ if __name__ == '__main__':
             "es.http.retries": "20",
             "es.batch.write.retry.count": "20", # maximum number of retries set
             "es.batch.write.retry.wait": "300s", # on failure, time to wait prior to retrying
-            "es.batch.size.entries": "200000", # number of docs per batch
+            "es.batch.size.entries": "400000", # number of docs per batch
             "es.mapping.id": "uri", # use `uri` as Elasticsearch `_id`
             "es.input.json": "true"
             }
@@ -124,9 +149,13 @@ if __name__ == '__main__':
 
         es_manager = ES(sc, conf, es_write_conf=es_write_conf)
         if create_index:
-            es_manager.create_index(args.index, "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/" + args.branch + "/es/es-mappings.json")
+            es_manager.create_index(args.index, "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/es/es-mappings.json")
             create_index = False
+            disable_index_refresh(es_write_conf, args.index)
         es_manager.rdd2es(input_rdd)
+
+
+    enable_index_refresh({"es.nodes":args.host, "es.port":args.port}, args.index)
 
     # Create alias effect to point to this new index
     es_manager_main = ES(sc, conf, es_write_conf={"es.nodes":args.host, "es.port":args.port})
