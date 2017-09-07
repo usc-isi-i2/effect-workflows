@@ -36,7 +36,8 @@ alias_models = {
 }
 
 source_extraction_fields = {
-    "hg-blogs": ["json_rep.text"]
+    "hg-blogs": ["json_rep.text"],
+    "isi-news": ["json_rep.readable_text"]
 }
 
 class EffectWorkflow(Workflow):
