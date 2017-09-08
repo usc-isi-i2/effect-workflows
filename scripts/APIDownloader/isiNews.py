@@ -42,9 +42,9 @@ if __name__ == "__main__":
 
     apiDownloader = APIDownloader(sc, sqlContext)
     if(args.date == "1970-01-01"):
-        url = "http://cloudeffect02.isi.edu:5620?start_date=1970-01-01&end_date=2050-01-01&"
+        url = "http://cloudeffect02.isi.edu:5620?"
     else:
-        url = "http://cloudeffect02.isi.edu:5620?start_date=" + str(args.date) + "&end_date=" + str(end_date) +"&"
+        url = "http://cloudeffect02.isi.edu:5620?start_date=" + str(args.date) + "&end_date=" + str(args.date) +"&"
 
     apiDownloader = APIDownloader(sc, sqlContext)
 
