@@ -17,6 +17,17 @@ def get_url_domain(url):
 # gives
 'http://stackoverflow.com/'
 
+def get_events(js):
+    events = None
+    if "events" in js:
+        events = js["events"]
+    else:
+        events = []
+        for element in js:
+            event = element["ground_truth"]
+            events.append(event)
+    return events
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-i", "--input", help="Input Folder", required=True)
@@ -26,9 +37,11 @@ if __name__ == '__main__':
     filenames = [join(folder, f) for f in listdir(folder) if isfile(join(folder, f))]
     map = {}
     for filepath in filenames:
+        if not filepath.endswith(".json"):
+            continue
         with open(filepath, 'r') as fh:
             js = json.loads(fh.read())
-            events = js["events"]
+            events = get_events(js)
             for event in events:
                 event_type= event["event_type"]
                 if event_type == "malicious-email":
@@ -49,10 +62,13 @@ if __name__ == '__main__':
                     if "addresses" in event:
                         addresses = event["addresses"]
                         for address in addresses:
-                            url = address["url"]
-                            domain = get_url_domain(url)
-                            if len(domain) == 0:
-                                domain = "unknown"
+                            if "url" in address:
+                                url = address["url"]
+                                domain = get_url_domain(url)
+                                if len(domain) == 0:
+                                    domain = "unknown"
+                            else:
+                                domain = address["ip"]
                             if domain in map:
                                 dates = map[domain]
                             else:

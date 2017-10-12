@@ -24,6 +24,17 @@ def is_email(email_str):
             return True
     return False
 
+def get_events(js):
+    events = None
+    if "events" in js:
+        events = js["events"]
+    else:
+        events = []
+        for element in js:
+            event = element["ground_truth"]
+            events.append(event)
+    return events
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-i", "--input", help="Input Folder", required=True)
@@ -34,9 +45,11 @@ if __name__ == '__main__':
     map = {}
     isOffuscated = False
     for filepath in filenames:
+        if not filepath.endswith(".json"):
+            continue
         with open(filepath, 'r') as fh:
             js = json.loads(fh.read())
-            events = js["events"]
+            events = get_events(js)
 
             for event in events:
                 print(json.dumps(event))
@@ -44,15 +57,20 @@ if __name__ == '__main__':
 
                 if "target_entity" in event or "target_organization" in event:
                     if "target_entity" in event:
-                        target = event["target_entity"]
+                        t = event["target_entity"]
+                        if not isinstance(t, list):
+                            targets = [t]
+                        else:
+                            targets = t
                     else:
-                        target = "unknown"
-                    if target in map:
-                        count = map[target]
-                    else:
-                        count = 0
-                    count += 1
-                    map[target] = count
+                        targets = ["unknown"]
+                    for target in targets:
+                        if target in map:
+                            count = map[target]
+                        else:
+                            count = 0
+                        count += 1
+                        map[target] = count
                 else:
                     for target_object in event["targets"]:
 

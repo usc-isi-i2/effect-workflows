@@ -18,6 +18,17 @@ def week_of_month(date):
 
         return week
 
+def get_events(js):
+    events = None
+    if "events" in js:
+        events = js["events"]
+    else:
+        events = []
+        for element in js:
+            event = element["ground_truth"]
+            events.append(event)
+    return events
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-i", "--input", help="Input Folder", required=True)
@@ -27,9 +38,11 @@ if __name__ == '__main__':
     filenames = [join(folder, f) for f in listdir(folder) if isfile(join(folder, f))]
     week_map = {}
     for filepath in filenames:
+        if not filepath.endswith(".json"):
+            continue
         with open(filepath, 'r') as fh:
             js = json.loads(fh.read())
-            events = js["events"]
+            events = get_events(js)
             for event in events:
                 #2016-11-29T14:56:31.000000Z
                 print(json.dumps(event))
