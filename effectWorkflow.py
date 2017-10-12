@@ -40,6 +40,7 @@ source_extraction_fields = {
     "isi-news": ["json_rep.readable_text"]
 }
 
+
 class EffectWorkflow(Workflow):
     def __init__(self, spark_context, sql_context, hdfs_client):
         self.sc = spark_context
@@ -210,6 +211,7 @@ if __name__ == "__main__":
     if len(since) > 0:
         timestamp = DateUtil.unix_timestamp(since, "%Y-%m-%dT%H:%M:%S%Z")/1000
         hiveQuery = "SELECT * from " + inputTable + " WHERE timestamp > " + str(timestamp)
+        #hiveQuery = "SELECT * from cdr WHERE source_name='isi-twitter' or source_name='asu-twitter'"
         since = since[0:10]
     # hiveQuery = "select * from CDR where source_name='asu-hacking-items'"
     # hiveQuery = "select * from CDR where source_name='asu-twitter'"
@@ -245,9 +247,8 @@ if __name__ == "__main__":
             # These are models without provenance, if neeed.
             # gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", "d24bbf5e11dd027ed91c26923035060432d93ab7")
 
-            gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", args.branch)
+            gitModelLoader = GitModelLoader("usc-isi-i2", "effect-alignment", args.branch, "/data1/github/effect-alignment")
             models = gitModelLoader.get_models_from_folder("models")
-
             print "Got models:", json.dumps(models)
 
             extractions_rdd_done = False
@@ -326,7 +327,7 @@ if __name__ == "__main__":
 
                 cdr_data_other = cdr_data.filter(lambda x: x[1]["source_name"] not in extraction_source_names)
 
-                cdr_extractions_isi_rdd.union(cdr_data_other\
+                cdr_extractions_isi_rdd = cdr_extractions_isi_rdd.union(cdr_data_other\
                         .mapValues(lambda x: cve_regex_extractor_processor.extract(x))\
                         .mapValues(lambda x: msid_regex_extractor_processor.extract(x)))
 
@@ -334,7 +335,7 @@ if __name__ == "__main__":
                 cdr_extractions_isi_rdd.persist(StorageLevel.MEMORY_AND_DISK)
                 cdr_extractions_isi_rdd.setName("cdr_extractions-isi")
                 count = cdr_extractions_isi_rdd.count()
-                print "There are ", count, "total objects now"
+                print "There are ", count, "total objects in ALL now"
 
                 if args.skipBBNExtractor is True:
                     cdr_extractions_rdd = cdr_extractions_isi_rdd
@@ -365,6 +366,9 @@ if __name__ == "__main__":
                         elif data["source_name"] == 'asu-twitter' or data["source_name"] == 'isi-twitter':
                             content_type = "SocialMediaPosting"
                             attribute_name = "json_rep.tweetContent"
+                        elif data["source_name"] == 'isi-news':
+                            content_type = "NewsArticle"
+                            attribute_name = "json_rep.readable_text"
 
                         if content_type is not None:
                             clean_data = remove_blank_lines(data, attribute_name)
@@ -396,6 +400,11 @@ if __name__ == "__main__":
                 else:
                     cdr_extractions_rdd = sc.sequenceFile(outputFilename + '/cdr_extractions').mapValues(lambda x: json.loads(x))
 
+                cdr_extractions_rdd =  cdr_extractions_rdd.repartition(numPartitions*20) \
+                                        .persist(StorageLevel.MEMORY_AND_DISK)
+
+                cdr_extractions_rdd.setName("cdr_extractions")
+
             # Run karma model as per the source of the data
             reduced_rdd = None
             reduced_rdd = workflow.apply_karma_model_per_msg_type(cdr_extractions_rdd, models, context_url,
@@ -426,7 +435,7 @@ if __name__ == "__main__":
         if args.framer:
             reduced_rdd.setName("karma_out_reduced")
 
-            gitFrameLoader = GitFrameLoader("usc-isi-i2", "effect-alignment", args.branch)
+            gitFrameLoader = GitFrameLoader("usc-isi-i2", "effect-alignment", args.branch, "/data1/github/effect-alignment")
             all_frames = gitFrameLoader.get_frames_from_folder("frames")
             gitFrameLoader.load_context(context_url)
             types = gitFrameLoader.get_types_in_all_frames()

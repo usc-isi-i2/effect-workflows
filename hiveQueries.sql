@@ -76,7 +76,7 @@ SELECT concat('isi-company-cpe-linkedin/', hex(hash(h.raw_content))), unix_times
 #Reloading ASU and HG data in CDR
 
 drop table cdr_temp;
-create table cdr_temp as select * from cdr where source_name!='isi-company-cpe';
+create table cdr_temp as select * from cdr where source_name!='hg-blogs';
 drop table cdr;
 CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type STRING, url STRING, version STRING, team STRING, source_name STRING)
 COMMENT 'Used to store all CDR data'
@@ -87,5 +87,14 @@ SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
 INSERT OVERWRITE TABLE CDR PARTITION(year, month) SELECT `_id`, timestamp, raw_content, content_type, url, version, team, source_name, year(from_unixtime(timestamp)), month(from_unixtime(timestamp)) FROM cdr_temp;
 
+# Deleting from Incrementals
+# import json
+# rdd = sc.sequenceFile("/user/effect/data/karma-out/incremental/cdr_extractions/*").mapValues(lambda x: json.loads(x))
+# rdd_out = rdd.filter(lambda x : x[1]['source_name'] != 'hg-blogs')
+# rdd_out.mapValues(lambda x: json.dumps(x)).saveAsSequenceFile("/user/effect/data/karma-out/incremental/cdr_extractions2")
+
+# Now empty incremental/cdr_extractions and move cdr_extraction2 as "initial" under cdr_extractions
+
+#Empty incremental/reduced_rdd and run workflow "KarmaPublishES-KarmaOnly" with value "initial"
 
 
