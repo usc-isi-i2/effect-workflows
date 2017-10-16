@@ -369,6 +369,9 @@ if __name__ == "__main__":
                         elif data["source_name"] == 'isi-news':
                             content_type = "NewsArticle"
                             attribute_name = "json_rep.readable_text"
+                        elif data["source_name"] == 'asu-hacking-posts':
+                            content_type = "Post"
+                            attribute_name = "json_rep.postContent"
 
                         if content_type is not None:
                             clean_data = remove_blank_lines(data, attribute_name)
