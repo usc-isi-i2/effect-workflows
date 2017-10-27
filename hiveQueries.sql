@@ -98,3 +98,34 @@ INSERT OVERWRITE TABLE CDR PARTITION(year, month) SELECT `_id`, timestamp, raw_c
 #Empty incremental/reduced_rdd and run workflow "KarmaPublishES-KarmaOnly" with value "initial"
 
 
+#-------------
+# Remove all Knox rules
+create table cdr_knox as select * from cdr where source_name = 'asu-dark-mention-rules' and raw_content like '%"targetSystem": "Knox"%';
+
+drop table cdr_temp;
+create table cdr_temp as select * from cdr a WHERE a.`_id` NOT IN(select b.`_id` from cdr_knox b);
+drop table cdr;
+CREATE TABLE CDR(`_id` STRING, timestamp INT, raw_content STRING, content_type STRING, url STRING, version STRING, team STRING, source_name STRING)
+COMMENT 'Used to store all CDR data'
+PARTITIONED BY (year INT, month INT)
+CLUSTERED BY(source_name) INTO 256 BUCKETS
+STORED AS ORC;
+SET hive.exec.dynamic.partition=true;
+SET hive.exec.dynamic.partition.mode=nonstrict;
+INSERT OVERWRITE TABLE CDR PARTITION(year, month) SELECT `_id`, timestamp, raw_content, content_type, url, version, team, source_name, year(from_unixtime(timestamp)), month(from_unixtime(timestamp)) FROM cdr_temp;
+DROP table cdr_knox;
+
+#Deleting from Incrementals
+def is_knox_rule(x):
+    if x[1]['source_name'] == 'asu-dark-mention-rules' and x[1]['json_rep']['targetSystem'] == 'Knox':
+        return True
+    return False
+
+# import json
+# rdd = sc.sequenceFile("/user/effect/data/karma-out/incremental/cdr_extractions/*").mapValues(lambda x: json.loads(x))
+# rdd2 = rdd.filter(lambda x: not is_knox_rule(x))
+# rdd2.mapValues(lambda x: json.dumps(x)).saveAsSequenceFile("/user/effect/data/karma-out/incremental/cdr_extractions2")
+
+# Now empty incremental/cdr_extractions and move cdr_extraction2 as "initial" under cdr_extractions
+
+#Empty incremental/reduced_rdd and run workflow "KarmaPublishES-KarmaOnly" with value "initial"
