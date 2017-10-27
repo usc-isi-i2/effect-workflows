@@ -76,7 +76,7 @@ if __name__ == '__main__':
                     }
                }
         print "Post:", url + ", data=" + json.dumps(command)
-        ret = requests.post(url, data=json.dumps(command))
+        ret = requests.put(url, data=json.dumps(command))
 
     def enable_index_refresh(es_write_conf, index):
         node = es_write_conf["es.nodes"].split(",")[0].strip()
@@ -87,7 +87,7 @@ if __name__ == '__main__':
                     }
                }
         print "Post:", url + ", data=" + json.dumps(command)
-        ret = requests.post(url, data=json.dumps(command))
+        ret = requests.put(url, data=json.dumps(command))
 
 
 
