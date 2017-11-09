@@ -17,6 +17,8 @@ Spark All Aplications: http://cloudmgr03.isi.edu:8088/cluster
 
 * An email is sent when the Karma workflow completes. (Configured in workflow `KarmaPublishES`)
 
+* If KarmaPublishES fails and its due to ES, see what the problem is, fix, delete the index and then restarte the job (Only failed)
+
 * SLA is setup to send an email if the workflow does not complete by 12:51pm PST (Configured in Settings of workflow `KarmaPublishES`). 
   Need to contact Tim at Lockheed (Siedlecki, Timothy <timothy.siedlecki@lmco.com>) and let him know why it din't complete and if it can complete by 3pm PST. He can delay the run if it can still complete by 3pm PST.
   If it will not complete, Tim needs to use the previous day's index to run the forecasting models. 
