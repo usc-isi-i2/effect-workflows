@@ -10,6 +10,8 @@ SENSE: http://cloudweb01.isi.edu/app/sense
 * Coordinators run everyday to download data from various APIs into the hive table `CDR` - Coordiantor-ASU, Coordinator-Ruhr, Coordinator-HG, Coordinator-ISI-News
 
 * Coordinator for Karma runs at 6:10am PST to get the data increment, apply karma, reduce and frame the entire dataset and produce a daily effect index - **`effect-<date>`**
+   * Data that is oroduce everyday is in http://cloudmgr03.isi.edu:8888/filebrowser/view=/user/effect#/user/effect/data/karma-out/incremental
+   * Workflow code is all here: http://cloudmgr03.isi.edu:8888/filebrowser/view=/user/effect#/user/effect/workflow
 
 * An email is sent when the Karma workflow completes. (Configured in workflow `KarmaPublishES`)
 
