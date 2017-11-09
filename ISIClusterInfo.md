@@ -46,7 +46,7 @@ Spark All Aplications: http://cloudmgr03.isi.edu:8088/cluster
 * http://cloudweb01.isi.edu/graph/
 * This runs on cloudsrch01 - Check if the process `main_dashboard.py` is running
   ```
-  cd  /data/github/effect-dashboard/dashboard
+  cd  /data1/github/effect-dashboard/dashboard
   source dashboardenv/bin/activate
   nohup python main_dashboard.py &
   ```
@@ -54,7 +54,7 @@ Spark All Aplications: http://cloudmgr03.isi.edu:8088/cluster
 ## Effect Ablation Server
  * This runs on cloudsrch01 - Check if the process `main_ablation.py` is running
     ```
-    cd  /data/github/effect-ablation-server
+    cd  /data1/github/effect-ablation-server
     source venv/bin/activate
     nohup python main_ablation.py &
     ```
