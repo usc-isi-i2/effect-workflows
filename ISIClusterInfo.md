@@ -58,3 +58,7 @@ SENSE: http://cloudweb01.isi.edu/app/sense
 Clouder Mgr: http://cldtestmgr01.isi.edu:7180/cmf/login
 
 SENSE: http://128.9.35.104:5601/app/sense
+
+## Extra Effect Machines
+cloudeffect01 and cloudeffect02 are two machine used by students.
+Each student has a his own user account created using: https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-centos-quickstart
