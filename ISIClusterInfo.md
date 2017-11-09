@@ -58,7 +58,27 @@ Spark All Aplications: http://cloudmgr03.isi.edu:8088/cluster
     source venv/bin/activate
     nohup python main_ablation.py &
     ```
-    
+    Queries to check ablation:
+    ```
+    GET effect/vulnerability/_search
+    {
+      "query": {
+        "match_phrase": {
+          "name": "CVE-2009-3298"
+        }
+      }
+    }
+
+    GET effect/vulnerability/_search?exclude=hg-cpe
+    {
+      "query": {
+        "match_phrase": {
+          "name": "CVE-2009-3298"
+        }
+      }
+    }
+    ```
+
 
 ## Development Cluster
 Clouder Mgr: http://cldtestmgr01.isi.edu:7180/cmf/login
