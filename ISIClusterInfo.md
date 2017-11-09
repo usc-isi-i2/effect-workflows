@@ -29,7 +29,7 @@ Spark All Aplications: http://cloudmgr03.isi.edu:8088/cluster
    * Script: `/local/research/checkESHealth.py` - Set emails here
    * Script is run using a cron job (`sudo crontab -e`)
 
-* At 4pm PST, the effect-<date> index is backed up in cloudmgr01:`/data/lockheed/upload/data-<date>.json.gz`. If the backup does not produce the correct data file, and email will be sent and you will need to generate the backup again.
+* At 4pm PST, the effect-<date> index is backed up in cloudweb01:`/data/lockheed/upload/data-<date>.json.gz`. If the backup does not produce the correct data file, and email will be sent and you will need to generate the backup again.
    * Machine: cloudweb01
    * Script: `/local/research/es_backup.sh` to backup and `/local/research/verifyESBackup.py` to verify the backups get generated correctly. Set emails in verifyESBackup.py script. Scripts configured using `sudo crontab -e`
    * Change and run `/local/research/es_backup_specific.sh` to generate the backup for a specific day. It generates the backup in current folder. Move it to the lockheed folder when done.
