@@ -274,7 +274,7 @@ if __name__ == "__main__":
                 #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
 
                 # Add all extractors that work on the CDR data
-                cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4})', re.IGNORECASE)
+                cve_regex = re.compile('(cve-[0-9]{4}-[0-9]{4,7})', re.IGNORECASE)
                 cve_regex_extractor = RegexExtractor() \
                     .set_regex(cve_regex) \
                     .set_metadata({'extractor': 'cve-regex'}) \
@@ -478,4 +478,3 @@ if __name__ == "__main__":
             reduced_rdd.unpersist()
             for type_name in type_to_rdd_json:
                 type_to_rdd_json[type_name]["rdd"].unpersist()
-
