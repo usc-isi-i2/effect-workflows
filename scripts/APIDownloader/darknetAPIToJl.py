@@ -46,9 +46,9 @@ if __name__ == "__main__":
         if(args.date != "1970-01-01"):
             date_filter = "from=" + args.date + "&to=" + args.date
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
-            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
-            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
+           "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
+           "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
+           "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
             "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
             "exploit-db": "https://apigargoyle.com/GargoyleApi/getExploitDBData?" + date_filter,
             "dark-mentions": "http://apigargoyle.com/GargoyleApi/getDarkMentions?" + date_filter,
@@ -74,9 +74,17 @@ if __name__ == "__main__":
                     num_results = len(res['results'])
                     print api_name, ": num results:", num_results
                     if num_results > 0:
-                        print res['results'][0]
-                        rdd = sc.parallelize(res['results'])
-                        apiDownloader.load_into_cdr(res['results'], source, args.team, source)
+                        results = res['results']
+                        print results[0]
+
+                        #Remove CVE extractions
+                        for r in results:
+                            if "postCve" in r:
+                                r['postCve'] = ''
+                            if "itemCve" in r:
+                                r['itemCve'] = ''
+                        rdd = sc.parallelize(results)
+                        apiDownloader.load_into_cdr(results, source, args.team, source)
                         rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
 
                 if (num_results < max_limit) or (num_results == 0):
