@@ -18,7 +18,36 @@ spark-submit --deploy-mode client  \
 --outputFolder hdfs://ip-172-31-19-102.us-west-2.compute.internal:8020/user/effect/data/hive/19700101
 --password <APIKEY>
 '''
-import sys, traceback
+import sys, traceback, json, requests
+
+
+def login(password):
+    "Login to the system and renew the apiKey"
+    print "\nLogin called or ApiKey expired, relogin called..."
+
+    data = {'userId': 'usc', 'password': password}
+    response = requests.post(url='https://apigargoyle.com/GargoyleApi/login',data=data,verify=False)
+
+    if response.status_code == 200:
+        #Successful login
+        json_response = response.json()
+        print (json.dumps(json_response))
+        """ Sample json_response. Use any parameters like expiry_time to determine when to renew apiKey or else
+           renew apiKey on errorCode of 401(Unauthorized) indicating expired apiKey
+        {
+        "creation_time": 1504912689016,
+        "twoFactor": true,
+        "role": "SAdmin",
+        "apiKey": "c570ff56-d85e-4f4a-b91b-ac67cf0bf1a6",
+        "expiry_time": 1504999089016,
+        "userId": "some_value",
+        "status": 200
+        } """
+        return json_response['apiKey']
+    else:
+        #On failure, display error and exit
+        print 'Relogin failed with errorcode:{} and reply:{}'.format(str(response.status_code), str(response.text))
+        return ''
 
 if __name__ == "__main__":
 
@@ -33,7 +62,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print ("Got arguments:", args)
 
-    headers = {"userId" :"usc","apiKey": args.password, "Connection" : "close"}
+    headers = {"userId" :"usc","apiKey": login('Nyd7NYLGt8DC'), "Connection" : "close"}
 
     def write_output_to_file(file_name, result):
         out_file = open(file_name, 'w')
@@ -46,9 +75,9 @@ if __name__ == "__main__":
         if(args.date != "1970-01-01"):
             date_filter = "from=" + args.date + "&to=" + args.date
         return {
-           "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
-           "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
-           "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
+            "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
+            "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
             "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
             "exploit-db": "https://apigargoyle.com/GargoyleApi/getExploitDBData?" + date_filter,
             "dark-mentions": "http://apigargoyle.com/GargoyleApi/getDarkMentions?" + date_filter,
