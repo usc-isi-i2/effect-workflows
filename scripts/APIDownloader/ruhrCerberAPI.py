@@ -4,6 +4,7 @@ from pyspark import SparkContext, StorageLevel
 from pyspark.sql import HiveContext
 import json
 from sshtunnel import SSHTunnelForwarder
+import sys
 
 '''
 spark-submit --deploy-mode client \
@@ -42,22 +43,28 @@ if __name__ == "__main__":
         url = 'http://127.0.0.1:18000/ransomware_enrichment/api/v1/predicted_domains'
 
     server.start()
-    results = apiDownloader.download_api(url)
+    try:
+        results = apiDownloader.download_api(url)
 
-    outputFolder = args.outputFolder + "/ruhr-cerber-domains"
-    if results is not None:
-        num_results = len(results)
-        print "Downloaded ", num_results, " new domains from Ruhr Cerber API"
-        if num_results > 0:
-            apiDownloader.load_into_cdr(results, "ruhr_cerberdomains", args.team, "ruhr-cerber-domains")
-            print "Done loading into CDR"
+        outputFolder = args.outputFolder + "/ruhr-cerber-domains"
+        if results is not None:
+            num_results = len(results)
+            print "Downloaded ", num_results, " new domains from Ruhr Cerber API"
+            if num_results > 0:
+                apiDownloader.load_into_cdr(results, "ruhr_cerberdomains", args.team, "ruhr-cerber-domains")
+                print "Done loading into CDR"
 
-            rdd = sc.parallelize(results)
-            print "Take a backup in folder:", outputFolder
-            rdd.map(lambda x: ("ruhr-cerber-domains", json.dumps(x))).saveAsSequenceFile(outputFolder)
-            print "Done taking backup"
-    else:
-        print "No data found:", results
+                rdd = sc.parallelize(results)
+                print "Take a backup in folder:", outputFolder
+                rdd.map(lambda x: ("ruhr-cerber-domains", json.dumps(x))).saveAsSequenceFile(outputFolder)
+                print "Done taking backup"
+        else:
+            print "No data found:", results
 
-    server.stop()
+        server.stop()
+    except:
+        print "Unexpected error:", sys.exc_info()[0]
+        server.stop()
+        raise
+
     exit(0)
