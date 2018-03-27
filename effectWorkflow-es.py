@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     create_index = True
     inputFolder = args.input
-    partitions = int(args.partitions)
+    partitions = 680  # int(args.partitions)
     since = args.since.strip()
     if since == "initial":
         since = ""
@@ -106,6 +106,21 @@ if __name__ == '__main__':
         input_rdd = sc.sequenceFile(doc_type_folder).repartition(partitions)
 
         if doc_type == 'topic' or doc_type == 'post':
+            es_write_conf = {
+                "es.nodes": args.host,
+                "es.port": args.port,
+                "es.nodes.discover": "false",
+                'es.nodes.wan.only': "true",
+                "es.resource": args.index + '/' + doc_type,  # use domain as `doc_type`
+                "es.http.timeout": "60s",
+                "es.http.retries": "20",
+                "es.batch.write.retry.count": "20",  # maximum number of retries set
+                "es.batch.write.retry.wait": "600s",  # on failure, time to wait prior to retrying
+                "es.batch.size.entries": "1000",  # number of docs per batch
+                "es.mapping.id": "uri",  # use `uri` as Elasticsearch `_id`
+                "es.input.json": "true"
+            }
+        elif doc_type == 'blog':
             es_write_conf = {
                 "es.nodes": args.host,
                 "es.port": args.port,

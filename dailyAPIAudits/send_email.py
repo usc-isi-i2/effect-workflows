@@ -4,10 +4,11 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime as dt
 
-exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","isi-company-cpe-linkedin"]
-highlighted_sources = ["hg-abusech", "asu-twitter", "hg-blogs", "asu-dark-mention-rules", "asu-dark-mentions", "asu-hacking-items", "asu-hacking-posts"]
+exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","isi-company-cpe-linkedin", "hg-zdi"]
+highlighted_sources = ["hg-abusech", "asu-twitter", "hg-blogs", "asu-dark-mention-rules", "asu-dark-mentions",
+                       "asu-hacking-items", "asu-hacking-posts", "asu-dark-mentions"]
 
-zero_count_sources = ["asu-dark-mention-rules"]
+zero_count_sources = ["asu-dark-mention-rules", "hg-abusech"]
 
 today = dt.datetime.today()
 date_of_pull = today.strftime("%Y-%m-%d")
@@ -20,6 +21,11 @@ day_minus_6 = (dt.date.today() - dt.timedelta(6)).strftime("%Y-%m-%d")
 
 cat = subprocess.Popen(
     ["hadoop", "fs", "-cat", "/user/hive/warehouse/daily_audit_report/date_of_pull=" + date_of_pull + "/*"],
+    stdout=subprocess.PIPE)
+
+other_file_date = (dt.date.today() - dt.timedelta(7)).strftime("%Y-%m-%d")
+cat2 = subprocess.Popen(
+    ["hadoop", "fs", "-cat", "/user/hive/warehouse/daily_audit_report/date_of_pull=" + other_file_date + "/*"],
     stdout=subprocess.PIPE)
 
 column_list = ["Source Name", "Last Day of Pull", date_of_pull,
@@ -39,9 +45,12 @@ errors_per_source["asu"] = []
 errors_per_source["ruhr"] = []
 errors_per_source["hg"] = []
 
-for line in cat.stdout:
+for (line, line2) in zip(cat.stdout, cat2.stdout):
     line = line.strip()
     row = line.split(",")
+
+    line2 = line2.strip()
+    row2 = line2.split(",")
     if row[0] not in exclude_sources:
         rowDict = ''
         if row[0] in highlighted_sources:
@@ -66,6 +75,9 @@ for line in cat.stdout:
             counts = []
             for i in range(3, 9):
                 counts.append(int(row[i]))
+
+            for i in range(2, 9):
+                counts.append(int(row2[i]))
 
             cur_zero_len = 0
             max_zero_len = 0
@@ -92,6 +104,8 @@ for line in cat.stdout:
             if todays_zero_len > max_zero_len:
                 #Flag this source
                 print(str(rowDict) + " is not getting data as expected")
+                print(row)
+                print(row2)
                 if row[0].startswith("hg-"):
                     errors_per_source['hg'].append(rowDict)
                 elif row[0].startswith("asu-"):
@@ -114,7 +128,8 @@ msg = MIMEMultipart(
     "alternative", None, [MIMEText(html), MIMEText(html, 'html')])
 
 from_addr = 'dipsy@isi.edu'
-to_addr = ['osuba@isi.edu','dipsy@isi.edu','annas@isi.edu','dipsykapoor@gmail.com']
+to_addr = ['dipsy@isi.edu','annas@isi.edu','dipsykapoor@gmail.com']
+cc_addr = []
 subject = 'Effect Daily API Audit'
 
 if today.weekday() == 6:
@@ -122,21 +137,38 @@ if today.weekday() == 6:
     to_addr.append('knoblock@isi.edu')
     to_addr.append('lerman@isi.edu')
     subject = "Effect: Data Received by APIs last week"
-#to_addr = ['dipsykapoor@gmail.com']
+
 
 emails = {}
-emails['asu'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu', 'jshak@asu.edu', 'shak@asu.edu']
-emails['hg'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu', 'atowler@hyperiongray.com', 'bmackintosh@hyperiongray.com']
-emails['isi'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu']
-emails['ruhr'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu', 'thorsten.holz@rub.de', 'florian.quinkert@ruhr-uni-bochum.de']
+emails['asu'] = ['jshak@asu.edu']
+emails['hg'] = ['bmackintosh@hyperiongray.com']
+emails['isi'] = ['dipsykapoor@gmail.com']
+emails['ruhr'] = ['florian.quinkert@ruhr-uni-bochum.de']
+
+emails_cc = {}
+emails_cc['asu'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu','shak@asu.edu']
+emails_cc['hg'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu', 'atowler@hyperiongray.com']
+emails_cc['isi'] = ['knoblock@isi.edu', 'lerman@isi.edu']
+emails_cc['ruhr'] = ['dipsykapoor@gmail.com', 'knoblock@isi.edu', 'lerman@isi.edu', 'thorsten.holz@rub.de']
+
+
+#For testing
+#to_addr = ['dipsykapoor@gmail.com']
+#emails['asu'] = ['dipsykapoor@gmail.com']
+#emails['hg'] = ['dipsykapoor@gmail.com']
+#emails['isi'] = ['dipsykapoor@gmail.com']
+#emails['ruhr'] = ['dipsykapoor@gmail.com']
+
 
 msg['Subject'] = subject
 msg['From'] = from_addr
 msg['To'] = ", ".join(to_addr)
+msg['CC'] = ", ".join(cc_addr)
+
 # Send the message via our own SMTP server, but don't include the
 # envelope header.
 s = smtplib.SMTP('smtp.isi.edu')
-s.sendmail(from_addr, to_addr, msg.as_string())
+s.sendmail(from_addr, to_addr + cc_addr, msg.as_string())
 print ("Send email:", msg.as_string())
 
 for source in errors_per_source:
@@ -153,7 +185,8 @@ for source in errors_per_source:
         msg_err['Subject'] = source.upper() + ' API not returning back data as expected'
         msg_err['From'] = from_addr
         msg_err['To'] = ", ".join(emails[source])
-        s.sendmail(from_addr, emails[source], msg_err.as_string())
+        msg_err['CC'] = ", ".join(emails_cc[source])
+        s.sendmail(from_addr, emails[source] + emails_cc[source], msg_err.as_string())
         print ("Send email:", msg_err.as_string())
 
 s.quit()
