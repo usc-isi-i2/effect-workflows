@@ -9,6 +9,11 @@ if __name__ == '__main__':
     out = open(output_filename, 'w')
     for line in open(input_filename, 'r'):
         line_json = json.loads(line)
-        line_json['doc_id'] = hashlib.sha256(line_json['uri']).hexdigest()
-        out.write(json.dumps(line_json))
+
+        out_line = {}
+        type = "_".join(line_json["a"])
+        out_line[type] = line_json
+        out_line['doc_id'] = hashlib.sha256(line_json['uri']).hexdigest()
+
+        out.write(json.dumps(out_line))
         out.write("\n")
