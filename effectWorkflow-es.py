@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     create_index = True
     inputFolder = args.input
-    partitions = 680  # int(args.partitions)
+    partitions = int(args.partitions)
     since = args.since.strip()
     if since == "initial":
         since = ""
@@ -70,6 +70,7 @@ if __name__ == '__main__':
         document_types.remove("post")
         document_types.insert(0, "post")
 
+    #document_types = ["organization"]
     print "Got doc_types:", document_types
 
 
@@ -83,7 +84,7 @@ if __name__ == '__main__':
         }
         print "Post:", url + ", data=" + json.dumps(command)
         ret = requests.put(url, data=json.dumps(command))
-
+        return ret
 
     def enable_index_refresh(es_write_conf, index):
         node = es_write_conf["es.nodes"].split(",")[0].strip()
@@ -95,7 +96,14 @@ if __name__ == '__main__':
         }
         print "Post:", url + ", data=" + json.dumps(command)
         ret = requests.put(url, data=json.dumps(command))
+        return ret
 
+    def delete_index(es_write_conf, index):
+        node = es_write_conf["es.nodes"].split(",")[0].strip()
+        url = "http://" + node + ":" + es_write_conf["es.port"] + "/" + index
+        print "DELETE:", url
+        ret = requests.delete(url)
+        return ret
 
     # document_types = ["socialmedia"]
     for doc_type in document_types:
@@ -116,7 +124,7 @@ if __name__ == '__main__':
                 "es.http.retries": "20",
                 "es.batch.write.retry.count": "20",  # maximum number of retries set
                 "es.batch.write.retry.wait": "600s",  # on failure, time to wait prior to retrying
-                "es.batch.size.entries": "1000",  # number of docs per batch
+                "es.batch.size.entries": "500",  # number of docs per batch
                 "es.mapping.id": "uri",  # use `uri` as Elasticsearch `_id`
                 "es.input.json": "true"
             }
@@ -170,6 +178,7 @@ if __name__ == '__main__':
 
         es_manager = ES(sc, conf, es_write_conf=es_write_conf)
         if create_index:
+            delete_index(es_write_conf, args.index)
             es_manager.create_index(args.index,
                                     "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/es/es-mappings.json")
             create_index = False
@@ -182,3 +191,4 @@ if __name__ == '__main__':
     es_manager_main = ES(sc, conf, es_write_conf={"es.nodes": args.host, "es.port": args.port})
     es_manager_main.create_alias("effect", [args.index])
     es_manager_main.create_alias("effect-data-latest", [args.index])
+    es_manager_main.create_alias("effect-asu-point-rules", ["effect-asu-point-rules-test", args.index])

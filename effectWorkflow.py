@@ -219,6 +219,10 @@ if __name__ == "__main__":
     numPartitions = int(args.partitions)
 
     numFramerPartitions = numPartitions / 2
+    numHivePartitions = numPartitions
+    if since == "":
+        numHivePartitions = numPartitions*20
+
     hdfsRelativeFilname = outputFilename
     if hdfsRelativeFilname.startswith("hdfs://"):
         idx = hdfsRelativeFilname.find("/", 8)
@@ -264,11 +268,11 @@ if __name__ == "__main__":
             if extractions_rdd_done is False:
                 if len(hiveQuery) > 0:
                     cdr_data = workflow.load_cdr_from_hive_query(hiveQuery) \
-                        .repartition(numPartitions*20) \
+                        .repartition(numHivePartitions) \
                         .persist(StorageLevel.MEMORY_AND_DISK)
                 else:
                     cdr_data = workflow.load_cdr_from_hive_table(inputTable) \
-                        .repartition(numPartitions*20) \
+                        .repartition(numHivePartitions) \
                         .persist(StorageLevel.MEMORY_AND_DISK)
                 #cdr_data.filter(lambda x: x[1]["source_name"] == "hg-blogs").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/blogs-input")
                 #cdr_data.filter(lambda x: x[1]["source_name"] == "asu-twitter").mapValues(lambda x: json.dumps(x)).saveAsSequenceFile(outputFilename + "/tweets-input")
