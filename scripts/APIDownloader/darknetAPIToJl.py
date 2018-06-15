@@ -80,7 +80,7 @@ if __name__ == "__main__":
             "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
             "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
             "exploit-db": "https://apigargoyle.com/GargoyleApi/getExploitDBData?" + date_filter,
-            "dark-mentions": "http://apigargoyle.com/GargoyleApi/getDarkMentions?" + date_filter,
+            "dark-mentions": "https://apigargoyle.com/GargoyleApi/getDarkMentions?", #+ date_filter,
             "dark-mention-rules": "https://apigargoyle.com/GargoyleApi/getDarkMentionRules?" + date_filter
         }
 
@@ -88,38 +88,50 @@ if __name__ == "__main__":
     urls = get_all_urls()
 
     exception_occured = False
+    max_num_tries_per_call = 3
+
     error = ""
     for api_name in urls:
         try:
             source = args.team + "-" + api_name
             done = False
             start = 0
-            max_limit = 5000
+            max_limit = 1000
+
             while done is False:
                 paging_url = urls[api_name] + "&start=" + str(start) + "&limit=" + str(max_limit)
-                num_results = 0
-                res = apiDownloader.download_api(paging_url, None, None, headers)
-                if (res is not None) and 'results' in res:
-                    num_results = len(res['results'])
-                    print api_name, ": num results:", num_results
-                    if num_results > 0:
-                        results = res['results']
-                        print results[0]
+                num_tries_per_call = 0
+                got_results = False
 
-                        #Remove CVE extractions
-                        for r in results:
-                            if "postCve" in r:
-                                r['postCve'] = ''
-                            if "itemCve" in r:
-                                r['itemCve'] = ''
-                        rdd = sc.parallelize(results)
-                        apiDownloader.load_into_cdr(results, source, args.team, source)
-                        rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
+                while (num_tries_per_call < max_num_tries_per_call) and got_results is False:
+                    num_results = 0
+                    res = apiDownloader.download_api(paging_url, None, None, headers)
 
-                if (num_results < max_limit) or (num_results == 0):
-                    done = True
-                else:
-                    start = start + num_results
+                    if (res is not None) and 'results' in res:
+                        num_results = len(res['results'])
+                        got_results = True
+                        print api_name, ": num results:", num_results
+                        if num_results > 0:
+                            results = res['results']
+                            print results[0]
+
+                            #Remove CVE extractions
+                            for r in results:
+                                if "postCve" in r:
+                                    r['postCve'] = ''
+                                if "itemCve" in r:
+                                    r['itemCve'] = ''
+                            rdd = sc.parallelize(results)
+                            apiDownloader.load_into_cdr(results, source, args.team, source)
+                            rdd.map(lambda x: (source, json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/" + source + "/" + str(start))
+                    else:
+                        print ("Got back no results JSON, num-tries:", num_tries_per_call)
+                    if (num_results < max_limit) or (num_results == 0):
+                        done = True
+                    else:
+                        start = start + num_results
+
+                    num_tries_per_call += 1
         except:
             error = error + "\nError running " + source + ":" + str(sys.exc_info()[0])
             error += traceback.format_exc()
