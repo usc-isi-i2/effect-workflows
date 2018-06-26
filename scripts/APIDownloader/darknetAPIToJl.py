@@ -75,13 +75,14 @@ if __name__ == "__main__":
         if(args.date != "1970-01-01"):
             date_filter = "from=" + args.date + "&to=" + args.date
         return {
-            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?order=scrapedDate&" + date_filter,
+            "zero-day-products": "https://apigargoyle.com/GargoyleApi/getZerodayProducts?" + date_filter,
             "hacking-items":  "https://apigargoyle.com/GargoyleApi/getHackingItems?order=scrapedDate&" + date_filter,
             "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
             "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
             "exploit-db": "https://apigargoyle.com/GargoyleApi/getExploitDBData?" + date_filter,
             "dark-mentions": "https://apigargoyle.com/GargoyleApi/getDarkMentions?", #+ date_filter,
-            "dark-mention-rules": "https://apigargoyle.com/GargoyleApi/getDarkMentionRules?" + date_filter
+            "dark-mention-rules": "https://apigargoyle.com/GargoyleApi/getDarkMentionRules?" + date_filter,
+            "dumps-s3-mapping": "https://apigargoyle.com/GargoyleApi/getDumpsS3Mapping?" + date_filter
         }
 
     apiDownloader = APIDownloader(sc, sqlContext)
