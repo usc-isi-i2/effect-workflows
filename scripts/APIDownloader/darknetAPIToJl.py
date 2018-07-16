@@ -26,7 +26,7 @@ def login(password):
     print "\nLogin called or ApiKey expired, relogin called..."
 
     data = {'userId': 'usc', 'password': password}
-    response = requests.post(url='https://apigargoyle.com/GargoyleApi/login',data=data,verify=False)
+    response = requests.post(url='https://apigargoyle.com/GargoyleApi/login',headers=data,verify=False)
 
     if response.status_code == 200:
         #Successful login
