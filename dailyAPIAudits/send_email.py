@@ -6,7 +6,7 @@ import datetime as dt
 
 exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","isi-company-cpe-linkedin","ruhr-cerber-domains"]
 highlighted_sources = ["hg-abusech", "asu-twitter", "hg-blogs", "asu-dark-mention-rules",
-                       "asu-hacking-items", "asu-hacking-posts", "asu-dark-mentions"]
+                       "asu-hacking-items", "asu-hacking-posts", "asu-dark-mentions", "hg-cpe","hg-cve","asu-exploit-db"]
 
 zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi","asu-dark-mentions"]
 
@@ -182,4 +182,3 @@ for source in errors_per_source:
         print ("Send email:", msg_err.as_string())
 
 s.quit()
-
