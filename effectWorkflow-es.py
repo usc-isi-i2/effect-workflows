@@ -190,8 +190,9 @@ if __name__ == '__main__':
 
     enable_index_refresh({"es.nodes": args.host, "es.port": args.port}, args.index)
 
+    es_manager_main = ES(sc, conf, es_write_conf={"es.nodes": args.host, "es.port": args.port})
+    es_manager_main.create_alias("effect-data-{}".format(datetime.now().isoformat()[:10]), [args.index])
     if add_to_index is False:
         # Create alias effect to point to this new index
-        es_manager_main = ES(sc, conf, es_write_conf={"es.nodes": args.host, "es.port": args.port})
         es_manager_main.create_alias("effect", [args.index])
         es_manager_main.create_alias("effect-data-latest", [args.index])
