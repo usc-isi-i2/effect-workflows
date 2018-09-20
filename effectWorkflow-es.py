@@ -35,6 +35,7 @@ if __name__ == '__main__':
     parser.add_argument("-z", "--incremental", help="Incremental Run", required=False, action="store_true")
     parser.add_argument("-s", "--since", help="Get data since a timestamp - format: %Y-%m-%dT%H:%M:%S%Z", default="",
                         required=False)
+    parser.add_argument("-w", "--addToIndex", help="Add to existing index", required=False, action="store_true")
 
     args = parser.parse_args()
 
@@ -48,6 +49,7 @@ if __name__ == '__main__':
             hdfsRelativeFilname = hdfsRelativeFilname[idx:]
 
     create_index = True
+    add_to_index = args.addToIndex
     inputFolder = args.input
     partitions = int(args.partitions)
     since = args.since.strip()
@@ -177,18 +179,19 @@ if __name__ == '__main__':
         print json.dumps(es_write_conf)
 
         es_manager = ES(sc, conf, es_write_conf=es_write_conf)
-        if create_index:
-            delete_index(es_write_conf, args.index)
-            es_manager.create_index(args.index,
-                                    "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/es/es-mappings.json")
-            create_index = False
-            disable_index_refresh(es_write_conf, args.index)
+        if add_to_index is False:
+            if create_index:
+                delete_index(es_write_conf, args.index)
+                es_manager.create_index(args.index,
+                                        "https://raw.githubusercontent.com/usc-isi-i2/effect-alignment/master/es/es-mappings.json")
+                create_index = False
+                disable_index_refresh(es_write_conf, args.index)
         es_manager.rdd2es(input_rdd)
 
     enable_index_refresh({"es.nodes": args.host, "es.port": args.port}, args.index)
 
-    # Create alias effect to point to this new index
-    es_manager_main = ES(sc, conf, es_write_conf={"es.nodes": args.host, "es.port": args.port})
-    es_manager_main.create_alias("effect", [args.index])
-    es_manager_main.create_alias("effect-data-latest", [args.index])
-    es_manager_main.create_alias("effect-asu-point-rules", ["effect-asu-point-rules-test", args.index])
+    if add_to_index is False:
+        # Create alias effect to point to this new index
+        es_manager_main = ES(sc, conf, es_write_conf={"es.nodes": args.host, "es.port": args.port})
+        es_manager_main.create_alias("effect", [args.index])
+        es_manager_main.create_alias("effect-data-latest", [args.index])
