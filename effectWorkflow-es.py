@@ -190,9 +190,38 @@ if __name__ == '__main__':
 
     enable_index_refresh({"es.nodes": args.host, "es.port": args.port}, args.index)
 
+    # create new aliases
+    current_date = datetime.now().date()
+    date_format = '%Y-%m-%d'
     es_manager_main = ES(sc, conf, es_write_conf={"es.nodes": args.host, "es.port": args.port})
-    es_manager_main.create_alias("effect-data-{}".format(datetime.now().isoformat()[:10]), [args.index])
+    es_manager_main.create_alias("effect-data-{}".format(current_date.strftime(date_format)), [args.index])
     if add_to_index is False:
         # Create alias effect to point to this new index
         es_manager_main.create_alias("effect", [args.index])
         es_manager_main.create_alias("effect-data-latest", [args.index])
+
+    # delete expired aliases
+    def get_alias(es_write_conf, index):
+        node = es_write_conf["es.nodes"].split(",")[0].strip()
+        url = "http://" + node + ":" + es_write_conf["es.port"] + "/" + index + "/_alias"
+        ret = requests.get(url).json()
+        print 'get aliases:', url, ret.status_code
+        return ret[index]['aliases']
+
+    def delete_alias(es_write_conf, index, alias):
+        node = es_write_conf["es.nodes"].split(",")[0].strip()
+        url = "http://" + node + ":" + es_write_conf["es.port"] + "/" + index + "/_alias/" + alias
+        ret = requests.delete(url)
+        print 'delete aliases:', url, ret.status_code
+
+    aliases = get_alias({"es.nodes": args.host, "es.port": args.port}, args.index)
+    for alias in aliases.keys():
+        if len(alias) == len('effect-data-YYYY-MM-DD'):
+            date_ = alias[len('effect-data-'):]
+            try:
+                date_ = datetime.strptime(date_, date_format).date()
+                delta = current_date - date_
+                if delta.days > 7: # keep one week
+                    delete_alias({"es.nodes": args.host, "es.port": args.port}, args.index, alias)
+            except:
+                pass # can not parse date
