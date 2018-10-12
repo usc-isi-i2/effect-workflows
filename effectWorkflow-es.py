@@ -224,7 +224,7 @@ if __name__ == '__main__':
             try:
                 date_ = datetime.strptime(date_, date_format).date()
                 delta = current_date - date_
-                if delta.days > 7: # keep one week
+                if delta.days >= 7: # keep one week
                     delete_alias({"es.nodes": args.host, "es.port": args.port}, args.index, alias)
             except:
                 pass # can not parse date
