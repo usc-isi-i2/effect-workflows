@@ -204,9 +204,10 @@ if __name__ == '__main__':
     def get_alias(es_write_conf, index):
         node = es_write_conf["es.nodes"].split(",")[0].strip()
         url = "http://" + node + ":" + es_write_conf["es.port"] + "/" + index + "/_alias"
-        ret = requests.get(url).json()
+        ret = requests.get(url)
         print 'get aliases:', url, ret.status_code
-        return ret[index]['aliases']
+        jobj = ret.json()
+        return jobj[index]['aliases']
 
     def delete_alias(es_write_conf, index, alias):
         node = es_write_conf["es.nodes"].split(",")[0].strip()
