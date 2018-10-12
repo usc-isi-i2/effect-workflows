@@ -207,7 +207,9 @@ if __name__ == '__main__':
         ret = requests.get(url)
         print 'get aliases:', url, ret.status_code
         jobj = ret.json()
-        return jobj[index]['aliases']
+        # can not just use index here, because index can also be alias
+        # return jobj[index]['aliases']
+        return jobj.values()[0]['aliases']
 
     def delete_alias(es_write_conf, index, alias):
         node = es_write_conf["es.nodes"].split(",")[0].strip()
