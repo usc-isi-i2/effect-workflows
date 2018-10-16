@@ -4,11 +4,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime as dt
 
-exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","isi-company-cpe-linkedin","ruhr-cerber-domains"]
+# don't send me notification from these sources
+exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","isi-company-cpe-linkedin","ruhr-cerber-domains", "asu-dark-mentions"]
+# what show in blue in email
 highlighted_sources = ["hg-abusech", "asu-twitter", "hg-blogs", "asu-dark-mention-rules",
-                       "asu-hacking-items", "asu-hacking-posts", "asu-dark-mentions", "hg-cpe","hg-cve","asu-exploit-db"]
+                       "asu-hacking-items", "asu-hacking-posts", "hg-cpe","hg-cve","asu-exploit-db"] # "asu-dark-mentions", 
 
-zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi","asu-dark-mentions"]
+zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi", "asu-dark-mentions"]
 
 today = dt.datetime.today()
 date_of_pull = today.strftime("%Y-%m-%d")
@@ -127,8 +129,8 @@ html += "<p>Regards,</p><p>ISI</p></body></html>"
 msg = MIMEMultipart(
     "alternative", None, [MIMEText(html), MIMEText(html, 'html')])
 
-from_addr = 'dipsy@isi.edu'
-to_addr = ['dipsykapoor@gmail.com','abramson@ads.isi.edu']
+from_addr = 'yixiangy@isi.edu'
+to_addr = ['yixiangy@isi.edu','abramson@ads.isi.edu']
 cc_addr = []
 subject = 'Effect Daily API Audit'
 
@@ -143,14 +145,14 @@ if today.weekday() == 6:
 emails = {}
 emails['asu'] = ['jana@cyr3con.ai','giriraj@cyr3con.com']
 emails['hg'] = ['bmackintosh@hyperiongray.com', 'jhopper@hyperiongray.com']
-emails['isi'] = ['dipsykapoor@gmail.com','abramson@ads.isi.edu']
+emails['isi'] = ['yixiangy@isi.edu','abramson@ads.isi.edu']
 emails['ruhr'] = ['florian.quinkert@ruhr-uni-bochum.de']
 
 emails_cc = {}
-emails_cc['asu'] = ['dipsykapoor@gmail.com', 'abramson@ads.isi.edu', 'lerman@isi.edu']
-emails_cc['hg'] = ['dipsykapoor@gmail.com', 'abramson@ads.isi.edu', 'lerman@isi.edu', 'atowler@hyperiongray.com']
+emails_cc['asu'] = ['yixiangy@isi.edu', 'abramson@ads.isi.edu', 'lerman@isi.edu']
+emails_cc['hg'] = ['yixiangy@isi.edu', 'abramson@ads.isi.edu', 'lerman@isi.edu', 'atowler@hyperiongray.com']
 emails_cc['isi'] = ['lerman@isi.edu']
-emails_cc['ruhr'] = ['dipsykapoor@gmail.com', 'abramson@ads.isi.edu', 'lerman@isi.edu', 'thorsten.holz@rub.de']
+emails_cc['ruhr'] = ['yixiangy@isi.edu', 'abramson@ads.isi.edu', 'lerman@isi.edu', 'thorsten.holz@rub.de']
 
 msg['Subject'] = subject
 msg['From'] = from_addr

@@ -80,7 +80,7 @@ if __name__ == "__main__":
             "hacking-posts": "https://apigargoyle.com/GargoyleApi/getHackingPosts?order=scrapedDate&" + date_filter,
             "twitter": "https://apigargoyle.com/GargoyleApi/getTwitterData?" + date_filter,
             "exploit-db": "https://apigargoyle.com/GargoyleApi/getExploitDBData?" + date_filter,
-            "dark-mentions": "https://apigargoyle.com/GargoyleApi/getDarkMentions?", #+ date_filter,
+            # "dark-mentions": "https://apigargoyle.com/GargoyleApi/getDarkMentions?", #+ date_filter,
             "dark-mention-rules": "https://apigargoyle.com/GargoyleApi/getDarkMentionRules?" + date_filter,
             "dumps-s3-mapping": "https://apigargoyle.com/GargoyleApi/getDumpsS3Mapping?" + date_filter
         }
