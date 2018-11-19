@@ -54,7 +54,7 @@ if __name__ == "__main__":
                 print "Taking backup on S3"
 
                 rdd = sc.parallelize(results)
-                rdd.map(lambda x: ("hg-cve", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-phishtank/" + str(page_num))
+                rdd.map(lambda x: ("hg-phishtank", json.dumps(x))).saveAsSequenceFile(args.outputFolder + "/hg-phishtank/" + str(page_num))
                 print "Done taking backing on S3"
         else:
             print "No data found:", results_json
