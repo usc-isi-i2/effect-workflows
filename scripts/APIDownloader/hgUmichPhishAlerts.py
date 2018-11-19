@@ -8,7 +8,7 @@ from dateUtil import DateUtil
 '''
 spark-submit --deploy-mode client \
     --py-files /home/hadoop/effect-workflows/lib/python-lib.zip \
-    hgCPEAPI.py \
+    hgUmichPhishAlerts.py \
     --outputFolder <HDFS or s3 output folder> \
     --team "hyperiongray" \
     --password <PASSWORD> \
