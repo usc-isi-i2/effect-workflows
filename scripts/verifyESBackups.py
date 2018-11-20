@@ -16,9 +16,9 @@ def convert_bytes(num):
 
 if __name__ == "__main__":
     from_addr = 'oozie@isi.edu'
-    to_addr = ['dipsykapoor@gmail.com']
+    to_addr = ['yixiangy@isi.edu']
 
-    files = [f for f in os.listdir("/data/lockheed/upload") if re.match(r'data-2017[0-9]*.json.gz', f)]
+    files = [f for f in os.listdir("/data/lockheed/upload") if re.match(r'data-2[0-9]*.json.gz', f)]
     files.sort()
     num_files = len(files)
     size = 0
