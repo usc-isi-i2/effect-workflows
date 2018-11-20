@@ -14,6 +14,14 @@ def convert_bytes(num):
             return "%3.1f %s" % (num, x)
         num /= 1024.0
 
+def has_enough_partition_space(threshold):
+    df = subprocess.Popen(['df', '-k', '/data'], stdout=subprocess.PIPE)
+    df.stdout.next() # header
+    used_percentage = df.stdout.next().decode().split()[4][:-1]
+    if int(used_percentage) > threshold:
+        return False
+    return True
+
 if __name__ == "__main__":
     from_addr = 'oozie@isi.edu'
     to_addr = ['yixiangy@isi.edu']
@@ -38,13 +46,25 @@ if __name__ == "__main__":
         prev_file = f
 
     if len(err) > 0:
-        print "Email error:", err
         s = smtplib.SMTP('smtp.isi.edu')
         html = "<html><body>" + err + "</body></html>"
         msg = MIMEMultipart(
             "alternative", None, [MIMEText(html), MIMEText(html, 'html')])
 
         msg['Subject'] = 'EFFECT ERROR: Error generating the ES Backup'
+        msg['From'] = from_addr
+        msg['To'] = ", ".join(to_addr)
+
+        s.sendmail(from_addr, to_addr, msg.as_string())
+        s.quit()
+
+    if not has_enough_partition_space(90):
+        s = smtplib.SMTP('smtp.isi.edu')
+        html = "<html><body>Don't have enough partition space left on cloudweb01</body></html>"
+        msg = MIMEMultipart(
+            "alternative", None, [MIMEText(html), MIMEText(html, 'html')])
+
+        msg['Subject'] = 'EFFECT ERROR: Don\'t have enough partition space left'
         msg['From'] = from_addr
         msg['To'] = ", ".join(to_addr)
 
