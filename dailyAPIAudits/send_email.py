@@ -10,7 +10,7 @@ exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","i
 highlighted_sources = ["hg-abusech", "asu-twitter", "hg-blogs", "asu-dark-mention-rules",
                        "asu-hacking-items", "asu-hacking-posts", "hg-cpe","hg-cve","asu-exploit-db"] # "asu-dark-mentions", 
 
-zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi", "asu-dark-mentions"]
+zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi", "asu-dark-mentions", "hg-umich-phish-alerts"]
 
 today = dt.datetime.today()
 date_of_pull = today.strftime("%Y-%m-%d")
