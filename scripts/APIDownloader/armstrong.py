@@ -32,7 +32,7 @@ if __name__ == "__main__":
     curr_date = datetime.strptime(curr_date, "%Y-%m-%d")
     prev_date = curr_date - timedelta(days=1)
 
-    url_query = "http://cloudeffect02.isi.edu:5001/api?ds=proofpoint&createdFrom={}&createdTo={}".format(
+    url_query = "http://cloudeffect02.isi.edu:5000/api?ds=proofpoint&createdFrom={}&createdTo={}".format(
         prev_date.isoformat(), curr_date.isoformat()
     )
 
