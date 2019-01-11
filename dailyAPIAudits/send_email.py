@@ -10,7 +10,7 @@ exclude_sources = ["hackmageddon", "hg-msbulletin", "hg-taxii", "isi-twitter","i
 highlighted_sources = ["hg-abusech", "asu-twitter", "hg-blogs", "asu-dark-mention-rules",
                        "asu-hacking-items", "asu-hacking-posts", "hg-cpe","hg-cve","asu-exploit-db"] # "asu-dark-mentions", 
 
-zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi", "asu-dark-mentions", "hg-umich-phish-alerts", "hg-unc-phish-alerts"]
+zero_count_sources = ["asu-dark-mention-rules", "hg-abusech","hg-zdi", "asu-dark-mentions", "hg-umich-phish-alerts", "hg-unc-phish-alerts", "armstrong"]
 
 today = dt.datetime.today()
 date_of_pull = today.strftime("%Y-%m-%d")
@@ -46,6 +46,7 @@ errors_per_source["isi"] = []
 errors_per_source["asu"] = []
 errors_per_source["ruhr"] = []
 errors_per_source["hg"] = []
+errors_per_source["armstrong"] = []
 
 for (line, line2) in zip(cat.stdout, cat2.stdout):
     line = line.strip()
@@ -114,6 +115,8 @@ for (line, line2) in zip(cat.stdout, cat2.stdout):
                     errors_per_source['asu'].append(rowDict)
                 elif row[0].startswith("ruhr-"):
                     errors_per_source['ruhr'].append(rowDict)
+                elif row[0].startswith("armstrong"):
+                    errors_per_source['armstrong'].append(rowDict)
                 else:
                     errors_per_source['isi'].append(rowDict)
 
@@ -145,14 +148,16 @@ if today.weekday() == 6:
 emails = {}
 emails['asu'] = ['jana@cyr3con.ai','giriraj@cyr3con.com']
 emails['hg'] = ['bmackintosh@hyperiongray.com', 'jhopper@hyperiongray.com']
-emails['isi'] = ['yixiangy@isi.edu','abramson@ads.isi.edu']
+emails['isi'] = ['abramson@ads.isi.edu']
 emails['ruhr'] = ['florian.quinkert@ruhr-uni-bochum.de']
+emails['armstrong'] = ['abramson@ads.isi.edu']
 
 emails_cc = {}
 emails_cc['asu'] = ['yixiangy@isi.edu', 'abramson@ads.isi.edu', 'lerman@isi.edu']
 emails_cc['hg'] = ['yixiangy@isi.edu', 'abramson@ads.isi.edu', 'lerman@isi.edu', 'atowler@hyperiongray.com']
-emails_cc['isi'] = ['lerman@isi.edu']
+emails_cc['isi'] = ['yixiangy@isi.edu', 'lerman@isi.edu']
 emails_cc['ruhr'] = ['yixiangy@isi.edu', 'abramson@ads.isi.edu', 'lerman@isi.edu', 'thorsten.holz@rub.de']
+emails_cc['armstrong'] = ['yixiangy@isi.edu']
 
 msg['Subject'] = subject
 msg['From'] = from_addr
