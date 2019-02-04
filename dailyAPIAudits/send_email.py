@@ -141,7 +141,7 @@ if today.weekday() == 6:
     #It is a Sunday, also send email to Craig and Kristina
     #to_addr.append('knoblock@isi.edu')
     to_addr.append('lerman@isi.edu')
-    to_addr.append('anoopk@isi.edu')
+    #to_addr.append('anoopk@isi.edu')
     subject = "Effect: Data Received by APIs last week"
 
 
